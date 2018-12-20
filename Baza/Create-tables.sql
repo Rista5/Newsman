@@ -1,4 +1,4 @@
-
+drop table if exists created, Picture, Audio, User, News;
 
 CREATE TABLE News(
 Id_news         int(32) NOT NULL AUTO_INCREMENT,
