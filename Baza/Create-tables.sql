@@ -1,4 +1,4 @@
-drop table if exists created, comment, Picture, Audio, User, News;
+drop table if exists created, comment, Picture, Audio, User, News, Modified;
 
 CREATE TABLE News(
 Id_news         int(32) NOT NULL AUTO_INCREMENT,
@@ -53,7 +53,7 @@ PRIMARY KEY(Id_audio)
 ALTER TABLE Audio ADD CONSTRAINT Id_news_FK_audio FOREIGN KEY(Id_news) REFERENCES News(Id_news);
 
 CREATE TABLE Modified(
-Id_modifed		int(32) NOT NULL AUTO_INCREMENT,
+Id_modified		int(32) NOT NULL AUTO_INCREMENT,
 Id_user         int(32),
 Id_news         int(32),
 Modified_date         date,

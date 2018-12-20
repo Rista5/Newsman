@@ -30,6 +30,72 @@ namespace DataLayerLib
             {
                 MessageBox.Show("id: " + n.Id + " title " + n.Title + " content " + n.Content);
             }
+
+            session.Close();
+        }
+
+        private void button_ucitaj_korisnike(object sender, EventArgs e)
+        {
+            ISession session = DataLayer.GetSession();
+
+            IList<User> users = session.QueryOver<User>()
+                .Where(x => x.Id >= 1).List<User>();
+
+            foreach (User u in users)
+            {
+                MessageBox.Show("id: " + u.Id + "\nUsername: "+u.Username+ "\nPassword: "+ u.Password);
+            }
+
+            session.Close();
+        }
+
+        private void button_ucitaj_komentare(object sender, EventArgs e)
+        {
+            ISession session = DataLayer.GetSession();
+
+            IList<Comment> comments = session.QueryOver<Comment>()
+                .Where(x => x.Id >= 1).List<Comment>();
+
+            foreach (Comment c in comments)
+            {
+                MessageBox.Show("id_komentara: "+c.Id + "\n Sadrzaj: "+c.Content+ "\n Kreirao user: "
+                    + c.CreatedBy.Username + "\n Komentar na vest: "+c.BelongsTo.Title
+                    +"\n Datum postovanja: "+c.PostDate);
+            }
+
+            session.Close();
+        }
+
+        private void button_ucitaj_slike(object sender, EventArgs e)
+        {
+            ISession session = DataLayer.GetSession();
+
+            IList<Picture> pictures = session.QueryOver<Picture>()
+                .Where(x => x.Id >= 1).List<Picture>();
+
+            foreach (Picture p in pictures)
+            {
+                MessageBox.Show("id_slike: " + p.Id + "\n Naziv: " + p.Name + "\n Opis: "+ p.Description
+                    +"\n Pripada vesti: " + p.BelongsTo.Title);
+            }
+
+            session.Close();
+        }
+
+        private void button_ucitaj_audio(object sender, EventArgs e)
+        {
+            ISession session = DataLayer.GetSession();
+
+            IList<Audio> audios = session.QueryOver<Audio>()
+                .Where(x => x.Id >= 1).List<Audio>();
+
+            foreach (Audio a in audios)
+            {
+                MessageBox.Show("id_zvuka: " + a.Id + "\n Naziv: " + a.Name + "\n Opis: " + a.Description
+                    + "\n Pripada vesti: " + a.BelongsTo.Title);
+            }
+
+            session.Close();
         }
     }
 }

@@ -17,6 +17,9 @@ namespace DataLayerLib.Mappers
 
             Map(x => x.Username, "Username");
             Map(x => x.Password, "Password");
+
+            HasMany(x => x.CommentsPosted).KeyColumn("Id_user").LazyLoad().Cascade.All().Inverse();
+            HasMany(x=>x.ModifiedNews).KeyColumn("Id_user").LazyLoad().Cascade.All().Inverse();
         }
     }
 }

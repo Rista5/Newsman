@@ -11,14 +11,14 @@ namespace DataLayerLib.Mappers
     {
         public NewsModifiedMapper()
         {
-            Table("Modified");
+            Table("modified");
 
             Id(x => x.Id, "Id_modified").GeneratedBy.Increment();
 
             Map(x => x.ModificationDate, "Modified_date");
 
-            HasOne(x => x.NewsId).ForeignKey("Id_news");
-            HasOne(x => x.UserId).ForeignKey("Id_user");
+            HasOne(x => x.News).ForeignKey("Id_news");
+            HasOne(x => x.User).ForeignKey("Id_user");
         }
     }
 }

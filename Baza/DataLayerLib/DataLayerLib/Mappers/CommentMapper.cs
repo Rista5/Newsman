@@ -18,8 +18,8 @@ namespace DataLayerLib.Mappers
             Map(x => x.Content, "Content");
             Map(x => x.PostDate, "Post_date");
 
-            HasOne(x => x.BelongsTo).ForeignKey("Id_news");
-            HasOne(x => x.CreatedBy).ForeignKey("Id_user");
+            HasOne(x => x.BelongsTo).ForeignKey("Id_news").LazyLoad().Cascade.All();
+            HasOne(x => x.CreatedBy).ForeignKey("Id_user").LazyLoad().Cascade.All();
         }
     }
 }

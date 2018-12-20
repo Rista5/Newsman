@@ -21,12 +21,14 @@ namespace DataLayerLib.Mappers
 
             HasMany(x => x.Pictures).KeyColumn("Id_news").LazyLoad().Cascade.All().Inverse();
             HasMany(x => x.AudioRecordings).KeyColumn("Id_news").LazyLoad().Cascade.All().Inverse();
+            HasMany(x => x.Comments).KeyColumn("Id_news").LazyLoad().Cascade.All().Inverse();
 
-            HasManyToMany(x => x.Modifications)
-                .Table("created")
-                .ParentKeyColumn("Id_news")
-                .ChildKeyColumn("Id_user")
-                .Cascade.All();
+            HasMany(x => x.Modifications).KeyColumn("Id_news");
+            //HasManyToMany(x => x.Modifications)
+            //    .Table("created")
+            //    .ParentKeyColumn("Id_news")
+            //    .ChildKeyColumn("Id_user")
+            //    .Cascade.All();
         }
     }
 }

@@ -37,7 +37,15 @@ namespace DataLayerLib
                 .Database(MySQLConfiguration.Standard.ConnectionString(connectionString))
                 .Mappings(m => m.FluentMappings.AddFromAssemblyOf<Mappers.NewsMapper>());
 
-            return cfg.BuildSessionFactory();
+            try
+            {
+                return cfg.BuildSessionFactory();
+            }
+            catch(Exception e)
+            {
+                Console.Write(e.Message);
+                return null;
+            }
         }
     }
 }

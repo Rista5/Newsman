@@ -29,17 +29,17 @@ INSERT INTO `aips`.`comment` (`Content`, `Id_news`, `Id_user`, `Post_date`) VALU
 
 
 --Created INSERT SQL
-INSERT INTO `aips`.`created` (`Id_user`, `Id_news`, `Creation_date`) VALUES ('1', '2', '2018-11-20');
+INSERT INTO `aips`.`modified` (`Id_user`, `Id_news`, `Creation_date`) VALUES ('1', '2', '2018-11-20');
 
-INSERT INTO `aips`.`created` (`Id_user`, `Id_news`, `Creation_date`) VALUES ('2', '4', '2018-11-23');
+INSERT INTO `aips`.`modified` (`Id_user`, `Id_news`, `Creation_date`) VALUES ('2', '4', '2018-11-23');
 
-INSERT INTO `aips`.`created` (`Id_user`, `Id_news`, `Creation_date`) VALUES ('3', '4', '2018-12-11');
+INSERT INTO `aips`.`modified` (`Id_user`, `Id_news`, `Creation_date`) VALUES ('3', '4', '2018-12-11');
 
-INSERT INTO `aips`.`created` (`Id_user`, `Id_news`, `Creation_date`) VALUES ('4', '3', '2018-12-12');
+INSERT INTO `aips`.`modified` (`Id_user`, `Id_news`, `Creation_date`) VALUES ('4', '3', '2018-12-12');
 
-INSERT INTO `aips`.`created` (`Id_user`, `Id_news`, `Creation_date`) VALUES ('1', '1', '2018-12-24');
+INSERT INTO `aips`.`modified` (`Id_user`, `Id_news`, `Creation_date`) VALUES ('1', '1', '2018-12-24');
 
-INSERT INTO `aips`.`created` (`Id_user`, `Id_news`, `Creation_date`) VALUES ('3', '3', '2018-12-17');
+INSERT INTO `aips`.`modified` (`Id_user`, `Id_news`, `Creation_date`) VALUES ('3', '3', '2018-12-17');
 
 
 
