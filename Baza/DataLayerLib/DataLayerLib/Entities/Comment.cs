@@ -6,12 +6,14 @@ using System.Threading.Tasks;
 
 namespace DataLayerLib.Entities
 {
-    class Picture
+    class Comment
     {
         public virtual int Id { get; protected set; }
-        public virtual string Name { get; set; }
-        public virtual string Description { get; set; }
+        public virtual string Contetn { get; protected set; }
         public virtual News BelongsTo { get; set; }
+        public virtual User CreatedBy { get; set; }
+        public virtual DateTime PostDate { get; set; }
 
+        public Comment() { }
     }
 }

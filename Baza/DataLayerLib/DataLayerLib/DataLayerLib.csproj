@@ -79,7 +79,10 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="DataLayer.cs" />
+    <Compile Include="Entities\Audio.cs" />
+    <Compile Include="Entities\Comment.cs" />
     <Compile Include="Entities\News.cs" />
+    <Compile Include="Entities\NewsModified.cs" />
     <Compile Include="Entities\Picture.cs" />
     <Compile Include="Entities\User.cs" />
     <Compile Include="Form1.cs">
