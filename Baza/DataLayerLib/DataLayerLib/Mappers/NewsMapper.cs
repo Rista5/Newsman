@@ -18,6 +18,15 @@ namespace DataLayerLib.Mappers
             Map(x => x.Title, "Title");
             Map(x => x.Content, "Content");
             Map(x => x.LastModified, "Last_modified");
+
+            HasMany(x => x.Pictures).KeyColumn("Id_news").LazyLoad().Cascade.All().Inverse();
+            HasMany(x => x.AudioRecordings).KeyColumn("Id_news").LazyLoad().Cascade.All().Inverse();
+
+            HasManyToMany(x => x.Modifications)
+                .Table("created")
+                .ParentKeyColumn("Id_news")
+                .ChildKeyColumn("Id_user")
+                .Cascade.All();
         }
     }
 }

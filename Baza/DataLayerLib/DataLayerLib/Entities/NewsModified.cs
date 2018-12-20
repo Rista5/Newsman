@@ -8,6 +8,7 @@ namespace DataLayerLib.Entities
 {
     class NewsModified
     {
+        public virtual int Id { get; protected set; }
         public virtual int UserId { get; protected set; }
         public virtual int NewsId { get; protected set; }
         public virtual DateTime ModificationDate { get; set; }
