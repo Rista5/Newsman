@@ -97,6 +97,8 @@
     <Compile Include="Mappers\NewsModifiedMapper.cs" />
     <Compile Include="Mappers\PictureMapper.cs" />
     <Compile Include="Mappers\UserMapper.cs" />
+    <Compile Include="MultimediaLoader\FileSystemPictureLoader.cs" />
+    <Compile Include="MultimediaLoader\IPictureLoader.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <EmbeddedResource Include="Form1.resx">

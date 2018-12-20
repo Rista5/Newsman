@@ -17,6 +17,7 @@ namespace DataLayerLib
         public Form1()
         {
             InitializeComponent();
+            pictureBox.SizeMode = PictureBoxSizeMode.StretchImage;
         }
 
         private void button1_Click(object sender, EventArgs e)
@@ -96,6 +97,20 @@ namespace DataLayerLib
             }
 
             session.Close();
+        }
+
+        private void button_prikazi_sliku(object sender, EventArgs e)
+        {
+            ISession session = DataLayer.GetSession();
+            Picture picture = session.Get<Picture>(1);
+            session.Close();
+
+            MultimediaLoader.IPictureLoader loader = new MultimediaLoader.FileSystemPictureLoader();
+            byte[] pictureData = loader.GetPicture(picture.Id, picture.Name);
+            System.IO.MemoryStream ms = new System.IO.MemoryStream(pictureData);
+            Image image = Image.FromStream(ms);
+            
+            pictureBox.Image = image;
         }
     }
 }
