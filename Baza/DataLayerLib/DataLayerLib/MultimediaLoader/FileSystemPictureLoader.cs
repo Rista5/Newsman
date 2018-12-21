@@ -45,7 +45,26 @@ namespace DataLayerLib.MultimediaLoader
 
         public bool SavePicture(int id, string name, byte[] data)
         {
-            throw new NotImplementedException();
+            string pictureName = name + id.ToString();
+            string path = LocationFolder + pictureName + ".jpg";
+            try
+            {
+                if(!File.Exists(path))
+                {
+                    FileStream fs = new FileStream(path, FileMode.Create);
+                    BinaryWriter bw = new BinaryWriter(fs);
+                    bw.Write(data);
+
+                    bw.Close();
+                    fs.Close();
+                }
+            }
+            catch(Exception ex)
+            {
+                Console.WriteLine(ex.Message);
+            }
+
+            return true;
         }
     }
 }

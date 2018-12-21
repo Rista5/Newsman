@@ -79,6 +79,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="DataLayer.cs" />
+    <Compile Include="DTOManager.cs" />
     <Compile Include="Entities\Audio.cs" />
     <Compile Include="Entities\Comment.cs" />
     <Compile Include="Entities\News.cs" />

@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace DataLayerLib.Entities
 {
-    class Audio
+    public class Audio
     {
         public virtual int Id { get; protected set; }
         public virtual string Description { get; set; }

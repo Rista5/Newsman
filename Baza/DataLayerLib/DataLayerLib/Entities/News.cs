@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace DataLayerLib.Entities
 {
-    class News
+    public class News
     {
         public virtual int Id { get; protected set; }
         public virtual String Title { get; set; }
