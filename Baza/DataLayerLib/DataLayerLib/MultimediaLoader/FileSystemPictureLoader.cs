@@ -4,22 +4,28 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using System.IO;
+using DataLayerLib.MultimediaLoader.Generator;
 
 namespace DataLayerLib.MultimediaLoader
 {
     class FileSystemLoader : IMultimediaLoader
     {
         public static string LocationFolder { get; private set; }
+        public IPathGenerator pathgen { get; set; }
 
         public FileSystemLoader()
         {
             LocationFolder = @"C:\Users\Uros\Downloads\IV godina\VII semestar\Arhitektura i projektovanje softvera\Projekat\Newsman\Baza\Slike\";
+            pathgen = new ClassicPath();
         }
 
-        public byte[] GetMedia(int id, string name)
+        public byte[] GetMedia(int id,int newsId, string name)
         {
-            string pictureName = name + id.ToString();
-            string path = LocationFolder + pictureName + ".jpg";
+            string path = pathgen.GeneratePath(id, newsId, name);
+
+            //string pictureName = name + id.ToString();
+            //string path = LocationFolder + pictureName + ".jpg";
+
             byte[] pictureData = null;
             try
             {
@@ -43,10 +49,13 @@ namespace DataLayerLib.MultimediaLoader
             return pictureData;
         }
 
-        public bool SaveMedia(int id, string name, byte[] data)
+        public bool SaveMedia(int id,int newsId, string name, byte[] data)
         {
-            string pictureName = name + id.ToString();
-            string path = LocationFolder + pictureName + ".jpg";
+            //string pictureName = name + id.ToString();
+            //string path = LocationFolder + pictureName + ".jpg";
+
+            string path = pathgen.GeneratePath(id, newsId, name);
+
             try
             {
                 if(!File.Exists(path))
@@ -67,10 +76,13 @@ namespace DataLayerLib.MultimediaLoader
             return true;
         }
 
-        public bool DeleteMedia(int id, string name)
+        public bool DeleteMedia(int id, int newsId, string name)
         {
-            string pictureName = name + id.ToString();
-            string path = LocationFolder + pictureName + ".jpg";
+            //string pictureName = name + id.ToString();
+            //string path = LocationFolder + pictureName + ".jpg";
+
+            string path = pathgen.GeneratePath(id, newsId, name);
+
             try
             {
                 if (!File.Exists(path))

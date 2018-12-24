@@ -74,7 +74,7 @@ namespace DataLayerLib.DTOManagers
                 Picture picture = session.Load<Picture>(pictureId);
                 result = new PictureDTO(picture);
                 MultimediaLoader.IMultimediaLoader loader = new MultimediaLoader.FileSystemLoader();
-                result.PictureData = loader.GetMedia(picture.Id, picture.Name);
+                result.PictureData = loader.GetMedia(picture.Id,picture.BelongsTo.Id , picture.Name);
                 session.Close();
             }
             catch (Exception ex)
@@ -107,7 +107,7 @@ namespace DataLayerLib.DTOManagers
                 if (pictureData != null)
                 {
                     MultimediaLoader.IMultimediaLoader loader = new MultimediaLoader.FileSystemLoader();
-                    loader.SaveMedia(picture.Id, picture.Name, pictureData);
+                    loader.SaveMedia(picture.Id,picture.BelongsTo.Id, picture.Name, pictureData);
                 }
 
                 result = true;
@@ -137,7 +137,7 @@ namespace DataLayerLib.DTOManagers
                 if (picture.PictureData != null)
                 {
                     MultimediaLoader.IMultimediaLoader loader = new MultimediaLoader.FileSystemLoader();
-                    loader.SaveMedia(picture.Id, picture.Name, picture.PictureData);
+                    loader.SaveMedia(picture.Id, picture.BelongsToNewsId, picture.Name, picture.PictureData);
                 }
 
                 result = true;
@@ -169,7 +169,7 @@ namespace DataLayerLib.DTOManagers
                 if (pictureData != null)
                 {
                     MultimediaLoader.IMultimediaLoader loader = new MultimediaLoader.FileSystemLoader();
-                    loader.SaveMedia(picture.Id, picture.Name, pictureData);
+                    loader.SaveMedia(picture.Id, picture.BelongsTo.Id, picture.Name, pictureData);
                 }
                 result = true;
             }
@@ -194,7 +194,7 @@ namespace DataLayerLib.DTOManagers
                 if (picture.PictureData != null)
                 {
                     MultimediaLoader.IMultimediaLoader loader = new MultimediaLoader.FileSystemLoader();
-                    loader.SaveMedia(picture.Id, picture.Name, picture.PictureData);
+                    loader.SaveMedia(picture.Id,picture.BelongsToNewsId, picture.Name, picture.PictureData);
                 }
                 result = true;
             }
