@@ -249,5 +249,19 @@ namespace DataLayerLib.DTOManagers
 
             return result;
         }
+
+        public static News ExpandDTO(NewsDTO newsDTO)
+        {
+            News news = new News();
+            news.LastModified = newsDTO.LasModified;
+            foreach(PictureDTO picture in newsDTO.Pictures)
+            {
+                Picture pic = new Picture();
+                pic.Description = picture.Description;
+                pic.BelongsTo = news;
+                pic.Name = picture.Name;
+            }
+            return news;
+        }
     }
 }
