@@ -66,5 +66,24 @@ namespace DataLayerLib.MultimediaLoader
 
             return true;
         }
+
+        public bool DeletePicture(int id, string name)
+        {
+            string pictureName = name + id.ToString();
+            string path = LocationFolder + pictureName + ".jpg";
+            try
+            {
+                if (!File.Exists(path))
+                {
+                    File.Delete(path);
+                }
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine(ex.Message);
+            }
+
+            return true;
+        }
     }
 }

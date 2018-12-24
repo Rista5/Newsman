@@ -10,5 +10,6 @@ namespace DataLayerLib.MultimediaLoader
     {
         byte[] GetPicture(int id, string name);
         bool SavePicture(int id, string name, byte[] data);
+        bool DeletePicture(int id, string name);
     }
 }

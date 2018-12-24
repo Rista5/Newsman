@@ -18,7 +18,7 @@ namespace DataLayerLib.Mappers
             Map(x => x.Name, "Name");
             Map(x => x.Description, "Description");
 
-            HasOne(x => x.BelongsTo).ForeignKey("Id_news");
+            References(x => x.BelongsTo, "Id_news").LazyLoad();
         }
     }
 }

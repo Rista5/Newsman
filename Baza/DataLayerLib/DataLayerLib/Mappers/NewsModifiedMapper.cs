@@ -17,8 +17,8 @@ namespace DataLayerLib.Mappers
 
             Map(x => x.ModificationDate, "Modified_date");
 
-            HasOne(x => x.News).ForeignKey("Id_news");
-            HasOne(x => x.User).ForeignKey("Id_user");
+            References(x => x.News, "Id_news");
+            References(x => x.User, "Id_user");
         }
     }
 }

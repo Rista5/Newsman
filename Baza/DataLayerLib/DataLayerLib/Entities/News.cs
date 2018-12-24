@@ -9,8 +9,8 @@ namespace DataLayerLib.Entities
     public class News
     {
         public virtual int Id { get; protected set; }
-        public virtual String Title { get; set; }
-        public virtual String Content { get; set; }
+        public virtual string Title { get; set; }
+        public virtual string Content { get; set; }
         public virtual DateTime LastModified { get; set; }
         public virtual IList<NewsModified> Modifications { get; set; }
         public virtual IList<Picture> Pictures { get; set; }

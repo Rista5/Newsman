@@ -78,19 +78,48 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="CreateCommentForm.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="CreateCommentForm.Designer.cs">
+      <DependentUpon>CreateCommentForm.cs</DependentUpon>
+    </Compile>
+    <Compile Include="CreateNewsForm.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="CreateNewsForm.Designer.cs">
+      <DependentUpon>CreateNewsForm.cs</DependentUpon>
+    </Compile>
+    <Compile Include="CreatePictureForm.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="CreatePictureForm.Designer.cs">
+      <DependentUpon>CreatePictureForm.cs</DependentUpon>
+    </Compile>
+    <Compile Include="CreateUserForm.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="CreateUserForm.Designer.cs">
+      <DependentUpon>CreateUserForm.cs</DependentUpon>
+    </Compile>
     <Compile Include="DataLayer.cs" />
     <Compile Include="DTOManager.cs" />
+    <Compile Include="DTOs\AudioDTO.cs" />
+    <Compile Include="DTOs\CommentDTO.cs" />
+    <Compile Include="DTOs\NewsDTO.cs" />
+    <Compile Include="DTOs\PictureDTO.cs" />
+    <Compile Include="DTOs\UserDTO.cs" />
     <Compile Include="Entities\Audio.cs" />
     <Compile Include="Entities\Comment.cs" />
     <Compile Include="Entities\News.cs" />
     <Compile Include="Entities\NewsModified.cs" />
     <Compile Include="Entities\Picture.cs" />
     <Compile Include="Entities\User.cs" />
-    <Compile Include="Form1.cs">
+    <Compile Include="MainForm.cs">
       <SubType>Form</SubType>
     </Compile>
-    <Compile Include="Form1.Designer.cs">
-      <DependentUpon>Form1.cs</DependentUpon>
+    <Compile Include="MainForm.Designer.cs">
+      <DependentUpon>MainForm.cs</DependentUpon>
     </Compile>
     <Compile Include="Mappers\AudioMapper.cs" />
     <Compile Include="Mappers\CommentMapper.cs" />
@@ -102,8 +131,20 @@
     <Compile Include="MultimediaLoader\IPictureLoader.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <EmbeddedResource Include="Form1.resx">
-      <DependentUpon>Form1.cs</DependentUpon>
+    <EmbeddedResource Include="CreateCommentForm.resx">
+      <DependentUpon>CreateCommentForm.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="CreateNewsForm.resx">
+      <DependentUpon>CreateNewsForm.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="CreatePictureForm.resx">
+      <DependentUpon>CreatePictureForm.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="CreateUserForm.resx">
+      <DependentUpon>CreateUserForm.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="MainForm.resx">
+      <DependentUpon>MainForm.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="Properties\Resources.resx">
       <Generator>ResXFileCodeGenerator</Generator>

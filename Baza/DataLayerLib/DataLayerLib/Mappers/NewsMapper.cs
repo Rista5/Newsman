@@ -23,7 +23,7 @@ namespace DataLayerLib.Mappers
             HasMany(x => x.AudioRecordings).KeyColumn("Id_news").LazyLoad().Cascade.All().Inverse();
             HasMany(x => x.Comments).KeyColumn("Id_news").LazyLoad().Cascade.All().Inverse();
 
-            HasMany(x => x.Modifications).KeyColumn("Id_news");
+            HasMany(x => x.Modifications).KeyColumn("Id_news").Cascade.All().Inverse();
             //HasManyToMany(x => x.Modifications)
             //    .Table("created")
             //    .ParentKeyColumn("Id_news")

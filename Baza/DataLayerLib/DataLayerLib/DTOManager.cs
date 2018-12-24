@@ -5,14 +5,15 @@ using System.Text;
 using System.Threading.Tasks;
 using DataLayerLib.Entities;
 using NHibernate;
+using DataLayerLib.DTOs;
 
 namespace DataLayerLib
 {
     public class DTOManager
     {
-        public static List<News> GetAllNews()
+        public static List<NewsDTO> GetAllNews()
         {
-            List<News> news = new List<News>();
+            List<NewsDTO> news = new List<NewsDTO>();
             ISession session = null;
             try
             {
@@ -20,10 +21,9 @@ namespace DataLayerLib
 
                 IEnumerable<News> retData = from n in session.Query<News>()
                                             select n;
-                session.Close();
-
                 foreach (News n in retData)
-                    news.Add(n);
+                    news.Add(new NewsDTO(n));
+                session.Close();
             }
             catch(Exception ex)
             {
@@ -34,20 +34,20 @@ namespace DataLayerLib
             return news;
         }
 
-        public static List<User> GetALlUsers()
+        public static List<UserDTO> GetALlUsers()
         {
-            List<User> users = new List<User>();
+            List<UserDTO> users = new List<UserDTO>();
             ISession session = null;
             try
             {
                 session = DataLayer.GetSession();
                 IEnumerable<User> retData = from u in session.Query<User>()
                                             select u;
-                session.Close();
                 foreach (User u in retData)
                 {
-                    users.Add(u);
+                    users.Add(new UserDTO(u));
                 }
+                session.Close();
             }
             catch(Exception ex)
             {
@@ -58,20 +58,20 @@ namespace DataLayerLib
             return users;
         }
 
-        public static List<Comment> GetAllComments()
+        public static List<CommentDTO> GetAllComments()
         {
-            List<Comment> comments = new List<Comment>();
+            List<CommentDTO> comments = new List<CommentDTO>();
             ISession session = null;
             try
             {
                 session = DataLayer.GetSession();
                 IEnumerable<Comment> retData = from c in session.Query<Comment>()
                                             select c;
-                session.Close();
                 foreach (Comment c in retData)
                 {
-                    comments.Add(c);
+                    comments.Add(new CommentDTO(c));
                 }
+                session.Close();
             }
             catch (Exception ex)
             {
@@ -82,20 +82,22 @@ namespace DataLayerLib
             return comments;
         }
 
-        public static List<Picture> GetAllPictures()
+        public static List<PictureDTO> GetAllPictures()
         {
-            List<Picture> pictures = new List<Picture>();
+            List<PictureDTO> pictures = new List<PictureDTO>();
             ISession session = null;
             try
             {
                 session = DataLayer.GetSession();
                 IEnumerable<Picture> retData = from p in session.Query<Picture>()
                                                select p;
-                session.Close();
                 foreach (Picture p in retData)
                 {
-                    pictures.Add(p);
+                    PictureDTO picDto = new PictureDTO(p);
+
+                    pictures.Add(picDto);
                 }
+                session.Close();
             }
             catch (Exception ex)
             {
@@ -106,20 +108,21 @@ namespace DataLayerLib
             return pictures;
         }
 
-        public static List<Audio> GetAllAudio()
+        public static List<AudioDTO> GetAllAudio()
         {
-            List<Audio> audios = new List<Audio>();
+            List<AudioDTO> audios = new List<AudioDTO>();
             ISession session = null;
             try
             {
                 session = DataLayer.GetSession();
                 IEnumerable<Audio> retData = from a in session.Query<Audio>()
                                                select a;
-                session.Close();
                 foreach (Audio a in retData)
                 {
-                    audios.Add(a);
+                    AudioDTO audioDto = new AudioDTO(a);
+                    audios.Add(audioDto);
                 }
+                session.Close();
             }
             catch (Exception ex)
             {
@@ -130,9 +133,9 @@ namespace DataLayerLib
             return audios;
         }
 
-        public static List<User> GetUsersWhoModifiedThisNews(int newsId)
+        public static List<UserDTO> GetUsersWhoModifiedThisNews(int newsId)
         {
-            List<User> users = new List<User>();
+            List<UserDTO> users = new List<UserDTO>();
             ISession session = null;
             try
             {
@@ -143,8 +146,9 @@ namespace DataLayerLib
                 foreach(NewsModified modification in modifications)
                 {
                     if (!users.Exists(x => x.Id == modification.User.Id))
-                        users.Add(modification.User);
+                        users.Add(new UserDTO(modification.User));
                 }
+                session.Close();
             }
             catch (Exception ex)
             {
@@ -155,9 +159,9 @@ namespace DataLayerLib
             return users;
         }
 
-        public static List<News> GetNewsModifiedByUser(int userId)
+        public static List<NewsDTO> GetNewsModifiedByUser(int userId)
         {
-            List<News> news = new List<News>();
+            List<NewsDTO> news = new List<NewsDTO>();
             ISession session = null;
             try
             {
@@ -169,7 +173,7 @@ namespace DataLayerLib
                 foreach (NewsModified m in retData)
                 {
                     if (!news.Exists(x => x.Id == m.News.Id))
-                        news.Add(m.News);
+                        news.Add(new NewsDTO(m.News));
                 }
                 session.Close();
             }
@@ -182,9 +186,9 @@ namespace DataLayerLib
             return news;
         }
 
-        public static List<Comment> GetCommentsForNews(int newsId)
+        public static List<CommentDTO> GetCommentsForNews(int newsId)
         {
-            List<Comment> comments = new List<Comment>();
+            List<CommentDTO> comments = new List<CommentDTO>();
             ISession session = null;
             try
             {
@@ -192,11 +196,11 @@ namespace DataLayerLib
                 IEnumerable<Comment> retData = from c in session.Query<Comment>()
                                                where c.BelongsTo.Id == newsId
                                                select c;
-                session.Close();
                 foreach (Comment c in retData)
                 {
-                    comments.Add(c);
+                    comments.Add(new CommentDTO(c));
                 }
+                session.Close();
             }
             catch (Exception ex)
             {
@@ -207,9 +211,9 @@ namespace DataLayerLib
             return comments;
         }
 
-        public static List<Picture> GetPicturesForNews(int newsId)
+        public static List<PictureDTO> GetPicturesForNews(int newsId)
         {
-            List<Picture> pictures = new List<Picture>();
+            List<PictureDTO> pictures = new List<PictureDTO>();
             ISession session = null;
             try
             {
@@ -217,11 +221,13 @@ namespace DataLayerLib
                 IEnumerable<Picture> retData = from p in session.Query<Picture>()
                                                where p.BelongsTo.Id == newsId
                                                select p;
-                session.Close();
                 foreach (Picture p in retData)
                 {
-                    pictures.Add(p);
+                    PictureDTO pictureDto = new PictureDTO(p);
+
+                    pictures.Add(pictureDto);
                 }
+                session.Close();
             }
             catch (Exception ex)
             {
@@ -232,21 +238,25 @@ namespace DataLayerLib
             return pictures;
         }
 
-        public static List<Audio> GetAudiosForNews(int newsId)
+        public static List<AudioDTO> GetAudiosForNews(int newsId)
         {
-            List<Audio> audios = new List<Audio>();
+            List<AudioDTO> audios = new List<AudioDTO>();
             ISession session = null;
             try
             {
                 session = DataLayer.GetSession();
                 IEnumerable<Audio> retData = from a in session.Query<Audio>()
-                                             where a.BelongsTo.Id ==newsId
+                                             where a.BelongsTo.Id == newsId
                                              select a;
-                session.Close();
+                //IList<Audio> retData = session.QueryOver<Audio>()
+                //    .Where(x => x.BelongsTo.Id == newsId).List();
                 foreach (Audio a in retData)
                 {
-                    audios.Add(a);
+                    AudioDTO audioDto = new AudioDTO(a);
+
+                    audios.Add(audioDto);
                 }
+                session.Close();
             }
             catch (Exception ex)
             {
@@ -255,6 +265,109 @@ namespace DataLayerLib
                     session.Close();
             }
             return audios;
+        }
+
+        public static UserDTO GetUser(int userId)
+        {
+            ISession session = null;
+            UserDTO result = null;
+            try
+            {
+                session = DataLayer.GetSession();
+                User user = session.Load<User>(userId);
+                result = new UserDTO(user);
+                session.Close();
+
+            }
+            catch(Exception ex)
+            {
+                Console.WriteLine(ex.Message);
+                if (session != null)
+                    session.Close();
+            }
+            return result;
+        }
+
+        public static NewsDTO GetNews(int newsId)
+        {
+            ISession session = null;
+            NewsDTO result = null;
+            try
+            {
+                session = DataLayer.GetSession();
+                News user = session.Load<News>(newsId);
+                result = new NewsDTO(user);
+                session.Close();
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine(ex.Message);
+                if (session != null)
+                    session.Close();
+            }
+            return result;
+        }
+
+        public static CommentDTO GetComment(int commentId)
+        {
+            ISession session = null;
+            CommentDTO result = null;
+            try
+            {
+                session = DataLayer.GetSession();
+                Comment user = session.Load<Comment>(commentId);
+                result = new CommentDTO(user);
+                session.Close();
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine(ex.Message);
+                if (session != null)
+                    session.Close();
+            }
+            return result;
+        }
+
+        public static PictureDTO GetPicture(int pictureId)
+        {
+            ISession session = null;
+            PictureDTO result = null;
+            try
+            {
+                session = DataLayer.GetSession();
+                Picture picture = session.Load<Picture>(pictureId);
+                result = new PictureDTO(picture);
+                MultimediaLoader.IPictureLoader loader = new MultimediaLoader.FileSystemPictureLoader();
+                result.PictureData = loader.GetPicture(picture.Id, picture.Name);
+                session.Close();
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine(ex.Message);
+                if (session != null)
+                    session.Close();
+            }
+            return result;
+        }
+
+        public static AudioDTO GetAudio(int audioId)
+        {
+            ISession session = null;
+            AudioDTO result = null;
+            try
+            {
+                session = DataLayer.GetSession();
+                Audio user = session.Load<Audio>(audioId);
+                result = new AudioDTO(user);
+                session.Close();
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine(ex.Message);
+                if (session != null)
+                    session.Close();
+            }
+            return result;
         }
 
         public static bool CreateNews(string title, string content, 
@@ -474,10 +587,17 @@ namespace DataLayerLib
             {
                 session = DataLayer.GetSession();
                 User user = session.Load<User>(userId);
-                string sql = "select Id_user from user where username = " + newUsername + " ;";
-                ISQLQuery query = session.CreateSQLQuery(sql).AddEntity(typeof(User));
-                List<User> qresult = (List<User>)query.List();
-                if(qresult.Count>0)
+                //string sql = "select Id_user from user where username = " + newUsername + " ;";
+                //ISQLQuery query = session.CreateSQLQuery(sql).AddEntity(typeof(User));
+
+                IEnumerable<User> qresult = from u in session.Query<User>()
+                                     where u.Username == newUsername
+                                     select u;
+                bool usernameInUse = false;
+                foreach (User u in qresult)
+                    if (u.Username.Equals(newUsername) && u.Id != userId)
+                        usernameInUse = true;
+                if(usernameInUse)
                 {
                     Exception exception = new Exception("Username already used by another user");
                     throw exception;
@@ -499,7 +619,7 @@ namespace DataLayerLib
                 session.SaveOrUpdate(user);
                 session.Flush();
                 session.Close();
-
+                result = true;
             }
             catch(Exception ex)
             {
@@ -534,7 +654,7 @@ namespace DataLayerLib
         }
 
         public static bool UpdatePicture(int pictureId, string name,
-            string description)
+            string description, byte[] pictureData)
         {
             ISession session = null;
             bool result = false;
@@ -547,6 +667,11 @@ namespace DataLayerLib
                 session.SaveOrUpdate(picture);
                 session.Flush();
                 session.Close();
+                if(pictureData!=null)
+                {
+                    MultimediaLoader.IPictureLoader loader = new MultimediaLoader.FileSystemPictureLoader();
+                    loader.SavePicture(picture.Id, picture.Name, pictureData);
+                }
                 result = true;
             }
             catch (Exception ex)
@@ -660,6 +785,10 @@ namespace DataLayerLib
             {
                 session = DataLayer.GetSession();
                 Picture picture = session.Load<Picture>(pictureId);
+
+                MultimediaLoader.IPictureLoader loader = new MultimediaLoader.FileSystemPictureLoader();
+                loader.DeletePicture(picture.Id,picture.Name);
+
                 session.Delete(picture);
                 session.Flush();
                 session.Close();
