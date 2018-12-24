@@ -106,8 +106,8 @@ namespace DataLayerLib.DTOManagers
                 //mora da se napravi poseban za audio
                 if (audioData != null)
                 {
-                    MultimediaLoader.IPictureLoader loader = new MultimediaLoader.FileSystemPictureLoader();
-                    loader.SavePicture(audio.Id, audio.Name, audioData);
+                    MultimediaLoader.IMultimediaLoader loader = new MultimediaLoader.FileSystemLoader();
+                    loader.SaveMedia(audio.Id, audio.Name, audioData);
                 }
 
                 result = true;
@@ -135,8 +135,8 @@ namespace DataLayerLib.DTOManagers
 
                 if (audio.AudioData != null)
                 {
-                    MultimediaLoader.IPictureLoader loader = new MultimediaLoader.FileSystemPictureLoader();
-                    loader.SavePicture(audio.Id, audio.Name, audio.AudioData);
+                    MultimediaLoader.IMultimediaLoader loader = new MultimediaLoader.FileSystemLoader();
+                    loader.SaveMedia(audio.Id, audio.Name, audio.AudioData);
                 }
 
                 result = true;
@@ -189,8 +189,8 @@ namespace DataLayerLib.DTOManagers
                 session.Close();
                 if(audio.AudioData!=null)
                 {
-                    MultimediaLoader.IPictureLoader loader = new MultimediaLoader.FileSystemPictureLoader();
-                    loader.SavePicture(audio.Id, audio.Name, audio.AudioData);
+                    MultimediaLoader.IMultimediaLoader loader = new MultimediaLoader.FileSystemLoader();
+                    loader.SaveMedia(audio.Id, audio.Name, audio.AudioData);
                 }
                 result = true;
             }

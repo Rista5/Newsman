@@ -91,9 +91,22 @@ namespace DataLayerLib.DTOManagers
                 User user = new User();
                 user.Username = username;
                 user.Password = password;
-                //user.ModifiedNews = new List<NewsModified>();
-                //user.CommentsPosted = new List<Comment>();
+
                 session = DataLayer.GetSession();
+
+                IEnumerable<User> qresult = from u in session.Query<User>()
+                                            where u.Username == user.Username
+                                            select u;
+                bool usernameInUse = false;
+                foreach (User u in qresult)
+                    if (u.Username.Equals(user.Username) && u.Id != user.Id)
+                        usernameInUse = true;
+                if (usernameInUse)
+                {
+                    Exception exception = new Exception("Username already used by another user");
+                    throw exception;
+                }
+
                 session.Save(user);
                 session.Flush();
                 session.Close();

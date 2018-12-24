@@ -6,10 +6,10 @@ using System.Threading.Tasks;
 
 namespace DataLayerLib.MultimediaLoader
 {
-    interface IPictureLoader
+    interface IMultimediaLoader
     {
-        byte[] GetPicture(int id, string name);
-        bool SavePicture(int id, string name, byte[] data);
-        bool DeletePicture(int id, string name);
+        byte[] GetMedia(int id, string name);
+        bool SaveMedia(int id, string name, byte[] data);
+        bool DeleteMedia(int id, string name);
     }
 }

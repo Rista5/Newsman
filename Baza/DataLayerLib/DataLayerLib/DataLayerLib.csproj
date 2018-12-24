@@ -104,6 +104,11 @@
     </Compile>
     <Compile Include="DataLayer.cs" />
     <Compile Include="DTOManager.cs" />
+    <Compile Include="DTOManagers\AudioDTOManager.cs" />
+    <Compile Include="DTOManagers\CommentDTOManager.cs" />
+    <Compile Include="DTOManagers\NewsDTOManager.cs" />
+    <Compile Include="DTOManagers\PictureDTOManager.cs" />
+    <Compile Include="DTOManagers\UserDTOManager.cs" />
     <Compile Include="DTOs\AudioDTO.cs" />
     <Compile Include="DTOs\CommentDTO.cs" />
     <Compile Include="DTOs\NewsDTO.cs" />

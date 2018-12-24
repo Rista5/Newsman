@@ -7,16 +7,16 @@ using System.IO;
 
 namespace DataLayerLib.MultimediaLoader
 {
-    class FileSystemPictureLoader : IPictureLoader
+    class FileSystemLoader : IMultimediaLoader
     {
         public static string LocationFolder { get; private set; }
 
-        public FileSystemPictureLoader()
+        public FileSystemLoader()
         {
             LocationFolder = @"C:\Users\Uros\Downloads\IV godina\VII semestar\Arhitektura i projektovanje softvera\Projekat\Newsman\Baza\Slike\";
         }
 
-        public byte[] GetPicture(int id, string name)
+        public byte[] GetMedia(int id, string name)
         {
             string pictureName = name + id.ToString();
             string path = LocationFolder + pictureName + ".jpg";
@@ -43,7 +43,7 @@ namespace DataLayerLib.MultimediaLoader
             return pictureData;
         }
 
-        public bool SavePicture(int id, string name, byte[] data)
+        public bool SaveMedia(int id, string name, byte[] data)
         {
             string pictureName = name + id.ToString();
             string path = LocationFolder + pictureName + ".jpg";
@@ -67,7 +67,7 @@ namespace DataLayerLib.MultimediaLoader
             return true;
         }
 
-        public bool DeletePicture(int id, string name)
+        public bool DeleteMedia(int id, string name)
         {
             string pictureName = name + id.ToString();
             string path = LocationFolder + pictureName + ".jpg";

@@ -337,8 +337,8 @@ namespace DataLayerLib
                 session = DataLayer.GetSession();
                 Picture picture = session.Load<Picture>(pictureId);
                 result = new PictureDTO(picture);
-                MultimediaLoader.IPictureLoader loader = new MultimediaLoader.FileSystemPictureLoader();
-                result.PictureData = loader.GetPicture(picture.Id, picture.Name);
+                MultimediaLoader.IMultimediaLoader loader = new MultimediaLoader.FileSystemLoader();
+                result.PictureData = loader.GetMedia(picture.Id, picture.Name);
                 session.Close();
             }
             catch (Exception ex)
@@ -487,8 +487,8 @@ namespace DataLayerLib
 
                 if(pictureData != null)
                 {
-                    MultimediaLoader.IPictureLoader loader = new MultimediaLoader.FileSystemPictureLoader();
-                    loader.SavePicture(picture.Id, picture.Name, pictureData);
+                    MultimediaLoader.IMultimediaLoader loader = new MultimediaLoader.FileSystemLoader();
+                    loader.SaveMedia(picture.Id, picture.Name, pictureData);
                 }
 
                 result = true;
@@ -524,8 +524,8 @@ namespace DataLayerLib
                 //mora da se napravi poseban za audio
                 if (audioData != null)
                 {
-                    MultimediaLoader.IPictureLoader loader = new MultimediaLoader.FileSystemPictureLoader();
-                    loader.SavePicture(audio.Id, audio.Name, audioData);
+                    MultimediaLoader.IMultimediaLoader loader = new MultimediaLoader.FileSystemLoader();
+                    loader.SaveMedia(audio.Id, audio.Name, audioData);
                 }
 
                 result = true;
@@ -669,8 +669,8 @@ namespace DataLayerLib
                 session.Close();
                 if(pictureData!=null)
                 {
-                    MultimediaLoader.IPictureLoader loader = new MultimediaLoader.FileSystemPictureLoader();
-                    loader.SavePicture(picture.Id, picture.Name, pictureData);
+                    MultimediaLoader.IMultimediaLoader loader = new MultimediaLoader.FileSystemLoader();
+                    loader.SaveMedia(picture.Id, picture.Name, pictureData);
                 }
                 result = true;
             }
@@ -786,8 +786,8 @@ namespace DataLayerLib
                 session = DataLayer.GetSession();
                 Picture picture = session.Load<Picture>(pictureId);
 
-                MultimediaLoader.IPictureLoader loader = new MultimediaLoader.FileSystemPictureLoader();
-                loader.DeletePicture(picture.Id,picture.Name);
+                MultimediaLoader.IMultimediaLoader loader = new MultimediaLoader.FileSystemLoader();
+                loader.DeleteMedia(picture.Id,picture.Name);
 
                 session.Delete(picture);
                 session.Flush();

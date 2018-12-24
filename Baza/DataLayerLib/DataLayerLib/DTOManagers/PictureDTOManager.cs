@@ -73,8 +73,8 @@ namespace DataLayerLib.DTOManagers
                 session = DataLayer.GetSession();
                 Picture picture = session.Load<Picture>(pictureId);
                 result = new PictureDTO(picture);
-                MultimediaLoader.IPictureLoader loader = new MultimediaLoader.FileSystemPictureLoader();
-                result.PictureData = loader.GetPicture(picture.Id, picture.Name);
+                MultimediaLoader.IMultimediaLoader loader = new MultimediaLoader.FileSystemLoader();
+                result.PictureData = loader.GetMedia(picture.Id, picture.Name);
                 session.Close();
             }
             catch (Exception ex)
@@ -106,8 +106,8 @@ namespace DataLayerLib.DTOManagers
 
                 if (pictureData != null)
                 {
-                    MultimediaLoader.IPictureLoader loader = new MultimediaLoader.FileSystemPictureLoader();
-                    loader.SavePicture(picture.Id, picture.Name, pictureData);
+                    MultimediaLoader.IMultimediaLoader loader = new MultimediaLoader.FileSystemLoader();
+                    loader.SaveMedia(picture.Id, picture.Name, pictureData);
                 }
 
                 result = true;
@@ -136,8 +136,8 @@ namespace DataLayerLib.DTOManagers
 
                 if (picture.PictureData != null)
                 {
-                    MultimediaLoader.IPictureLoader loader = new MultimediaLoader.FileSystemPictureLoader();
-                    loader.SavePicture(picture.Id, picture.Name, picture.PictureData);
+                    MultimediaLoader.IMultimediaLoader loader = new MultimediaLoader.FileSystemLoader();
+                    loader.SaveMedia(picture.Id, picture.Name, picture.PictureData);
                 }
 
                 result = true;
@@ -168,8 +168,8 @@ namespace DataLayerLib.DTOManagers
                 session.Close();
                 if (pictureData != null)
                 {
-                    MultimediaLoader.IPictureLoader loader = new MultimediaLoader.FileSystemPictureLoader();
-                    loader.SavePicture(picture.Id, picture.Name, pictureData);
+                    MultimediaLoader.IMultimediaLoader loader = new MultimediaLoader.FileSystemLoader();
+                    loader.SaveMedia(picture.Id, picture.Name, pictureData);
                 }
                 result = true;
             }
@@ -193,8 +193,8 @@ namespace DataLayerLib.DTOManagers
                 session.Close();
                 if (picture.PictureData != null)
                 {
-                    MultimediaLoader.IPictureLoader loader = new MultimediaLoader.FileSystemPictureLoader();
-                    loader.SavePicture(picture.Id, picture.Name, picture.PictureData);
+                    MultimediaLoader.IMultimediaLoader loader = new MultimediaLoader.FileSystemLoader();
+                    loader.SaveMedia(picture.Id, picture.Name, picture.PictureData);
                 }
                 result = true;
             }
@@ -215,8 +215,8 @@ namespace DataLayerLib.DTOManagers
                 session = DataLayer.GetSession();
                 Picture picture = session.Load<Picture>(pictureId);
 
-                MultimediaLoader.IPictureLoader loader = new MultimediaLoader.FileSystemPictureLoader();
-                loader.DeletePicture(picture.Id, picture.Name);
+                MultimediaLoader.IMultimediaLoader loader = new MultimediaLoader.FileSystemLoader();
+                loader.DeleteMedia(picture.Id, picture.Name);
 
                 session.Delete(picture);
                 session.Flush();
