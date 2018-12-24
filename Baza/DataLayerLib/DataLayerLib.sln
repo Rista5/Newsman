@@ -5,6 +5,8 @@ VisualStudioVersion = 15.0.28307.136
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DataLayerLib", "DataLayerLib\DataLayerLib.csproj", "{48C9B517-B406-41A1-BFD7-E143C3C85167}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "API", "API\API.csproj", "{8F2AE5B2-B141-450C-BB91-C8956118B728}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -15,6 +17,10 @@ Global
 		{48C9B517-B406-41A1-BFD7-E143C3C85167}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{48C9B517-B406-41A1-BFD7-E143C3C85167}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{48C9B517-B406-41A1-BFD7-E143C3C85167}.Release|Any CPU.Build.0 = Release|Any CPU
+		{8F2AE5B2-B141-450C-BB91-C8956118B728}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{8F2AE5B2-B141-450C-BB91-C8956118B728}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{8F2AE5B2-B141-450C-BB91-C8956118B728}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{8F2AE5B2-B141-450C-BB91-C8956118B728}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

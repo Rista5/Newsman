@@ -129,7 +129,8 @@ namespace DataLayerLib.DTOManagers
             try
             {
                 session = DataLayer.GetSession();
-                session.Save(news);
+                News newNews = ExpandDTO(news);
+                session.Save(newNews);
 
                 session.Flush();
                 session.Close();
@@ -188,7 +189,7 @@ namespace DataLayerLib.DTOManagers
             try
             {
                 session = DataLayer.GetSession();
-                session.SaveOrUpdate(news);
+                session.SaveOrUpdate(ExpandDTO(news));
 
                 session.Flush();
                 session.Close();
@@ -254,12 +255,29 @@ namespace DataLayerLib.DTOManagers
         {
             News news = new News();
             news.LastModified = newsDTO.LasModified;
+            news.Content = newsDTO.Content;
+            news.Title = newsDTO.Title;
             foreach(PictureDTO picture in newsDTO.Pictures)
             {
                 Picture pic = new Picture();
                 pic.Description = picture.Description;
                 pic.BelongsTo = news;
                 pic.Name = picture.Name;
+            }
+            foreach(AudioDTO audio in newsDTO.AudioRecordings)
+            {
+                Audio aud = new Audio();
+                aud.BelongsTo = news;
+                aud.Description = audio.Description;
+                aud.Name = audio.Name;
+            }
+            foreach(CommentDTO comm in newsDTO.Comments)
+            {
+                Comment comment = new Comment();
+                comment.BelongsTo = news;
+                comment.Content = comm.Content;
+                comment.PostDate = comm.PostDate;
+                //we are missing a User
             }
             return news;
         }
