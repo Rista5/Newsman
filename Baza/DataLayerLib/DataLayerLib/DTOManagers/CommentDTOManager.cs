@@ -173,6 +173,7 @@ namespace DataLayerLib.DTOManagers
 
             return result;
         }
+
         public static bool DeleteComment(int commentId)
         {
             ISession session = null;
@@ -195,6 +196,5 @@ namespace DataLayerLib.DTOManagers
 
             return result;
         }
-
     }
 }

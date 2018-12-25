@@ -82,6 +82,25 @@ namespace DataLayerLib.DTOManagers
             return result;
         }
 
+        public static News GetFullNews(int newsId)
+        {
+            ISession session = null;
+            News result = null;
+            try
+            {
+                session = DataLayer.GetSession();
+                result = session.Load<News>(newsId);
+                session.Close();
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine(ex.Message);
+                if (session != null)
+                    session.Close();
+            }
+            return result;
+        }
+
         public static bool CreateNews(string title, string content,
             int userId)
         {
@@ -278,6 +297,7 @@ namespace DataLayerLib.DTOManagers
                 comment.Content = comm.Content;
                 comment.PostDate = comm.PostDate;
                 //we are missing a User
+                //ne razmatra se
             }
             return news;
         }

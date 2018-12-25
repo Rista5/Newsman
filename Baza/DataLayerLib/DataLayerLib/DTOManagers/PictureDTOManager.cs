@@ -216,7 +216,7 @@ namespace DataLayerLib.DTOManagers
                 Picture picture = session.Load<Picture>(pictureId);
 
                 MultimediaLoader.IMultimediaLoader loader = new MultimediaLoader.FileSystemLoader();
-                loader.DeleteMedia(picture.Id, picture.Name);
+                loader.DeleteMedia(picture.Id,picture.BelongsTo.Id, picture.Name);
 
                 session.Delete(picture);
                 session.Flush();

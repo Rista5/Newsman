@@ -61,6 +61,27 @@ namespace DataLayerLib.DTOManagers
             return users;
         }
 
+        public static User GetFullUser(int userId)
+        {
+            ISession session = null;
+            User result = null;
+            try
+            {
+                session = DataLayer.GetSession();
+                result = session.Load<User>(userId);
+                session.Close();
+
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine(ex.Message);
+                if (session != null)
+                    session.Close();
+            }
+            return result;
+
+        }
+
         public static UserDTO GetUser(int userId)
         {
             ISession session = null;
@@ -81,6 +102,8 @@ namespace DataLayerLib.DTOManagers
             }
             return result;
         }
+
+
 
         public static bool CreateUser(string username, string password)
         {
