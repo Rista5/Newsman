@@ -24,6 +24,16 @@ namespace API.Controllers
             return UserDTOManager.GetUser(id);
         }
 
+        public bool Put(int id, [FromBody] string password, string newName)
+        {
+            return UserDTOManager.UpdateUserName(id, password, newName);
+        }
+
+        public bool Put(int id, [FromBody] UserPasswordsDTO passwords)
+        {
+            return UserDTOManager.UpdateUserPassword(id, passwords);
+            //return UserDTOManager.UpdateUser(id, passwords.OldPassword,username)
+        }
         public bool DeleteUser(int id)
         {
             return UserDTOManager.DeleteUser(id);

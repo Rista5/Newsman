@@ -81,8 +81,10 @@
     <Compile Include="Codes\ICode.cs" />
     <Compile Include="Codes\PostGood.cs" />
     <Compile Include="Codes\UserCreated.cs" />
+    <Compile Include="Codes\UsernameChanged.cs" />
     <Compile Include="Codes\UsernameTaken.cs" />
     <Compile Include="Codes\UserNotCreated.cs" />
+    <Compile Include="Codes\WrongPassword.cs" />
     <Compile Include="CreateCommentForm.cs">
       <SubType>Form</SubType>
     </Compile>
@@ -120,6 +122,7 @@
     <Compile Include="DTOs\NewsDTO.cs" />
     <Compile Include="DTOs\PictureDTO.cs" />
     <Compile Include="DTOs\UserDTO.cs" />
+    <Compile Include="DTOs\UserPasswordsDTO.cs" />
     <Compile Include="Entities\Audio.cs" />
     <Compile Include="Entities\Comment.cs" />
     <Compile Include="Entities\News.cs" />

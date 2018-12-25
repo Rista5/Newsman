@@ -161,13 +161,14 @@ namespace DataLayerLib.DTOManagers
             {
                 session = DataLayer.GetSession();
                 User user = session.Load<User>(userId);
-                IEnumerable<User> qresult = from u in session.Query<User>()
-                                            where u.Username == newUsername
-                                            select u;
-                bool usernameInUse = false;
-                foreach (User u in qresult)
-                    if (u.Username.Equals(newUsername) && u.Id != userId)
-                        usernameInUse = true;
+                //IEnumerable<User> qresult = from u in session.Query<User>()
+                //                            where u.Username == newUsername
+                //                            select u;
+                //bool usernameInUse = false;
+                //foreach (User u in qresult)
+                //    if (u.Username.Equals(newUsername) && u.Id != userId)
+                //        usernameInUse = true;
+                bool usernameInUse = ValidateUsername(session, user.Id, user.Username);
                 if (usernameInUse)
                 {
                     Exception exception = new Exception("Username already used by another user");
@@ -199,6 +200,59 @@ namespace DataLayerLib.DTOManagers
                     session.Close();
             }
 
+            return result;
+        }
+
+        public static bool UpdateUserName(int userId, string password, string newUsername)
+        {
+            bool result = false;
+            ISession session = null;
+            try
+            {
+                session = DataLayer.GetSession();
+                User user = session.Load<User>(userId);
+                if(password != user.Password)
+                {
+                    throw new Exception("Wrong password");
+                }
+                user.Username = newUsername;
+                session.SaveOrUpdate(user);
+                session.Flush();
+                session.Close();
+                result = true;
+              
+            }
+            catch(Exception ex)
+            {
+                Console.WriteLine(ex.Message);
+                if (session != null)
+                    session.Close();
+            }
+            return result;
+        }
+
+        public static bool UpdateUserPassword(int userId, UserPasswordsDTO passwords)
+        {
+            bool result = false;
+            ISession session = null;
+            try
+            {
+                session = DataLayer.GetSession();
+                User user = session.Load<User>(userId);
+                if (user.Password != passwords.OldPassword)
+                    throw new Exception("WrongPassword");
+                user.Password = passwords.NewPassword;
+                session.SaveOrUpdate(user);
+                session.Flush();
+                session.Close();
+                result = true;
+            }
+            catch(Exception ex)
+            {
+                Console.WriteLine(ex.Message);
+                if (session != null)
+                    session.Close();
+            }
             return result;
         }
 
