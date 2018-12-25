@@ -6,6 +6,7 @@ using System.Threading.Tasks;
 using DataLayerLib.DTOs;
 using NHibernate;
 using DataLayerLib.Entities;
+using DataLayerLib.Codes;
 
 namespace DataLayerLib.DTOManagers
 {
@@ -103,11 +104,9 @@ namespace DataLayerLib.DTOManagers
             return result;
         }
 
-
-
-        public static bool CreateUser(string username, string password)
+        public static ICode CreateUser(string username, string password)
         {
-            bool result = false;
+            ICode result = new UserNotCreated();
             ISession session = null;
             try
             {
@@ -117,24 +116,32 @@ namespace DataLayerLib.DTOManagers
 
                 session = DataLayer.GetSession();
 
-                IEnumerable<User> qresult = from u in session.Query<User>()
-                                            where u.Username == user.Username
-                                            select u;
-                bool usernameInUse = false;
-                foreach (User u in qresult)
-                    if (u.Username.Equals(user.Username) && u.Id != user.Id)
-                        usernameInUse = true;
+                //IEnumerable<User> qresult = from u in session.Query<User>()
+                //                            where u.Username == user.Username
+                //                            select u;
+                //bool usernameInUse = false;
+                //foreach (User u in qresult)
+                //    if (u.Username.Equals(user.Username) && u.Id != user.Id)
+                //        usernameInUse = true;
+                //if (usernameInUse)
+                //{
+                //    Exception exception = new Exception("Username already used by another user");
+                //    throw exception;
+                //}
+
+                bool usernameInUse = ValidateUsername(session, user.Id, user.Username);
                 if (usernameInUse)
                 {
-                    Exception exception = new Exception("Username already used by another user");
-                    throw exception;
+                    return new UsernameTaken();
                 }
+                else
+                {
+                    session.Save(user);
+                    session.Flush();
+                    session.Close();
 
-                session.Save(user);
-                session.Flush();
-                session.Close();
-
-                result = true;
+                    result = new UserCreated();
+                }
             }
             catch (Exception ex)
             {
@@ -218,6 +225,16 @@ namespace DataLayerLib.DTOManagers
             return result;
         }
 
-
+        private static bool ValidateUsername(ISession session,int id, string username)
+        {
+            IEnumerable<User> qresult = from u in session.Query<User>()
+                                        where u.Username == username
+                                        select u;
+            bool usernameInUse = false;
+            foreach (User u in qresult)
+                if (u.Username.Equals(username) && u.Id != id)
+                    usernameInUse = true;
+            return usernameInUse;
+        }
     }
 }
