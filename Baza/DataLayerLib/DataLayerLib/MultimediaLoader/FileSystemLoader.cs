@@ -15,16 +15,19 @@ namespace DataLayerLib.MultimediaLoader
 
         public FileSystemLoader()
         {
-            LocationFolder = @"C:\Users\Uros\Downloads\IV godina\VII semestar\Arhitektura i projektovanje softvera\Projekat\Newsman\Baza\Slike\";
+            //LocationFolder = @"C:\Users\Uros\Downloads\IV godina\VII semestar\Arhitektura i projektovanje softvera\Projekat\Newsman\Baza\Slike\";
             pathgen = new ClassicPath();
+            string path = Directory.GetCurrentDirectory();
+            for(int i =0;i<4;i++)
+                path = Path.GetDirectoryName(path);
+            path += "\\Slike\\";
+            LocationFolder = path;
         }
 
         public byte[] GetMedia(int id,int newsId, string name)
         {
             string path = pathgen.GeneratePath(id, newsId, name);
-
-            //string pictureName = name + id.ToString();
-            //string path = LocationFolder + pictureName + ".jpg";
+            path += name;
 
             byte[] pictureData = null;
             try
@@ -55,18 +58,19 @@ namespace DataLayerLib.MultimediaLoader
             //string path = LocationFolder + pictureName + ".jpg";
 
             string path = pathgen.GeneratePath(id, newsId, name);
-
+            
             try
             {
                 if(!File.Exists(path))
                 {
-                    FileStream fs = new FileStream(path, FileMode.Create);
-                    BinaryWriter bw = new BinaryWriter(fs);
-                    bw.Write(data);
-
-                    bw.Close();
-                    fs.Close();
+                    Directory.CreateDirectory(path);
                 }
+                FileStream fs = new FileStream(path+name, FileMode.Create);
+                BinaryWriter bw = new BinaryWriter(fs);
+                bw.Write(data);
+
+                bw.Close();
+                fs.Close();
             }
             catch(Exception ex)
             {
@@ -82,10 +86,10 @@ namespace DataLayerLib.MultimediaLoader
             //string path = LocationFolder + pictureName + ".jpg";
 
             string path = pathgen.GeneratePath(id, newsId, name);
-
+            path+= name;
             try
             {
-                if (!File.Exists(path))
+                if (File.Exists(path))
                 {
                     File.Delete(path);
                 }

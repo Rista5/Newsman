@@ -393,10 +393,12 @@ namespace DataLayerLib
                 news.Modifications = new List<NewsModified>();
                 news.Modifications.Add(modifiaction);
 
+                ITransaction transaction = session.BeginTransaction();
                 session.Save(news);
                 session.Save(modifiaction);
 
                 session.Flush();
+                transaction.Commit();
                 session.Close();
                 result = true;
 

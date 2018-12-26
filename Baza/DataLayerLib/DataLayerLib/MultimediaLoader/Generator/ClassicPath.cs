@@ -11,7 +11,7 @@ namespace DataLayerLib.MultimediaLoader.Generator
         public string GeneratePath(int id, int newsId, string name)
         {
             string path;
-            path = @".\..\Data\"+ newsId + @"\" + name;
+            path = @".\..\..\..\..\Data\" + newsId + @"\";//+ name;
             return path;
         }
     }

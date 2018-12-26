@@ -20,9 +20,11 @@ namespace DataLayerLib
         public int News_ID { get; set; }
         public byte[] PictureData { get; set; }
         public bool UpdatePicture { get; set; }
+        public string Extension { get; set; }
         private CreatePictureForm()
         {
             InitializeComponent();
+            pictureBox.SizeMode = PictureBoxSizeMode.StretchImage;
         }
 
         public CreatePictureForm(List<NewsDTO> newsDTOs):this()
@@ -36,7 +38,8 @@ namespace DataLayerLib
             UpdatePicture = true;
             dgvNews.Hide();
             lblNews.Hide();
-            PictureName = pictureName;
+            Extension = System.IO.Path.GetExtension(pictureName);
+            PictureName = System.IO.Path.GetFileName(pictureName);
             Description = description;
             txtDescription.Text = description;
             txtName.Text = pictureName;
@@ -63,6 +66,7 @@ namespace DataLayerLib
                 MemoryStream ms = new MemoryStream(PictureData);
                 Image image = Image.FromStream(ms);
                 pictureBox.Image = image;
+                Extension = System.IO.Path.GetExtension(Path);
             }
         }
 
@@ -74,7 +78,7 @@ namespace DataLayerLib
                 if (!UpdatePicture)
                     News_ID = (int)dgvNews.SelectedCells[0].Value;
                 else News_ID = 0;
-                PictureName = txtName.Text;
+                PictureName = txtName.Text + Extension;
                 Description = txtDescription.Text;
                 FileInfo fileInfo = new FileInfo(Path);
                 using (BinaryReader br = new BinaryReader(new FileStream(Path,FileMode.Open)))

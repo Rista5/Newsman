@@ -16,6 +16,7 @@ namespace DataLayerLib
         public string Content { get; set; }
         public int User_Id { get; set; }
         public int News_Id { get; set; }
+        private bool updateComment;
         private CreateCommentForm()
         {
             InitializeComponent();
@@ -25,15 +26,31 @@ namespace DataLayerLib
         {
             dgvUser.DataSource = users;
             dgvNews.DataSource = news;
+            updateComment = false;
+        }
 
+        public CreateCommentForm(CommentDTO comment):this()
+        {
+            dgvUser.Hide();
+            dgvNews.Hide();
+            label3.Hide();
+            label2.Hide();
+            User_Id = comment.CreatedBy.Id;
+            News_Id = comment.BelongsToNewsId;
+            Content = comment.Content;
+            txtContent.Text = comment.Content;
+            updateComment = true;
         }
 
         private void btnOk_Click(object sender, EventArgs e)
         {
             if (dgvUser.SelectedRows != null && dgvNews.SelectedRows != null)
             {
-                User_Id = (int)dgvUser.SelectedCells[0].Value;
-                News_Id = (int)dgvNews.SelectedCells[0].Value;
+                if(!updateComment)
+                {
+                    User_Id = (int)dgvUser.SelectedCells[0].Value;
+                    News_Id = (int)dgvNews.SelectedCells[0].Value;
+                }
                 Content = txtContent.Text;
                 if (Content != null)
                 {
