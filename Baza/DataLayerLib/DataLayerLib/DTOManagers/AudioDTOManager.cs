@@ -212,6 +212,10 @@ namespace DataLayerLib.DTOManagers
             {
                 session = DataLayer.GetSession();
                 Audio audio = session.Load<Audio>(audioId);
+
+                MultimediaLoader.IMultimediaLoader loader = new MultimediaLoader.FileSystemLoader();
+                loader.DeleteMedia(audio.Id, audio.BelongsTo.Id, audio.Name);
+
                 session.Delete(audio);
                 session.Flush();
                 session.Close();

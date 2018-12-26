@@ -104,9 +104,10 @@ namespace DataLayerLib.DTOManagers
             return result;
         }
 
-        public static ICode CreateUser(string username, string password)
+        public static bool CreateUser(string username, string password)
         {
-            ICode result = new UserNotCreated();
+            //ICode result = new UserNotCreated();
+            bool result = false;
             ISession session = null;
             try
             {
@@ -132,15 +133,16 @@ namespace DataLayerLib.DTOManagers
                 bool usernameInUse = ValidateUsername(session, user.Id, user.Username);
                 if (usernameInUse)
                 {
-                    return new UsernameTaken();
+                    //return result;//new UsernameTaken();
+                    result = false;
                 }
                 else
                 {
                     session.Save(user);
                     session.Flush();
                     session.Close();
-
-                    result = new UserCreated();
+                    //result = new UserCreated();
+                    result = true;
                 }
             }
             catch (Exception ex)

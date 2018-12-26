@@ -41,6 +41,7 @@ namespace DataLayerLib
                 int userId = (int)dgvUser.SelectedCells[0].Value;
                 Content = txtContent.Text;
                 Title = txtTitle.Text;
+                User_ID = userId;
                 DialogResult = DialogResult.OK;
                 Close();
             }

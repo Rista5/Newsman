@@ -145,7 +145,7 @@ namespace DataLayerLib.DTOManagers
             return result;
         }
 
-        public static bool CreateNews(NewsDTO news)
+        public static bool CreateNews(NewsDTO news, int userId)
         {
             bool result = false;
             ISession session = null;
@@ -153,9 +153,20 @@ namespace DataLayerLib.DTOManagers
             {
                 session = DataLayer.GetSession();
                 News newNews = ExpandDTO(news);
-                session.Save(newNews);
+                newNews.LastModified = DateTime.Today;
+                User user = session.Load<User>(userId);
+                NewsModified modified = new NewsModified();
+                modified.News = newNews;
+                modified.User = user;
+                modified.ModificationDate = DateTime.Today;
+                modified.News = newNews;
 
+                ITransaction transaction = session.BeginTransaction();
+                session.Save(newNews);
+                session.Save(modified);
                 session.Flush();
+
+                transaction.Commit();
                 session.Close();
                 result = true;
             }
@@ -205,16 +216,28 @@ namespace DataLayerLib.DTOManagers
             return result;
         }
 
-        public static bool UpdateNews(NewsDTO news)
+        public static bool UpdateNews(NewsDTO newsDTO, int userId)
         {
             bool result = false;
             ISession session = null;
             try
             {
                 session = DataLayer.GetSession();
-                session.SaveOrUpdate(ExpandDTO(news));
+                News news = ExpandDTO(newsDTO);
+                news.LastModified = DateTime.Today;
+                User user = session.Load<User>(userId);
+                NewsModified modified = new NewsModified();
+                modified.News = news;
+                modified.User = user;
+                modified.ModificationDate = DateTime.Today;
+                modified.News = news;
 
+                ITransaction transaction = session.BeginTransaction();
+                session.Save(news);
+                session.Save(modified);
                 session.Flush();
+
+                transaction.Commit();
                 session.Close();
                 result = true;
 

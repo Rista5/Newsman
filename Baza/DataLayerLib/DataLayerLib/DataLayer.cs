@@ -14,7 +14,7 @@ namespace DataLayerLib
     {
         private static ISessionFactory _factory = null;
         private static object objLock = new object();
-        private static String connectionString = "Server = localhost; Port = 3307; Database = aips; Uid = root; Pwd = root";
+        private static String connectionString = "Server = localhost; Port = 8888; Database = aips; Uid = root; Pwd = root";
 
         public static ISession GetSession()
         {

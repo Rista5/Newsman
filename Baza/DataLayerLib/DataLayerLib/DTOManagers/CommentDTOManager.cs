@@ -110,13 +110,24 @@ namespace DataLayerLib.DTOManagers
             return result;
         }
 
-        public static bool CreateComment(CommentDTO comment)
+        public static bool CreateComment(CommentDTO commentDTO)
         {
             bool result = false;
             ISession session = null;
             try
             {
+                Comment comment = new Comment();
+                comment.Content = commentDTO.Content;
+                comment.PostDate = DateTime.Today;
+
                 session = DataLayer.GetSession();
+                User creator = session.QueryOver<User>()
+                    .Where(x => x.Id == commentDTO.CreatedBy.Id).SingleOrDefault();
+                News belongsTo = session.QueryOver<News>()
+                    .Where(x => x.Id == commentDTO.BelongsToNewsId).SingleOrDefault();
+                comment.CreatedBy = creator;
+                comment.BelongsTo = belongsTo;
+
                 session.Save(comment);
                 session.Flush();
                 session.Close();
@@ -154,13 +165,17 @@ namespace DataLayerLib.DTOManagers
             return result;
         }
 
-        public static bool UpdateComment(CommentDTO comment)
+        public static bool UpdateComment(CommentDTO commentDTO)
         {
             ISession session = null;
             bool result = false;
             try
             {
                 session = DataLayer.GetSession();
+
+                Comment comment = session.Load<Comment>(commentDTO.Id);
+                comment.Content = commentDTO.Content;
+
                 session.SaveOrUpdate(comment);
                 session.Flush();
                 session.Close();
@@ -196,5 +211,6 @@ namespace DataLayerLib.DTOManagers
 
             return result;
         }
+
     }
 }
