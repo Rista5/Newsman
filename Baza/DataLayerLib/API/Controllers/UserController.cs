@@ -39,9 +39,9 @@ namespace API.Controllers
             return UserDTOManager.DeleteUser(id);
         }
 
-        public string Post([FromUri] string username, [FromBody]string password)
+        public bool Post([FromUri] string username, [FromBody]string password)
         {
-            return UserDTOManager.CreateUser(username, password).GetDesciption();
+            return UserDTOManager.CreateUser(username, password);//.GetDesciption();
         }
     }
 }

@@ -16,5 +16,40 @@ namespace API.Controllers
         {
             return NewsDTOManager.GetAllNews();
         }
+
+        [HttpGet]
+        [Route("api/NewsModifiedByUser/{id}")]
+        public IEnumerable<NewsDTO> Get(int id)
+        {
+            return NewsDTOManager.GetNewsModifiedByUser(id);
+        }
+
+        [HttpGet]
+        [Route("api/News/{id}")]
+        public NewsDTO GetNewsById(int id)
+        {
+            return NewsDTOManager.GetNews(id);
+        }
+
+        [HttpPut]
+        [Route("api/CreateNews/{userId}")]
+        public bool CreateNews([FromBody]NewsDTO news, int userId)
+        {
+            return NewsDTOManager.CreateNews(news, userId);
+        }
+
+        [HttpPost]
+        [Route("api/UpdateNews/{userId}")]
+        public bool UpdateNews([FromBody] NewsDTO news, int userId)
+        {
+            return NewsDTOManager.UpdateNews(news, userId);
+        }
+
+        [HttpDelete]
+        [Route("api/DeleteNews/{userId}")]
+        public bool DeleteNews(int userId)
+        {
+            return NewsDTOManager.DeleteNews(userId);
+        }
     }
 }
