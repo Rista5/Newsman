@@ -124,8 +124,12 @@ namespace DataLayerLib.DTOManagers
                 news.Modifications = new List<NewsModified>();
                 news.Modifications.Add(modifiaction);
 
+                ITransaction transaction = session.BeginTransaction();
+
                 session.Save(news);
                 session.Save(modifiaction);
+
+                transaction.Commit();
 
                 session.Flush();
                 session.Close();

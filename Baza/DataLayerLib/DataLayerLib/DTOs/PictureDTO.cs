@@ -14,6 +14,7 @@ namespace DataLayerLib.DTOs
         public string Description { get; set; }
         public int BelongsToNewsId { get; set; }
         public byte[] PictureData { get; set; }
+
         public PictureDTO() { }
         public PictureDTO(Picture picture)
         {
