@@ -43,7 +43,7 @@ namespace DataLayerLib.DTOManagers
             {
                 session = DataLayer.GetSession();
                 IEnumerable<NewsModified> retData = from m in session.Query<NewsModified>()
-                                                    where m.News.Id == userId
+                                                    where m.User.Id == userId
                                                     select m;
 
                 foreach (NewsModified m in retData)

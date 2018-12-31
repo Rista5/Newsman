@@ -80,10 +80,14 @@ namespace DataLayerLib
                 else News_ID = 0;
                 PictureName = txtName.Text + Extension;
                 Description = txtDescription.Text;
-                FileInfo fileInfo = new FileInfo(Path);
-                using (BinaryReader br = new BinaryReader(new FileStream(Path,FileMode.Open)))
+                if (Path != null && Path.Length >= 1)
                 {
-                    PictureData = br.ReadBytes((int)fileInfo.Length);
+                    FileInfo fileInfo = new FileInfo(Path);
+
+                    using (BinaryReader br = new BinaryReader(new FileStream(Path, FileMode.Open)))
+                    {
+                        PictureData = br.ReadBytes((int)fileInfo.Length);
+                    }
                 }
                 DialogResult = DialogResult.OK;
                 Close();

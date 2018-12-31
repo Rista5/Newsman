@@ -5,6 +5,7 @@ using System.Text;
 using System.Threading.Tasks;
 using System.IO;
 using DataLayerLib.MultimediaLoader.Generator;
+using System.Reflection;
 
 namespace DataLayerLib.MultimediaLoader
 {
@@ -16,7 +17,7 @@ namespace DataLayerLib.MultimediaLoader
         public FileSystemLoader()
         {
             //LocationFolder = @"C:\Users\Uros\Downloads\IV godina\VII semestar\Arhitektura i projektovanje softvera\Projekat\Newsman\Baza\Slike\";
-            pathgen = new ClassicPath();
+            pathgen = new IIExpresPath();
             string path = Directory.GetCurrentDirectory();
             for(int i =0;i<4;i++)
                 path = Path.GetDirectoryName(path);
@@ -32,7 +33,8 @@ namespace DataLayerLib.MultimediaLoader
             byte[] pictureData = null;
             try
             {
-                if(File.Exists(path))
+                string s = Directory.GetCurrentDirectory();
+                if (File.Exists(path))
                 {
                     FileInfo info = new FileInfo(path);
                     long size = info.Length;

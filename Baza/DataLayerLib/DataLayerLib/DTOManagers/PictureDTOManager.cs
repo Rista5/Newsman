@@ -6,11 +6,14 @@ using System.Threading.Tasks;
 using DataLayerLib.DTOs;
 using NHibernate;
 using DataLayerLib.Entities;
+using DataLayerLib.MultimediaLoader;
 
 namespace DataLayerLib.DTOManagers
 {
     public class PictureDTOManager
     {
+        private static IMultimediaLoader _loader = null;
+
         public static List<PictureDTO> GetAllPictures()
         {
             List<PictureDTO> pictures = new List<PictureDTO>();
@@ -23,7 +26,7 @@ namespace DataLayerLib.DTOManagers
                 foreach (Picture p in retData)
                 {
                     PictureDTO picDto = new PictureDTO(p);
-
+                    picDto.PictureData = Loader.GetMedia(p.Id, p.BelongsTo.Id, p.Name);
                     pictures.Add(picDto);
                 }
                 session.Close();
@@ -122,22 +125,29 @@ namespace DataLayerLib.DTOManagers
             return result;
         }
 
-        public static bool CreatePicture(PictureDTO picture)
+        public static bool CreatePicture(PictureDTO picturedto)
         {
             bool result = false;
             ISession session = null;
             try
             {
                 session = DataLayer.GetSession();
-                
+                Picture picture = new Picture();
+                picture.Description = picturedto.Description;
+                picture.Name = picturedto.Name;
+
+
+                News news = session.Load<News>(picturedto.BelongsToNewsId);
+                picture.BelongsTo = news;
+
                 session.Save(picture);
                 session.Flush();
                 session.Close();
 
-                if (picture.PictureData != null)
+                if (picturedto.PictureData != null)
                 {
                     MultimediaLoader.IMultimediaLoader loader = new MultimediaLoader.FileSystemLoader();
-                    loader.SaveMedia(picture.Id, picture.BelongsToNewsId, picture.Name, picture.PictureData);
+                    loader.SaveMedia(picture.Id, picturedto.BelongsToNewsId, picture.Name, picturedto.PictureData);
                 }
 
                 result = true;
@@ -181,20 +191,27 @@ namespace DataLayerLib.DTOManagers
             return result;
         }
 
-        public static bool UpdatePicture(PictureDTO picture)
+        public static bool UpdatePicture(PictureDTO pic)
         {
             ISession session = null;
             bool result = false;
             try
             {
                 session = DataLayer.GetSession();
+
+                Picture picture = new Picture();
+                picture = session.Load<Picture>(pic.Id);
+                picture.Name = pic.Name;
+                picture.BelongsTo = session.Load<News>(pic.BelongsToNewsId);
+                picture.Description = pic.Description;
+
                 session.SaveOrUpdate(picture);
                 session.Flush();
                 session.Close();
-                if (picture.PictureData != null)
+                if (pic.PictureData != null)
                 {
                     MultimediaLoader.IMultimediaLoader loader = new MultimediaLoader.FileSystemLoader();
-                    loader.SaveMedia(picture.Id,picture.BelongsToNewsId, picture.Name, picture.PictureData);
+                    loader.SaveMedia(picture.Id,pic.BelongsToNewsId, pic.Name, pic.PictureData);
                 }
                 result = true;
             }
@@ -231,6 +248,16 @@ namespace DataLayerLib.DTOManagers
             }
 
             return result;
+        }
+
+        static IMultimediaLoader Loader
+        {
+            get
+            {
+                if (_loader == null)
+                    _loader = new FileSystemLoader();
+                return _loader;
+            }
         }
 
     }

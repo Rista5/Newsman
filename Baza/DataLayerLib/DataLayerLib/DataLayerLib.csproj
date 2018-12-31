@@ -143,6 +143,7 @@
     <Compile Include="Mappers\UserMapper.cs" />
     <Compile Include="MultimediaLoader\FileSystemLoader.cs" />
     <Compile Include="MultimediaLoader\Generator\ClassicPath.cs" />
+    <Compile Include="MultimediaLoader\Generator\IIExpresPath.cs" />
     <Compile Include="MultimediaLoader\Generator\IPathGenerator.cs" />
     <Compile Include="MultimediaLoader\IMultimediaLoader.cs" />
     <Compile Include="Program.cs" />
