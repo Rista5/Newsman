@@ -8,6 +8,7 @@ using NHibernate;
 using DataLayerLib.Entities;
 
 
+
 namespace DataLayerLib.DTOManagers
 {
     public class NewsDTOManager
@@ -133,6 +134,10 @@ namespace DataLayerLib.DTOManagers
 
                 session.Flush();
                 session.Close();
+
+                MessageQueueManager manager = MessageQueueManager.Instance;
+                manager.DeclareExchange(news.Id.ToString());
+
                 result = true;
 
             }
@@ -168,6 +173,10 @@ namespace DataLayerLib.DTOManagers
 
                 transaction.Commit();
                 session.Close();
+
+                MessageQueueManager manager = MessageQueueManager.Instance;
+                manager.DeclareExchange(news.Id.ToString());
+
                 result = true;
             }
             catch (Exception ex)
@@ -204,6 +213,8 @@ namespace DataLayerLib.DTOManagers
                 session.Flush();
                 session.Close();
 
+                MessageQueueManager manager = MessageQueueManager.Instance;
+                manager.PublishMessage(newsId.ToString());
 
                 result = true;
             }
@@ -239,6 +250,10 @@ namespace DataLayerLib.DTOManagers
 
                 transaction.Commit();
                 session.Close();
+
+                MessageQueueManager manager = MessageQueueManager.Instance;
+                manager.PublishMessage(news.Id.ToString());
+
                 result = true;
 
             }
@@ -262,6 +277,10 @@ namespace DataLayerLib.DTOManagers
                 session.Delete(news);
                 session.Flush();
                 session.Close();
+
+                MessageQueueManager manager = MessageQueueManager.Instance;
+                manager.DeleteExchange(newsId.ToString());
+
                 result = true;
             }
             catch (Exception ex)
