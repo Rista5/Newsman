@@ -121,7 +121,7 @@ namespace DataLayerLib.DTOManagers
             return result;
         }
 
-        public static bool CreateAudio(AudioDTO audio)
+        public static bool CreateAudio(AudioDTO audioDTO)
         {
             bool result = false;
             ISession session = null;
@@ -129,14 +129,19 @@ namespace DataLayerLib.DTOManagers
             {
                 session = DataLayer.GetSession();
 
+                Audio audio = new Audio();
+                audio.Description = audioDTO.Description;
+                audio.Name = audioDTO.Name;
+                audio.BelongsTo = session.Load<News>(audioDTO.BelongsToNewsId);
+
                 session.Save(audio);
                 session.Flush();
                 session.Close();
 
-                if (audio.AudioData != null)
+                if (audioDTO.AudioData != null)
                 {
                     MultimediaLoader.IMultimediaLoader loader = new MultimediaLoader.FileSystemLoader();
-                    loader.SaveMedia(audio.Id, audio.BelongsToNewsId, audio.Name, audio.AudioData);
+                    loader.SaveMedia(audio.Id, audioDTO.BelongsToNewsId, audio.Name, audioDTO.AudioData);
                 }
 
                 result = true;
@@ -176,21 +181,26 @@ namespace DataLayerLib.DTOManagers
             return result;
         }
 
-        public static bool UpdateAudio(AudioDTO audio)
+        public static bool UpdateAudio(AudioDTO audioDTO)
         {
             ISession session = null;
             bool result = false;
             try
             {
                 session = DataLayer.GetSession();
-                
+
+                Audio audio = new Audio();
+                audio.Description = audioDTO.Description;
+                audio.Name = audioDTO.Name;
+                audio.BelongsTo = session.Load<News>(audioDTO.BelongsToNewsId);
+
                 session.SaveOrUpdate(audio);
                 session.Flush();
                 session.Close();
-                if(audio.AudioData!=null)
+                if(audioDTO.AudioData!=null)
                 {
                     MultimediaLoader.IMultimediaLoader loader = new MultimediaLoader.FileSystemLoader();
-                    loader.SaveMedia(audio.Id,audio.BelongsToNewsId, audio.Name, audio.AudioData);
+                    loader.SaveMedia(audio.Id,audioDTO.BelongsToNewsId, audio.Name, audioDTO.AudioData);
                 }
                 result = true;
             }
