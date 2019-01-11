@@ -130,6 +130,10 @@ namespace DataLayerLib.DTOManagers
 
                 session.Save(comment);
                 session.Flush();
+
+                MessageQueueManager menager = MessageQueueManager.Instance;
+                menager.PublishMessage(comment.BelongsTo.Id, comment.Id, new CommentDTO(comment), false);
+
                 session.Close();
 
                 result = true;
@@ -154,6 +158,10 @@ namespace DataLayerLib.DTOManagers
                 comment.Content = content;
                 session.SaveOrUpdate(comment);
                 session.Flush();
+
+                MessageQueueManager menager = MessageQueueManager.Instance;
+                menager.PublishMessage(comment.BelongsTo.Id, comment.Id, new CommentDTO(comment), false);
+
                 session.Close();
                 result = true;
             }
@@ -178,6 +186,10 @@ namespace DataLayerLib.DTOManagers
 
                 session.SaveOrUpdate(comment);
                 session.Flush();
+
+                MessageQueueManager menager = MessageQueueManager.Instance;
+                menager.PublishMessage(comment.BelongsTo.Id, comment.Id, new CommentDTO(comment), false);
+
                 session.Close();
                 result = true;
             }

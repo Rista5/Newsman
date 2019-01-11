@@ -105,13 +105,19 @@ namespace DataLayerLib.DTOManagers
                 picture.BelongsTo = belongsTo;
                 session.Save(picture);
                 session.Flush();
-                session.Close();
 
                 if (pictureData != null)
                 {
                     MultimediaLoader.IMultimediaLoader loader = new MultimediaLoader.FileSystemLoader();
                     loader.SaveMedia(picture.Id,picture.BelongsTo.Id, picture.Name, pictureData);
                 }
+
+                PictureDTO dto = new PictureDTO(picture);
+                dto.PictureData = pictureData;
+                MessageQueueManager menager = MessageQueueManager.Instance;
+                menager.PublishMessage(picture.BelongsTo.Id, picture.Id, dto, false);
+
+                session.Close();
 
                 result = true;
             }
@@ -142,13 +148,17 @@ namespace DataLayerLib.DTOManagers
 
                 session.Save(picture);
                 session.Flush();
-                session.Close();
 
                 if (picturedto.PictureData != null)
                 {
                     MultimediaLoader.IMultimediaLoader loader = new MultimediaLoader.FileSystemLoader();
                     loader.SaveMedia(picture.Id, picturedto.BelongsToNewsId, picture.Name, picturedto.PictureData);
                 }
+
+                MessageQueueManager menager = MessageQueueManager.Instance;
+                menager.PublishMessage(picture.BelongsTo.Id, picture.Id, picturedto, false);
+
+                session.Close();
 
                 result = true;
             }
@@ -175,12 +185,20 @@ namespace DataLayerLib.DTOManagers
                 picture.Description = description;
                 session.SaveOrUpdate(picture);
                 session.Flush();
-                session.Close();
+                
                 if (pictureData != null)
                 {
                     MultimediaLoader.IMultimediaLoader loader = new MultimediaLoader.FileSystemLoader();
                     loader.SaveMedia(picture.Id, picture.BelongsTo.Id, picture.Name, pictureData);
                 }
+
+                PictureDTO dto = new PictureDTO(picture);
+                dto.PictureData = pictureData;
+                MessageQueueManager manager = MessageQueueManager.Instance;
+                manager.PublishMessage(picture.BelongsTo.Id, picture.Id, dto,false);
+
+                session.Close();
+
                 result = true;
             }
             catch (Exception ex)
@@ -207,12 +225,18 @@ namespace DataLayerLib.DTOManagers
 
                 session.SaveOrUpdate(picture);
                 session.Flush();
-                session.Close();
+
                 if (pic.PictureData != null)
                 {
                     MultimediaLoader.IMultimediaLoader loader = new MultimediaLoader.FileSystemLoader();
                     loader.SaveMedia(picture.Id,pic.BelongsToNewsId, pic.Name, pic.PictureData);
                 }
+
+                MessageQueueManager manager = MessageQueueManager.Instance;
+                manager.PublishMessage(picture.BelongsTo.Id, picture.Id, pic, false);
+
+                session.Close();
+
                 result = true;
             }
             catch (Exception ex)

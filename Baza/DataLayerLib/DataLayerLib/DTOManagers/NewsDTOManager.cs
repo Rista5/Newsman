@@ -133,10 +133,12 @@ namespace DataLayerLib.DTOManagers
                 transaction.Commit();
 
                 session.Flush();
-                session.Close();
 
-                //MessageQueueManager manager = MessageQueueManager.Instance;
-                //manager.DeclareExchange(news.Id.ToString());
+
+                MessageQueueManager manager = MessageQueueManager.Instance;
+                manager.PublishMessage(news.Id, news.Id, new NewsDTO(news), false);
+
+                session.Close();
 
                 result = true;
 
@@ -172,10 +174,11 @@ namespace DataLayerLib.DTOManagers
                 session.Flush();
 
                 transaction.Commit();
-                session.Close();
 
-                //MessageQueueManager manager = MessageQueueManager.Instance;
-                //manager.DeclareExchange(news.Id.ToString());
+                MessageQueueManager manager = MessageQueueManager.Instance;
+                manager.PublishMessage(newNews.Id, newNews.Id, new NewsDTO(newNews), false);
+
+                session.Close();
 
                 result = true;
             }
