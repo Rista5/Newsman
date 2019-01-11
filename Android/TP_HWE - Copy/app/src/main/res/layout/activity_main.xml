@@ -11,7 +11,7 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:id = "@+id/editIP"
-        android:text = "ip-addres"/>
+        android:text = "192.168.1.3"/>
 
     <Button
         android:layout_width="match_parent"
@@ -36,5 +36,23 @@
         android:layout_alignTop="@+id/setIPButton"
         android:text="Connect to REST"
         app:layout_constraintTop_toBottomOf="@id/editName" />
+
+    <ListView
+        android:id="@+id/news_list"
+        app:layout_constraintTop_toBottomOf="@id/connectButton"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+
+    </ListView>
+    <ScrollView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+
+        <TextView
+            android:id="@+id/users_list"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content" />
+
+    </ScrollView>
 
 </android.support.constraint.ConstraintLayout>
