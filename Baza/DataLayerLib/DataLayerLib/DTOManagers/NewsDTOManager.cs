@@ -135,8 +135,8 @@ namespace DataLayerLib.DTOManagers
                 session.Flush();
                 session.Close();
 
-                MessageQueueManager manager = MessageQueueManager.Instance;
-                manager.DeclareExchange(news.Id.ToString());
+                //MessageQueueManager manager = MessageQueueManager.Instance;
+                //manager.DeclareExchange(news.Id.ToString());
 
                 result = true;
 
@@ -174,8 +174,8 @@ namespace DataLayerLib.DTOManagers
                 transaction.Commit();
                 session.Close();
 
-                MessageQueueManager manager = MessageQueueManager.Instance;
-                manager.DeclareExchange(news.Id.ToString());
+                //MessageQueueManager manager = MessageQueueManager.Instance;
+                //manager.DeclareExchange(news.Id.ToString());
 
                 result = true;
             }
@@ -209,12 +209,12 @@ namespace DataLayerLib.DTOManagers
 
                 session.SaveOrUpdate(news);
                 session.Save(modification);
-
                 session.Flush();
-                session.Close();
 
                 MessageQueueManager manager = MessageQueueManager.Instance;
-                manager.PublishMessage(newsId.ToString());
+                manager.PublishMessage(news.Id, news.Id, new NewsDTO(news), false);
+
+                session.Close();
 
                 result = true;
             }
@@ -249,10 +249,12 @@ namespace DataLayerLib.DTOManagers
                 session.Flush();
 
                 transaction.Commit();
-                session.Close();
+
 
                 MessageQueueManager manager = MessageQueueManager.Instance;
-                manager.PublishMessage(news.Id.ToString());
+                manager.PublishMessage(news.Id, news.Id, new NewsDTO(news), false);
+
+                session.Close();
 
                 result = true;
 
@@ -278,8 +280,8 @@ namespace DataLayerLib.DTOManagers
                 session.Flush();
                 session.Close();
 
-                MessageQueueManager manager = MessageQueueManager.Instance;
-                manager.DeleteExchange(newsId.ToString());
+                //MessageQueueManager manager = MessageQueueManager.Instance;
+                //manager.DeleteExchange(newsId.ToString());
 
                 result = true;
             }

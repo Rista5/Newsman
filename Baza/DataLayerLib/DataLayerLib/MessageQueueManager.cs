@@ -5,16 +5,22 @@ using System.Text;
 using System.Threading.Tasks;
 using RabbitMQ.Client;
 
+
 namespace DataLayerLib
 {
     //razmisli da li treba da se svaki put kreira konekcija ili je server uvek povezan
     // mozda da postoji jedan exchange i da se postavljaju routing keyevi za vesti??
+    // predlog za routing - News.newsId.Update/Delete.Obj.objId
     public class MessageQueueManager
     {
         private static MessageQueueManager _instance;
         private static object objLock = new object();
         private ConnectionFactory factory;
-        string host = "localhost";
+        private IConnection connection;
+        private IModel channel;
+
+        static string host = "localhost";
+        static string exchangeName = "Newsman";
 
         private MessageQueueManager()
         {
@@ -27,7 +33,10 @@ namespace DataLayerLib
                 Protocol = Protocols.DefaultProtocol,
                 VirtualHost = "/",
             };
+            connection = factory.CreateConnection();
+            channel = connection.CreateModel();
             
+            channel.ExchangeDeclare(exchange: exchangeName, type: "topic");
         }
 
         public static MessageQueueManager Instance
@@ -45,67 +54,103 @@ namespace DataLayerLib
             }
         }
 
-        public void DeclareExchange(string name)
+        public void PublishMessage(string routingKey, byte[] data)
         {
-            using (var connection = factory.CreateConnection())
-            {
-                using (var channel = connection.CreateModel())
-                {
-                    channel.ExchangeDeclare(exchange: name, type: "fanout");
-                }
-            }
+            channel.BasicPublish(exchange: exchangeName,
+                    routingKey: routingKey,
+                    basicProperties: null,
+                    body: data);
         }
 
-        public void DeclareExchange(string name,string type)
+        public void PublishMessage(int newsId,int objId,  object obj,bool delete)
         {
-            using (var connection = factory.CreateConnection())
-            {
-                using (var channel = connection.CreateModel())
-                {
-                    channel.ExchangeDeclare(exchange: name, type: type);
-                }
-            }
+            string routingKey = GenerateRoutingKey(newsId, objId, obj, delete);
+            byte[] data = SerializeObject(obj);
+            PublishMessage(routingKey, data);
         }
 
-        public void PublishMessage(string exchangeName)
+        public static string GenerateRoutingKey(int newsId, int objId, object obj, bool delete = false)
         {
-            using (var connection = factory.CreateConnection())
-            {
-                using (var channel = connection.CreateModel())
-                {
-                    string message = exchangeName;//"News updated";
-                    var body = Encoding.Default.GetBytes(message);
-                    channel.BasicPublish(exchange: exchangeName,
-                            routingKey: "",
-                            basicProperties: null,
-                            body: body);
-                }
-            }
+            string result = "";
+            result = "News." + newsId + ".";
+            if (delete)
+                result += "Delete.";
+            else
+                result += "Update.";
+            result += obj.GetType().Name + "." + objId;
+            return result;
         }
 
-        public void PublishMessage(string exchangeName, byte[] body)
+        public static byte[] SerializeObject (object obj)
         {
-            using (var connection = factory.CreateConnection())
-            {
-                using (var channel = connection.CreateModel())
-                {
-                    channel.BasicPublish(exchange: exchangeName,
-                            routingKey: "",
-                            basicProperties: null,
-                            body: body);
-                }
-            }
+            byte[] result = null;
+            string json = Newtonsoft.Json.JsonConvert.SerializeObject(obj);
+            result = Encoding.Default.GetBytes(json);
+            return result;
         }
+
+
+        //public void DeclareExchange(string name)
+        //{
+        //    using (var connection = factory.CreateConnection())
+        //    {
+        //        using (var channel = connection.CreateModel())
+        //        {
+        //            channel.ExchangeDeclare(exchange: name, type: "topic");
+        //        }
+        //    }
+        //}
+
+        //public void DeclareExchange(string name,string type)
+        //{
+        //    using (var connection = factory.CreateConnection())
+        //    {
+        //        using (var channel = connection.CreateModel())
+        //        {
+        //            channel.ExchangeDeclare(exchange: name, type: type);
+        //        }
+        //    }
+        //}
+
+        //public void PublishMessage(string exchangeName)
+        //{
+        //    using (var connection = factory.CreateConnection())
+        //    {
+        //        using (var channel = connection.CreateModel())
+        //        {
+        //            string message = exchangeName;//"News updated";
+        //            var body = Encoding.Default.GetBytes(message);
+        //            channel.BasicPublish(exchange: exchangeName,
+        //                    routingKey: "",
+        //                    basicProperties: null,
+        //                    body: body);
+        //        }
+        //    }
+        //}
+
+        //public void PublishMessage(string exchangeName, byte[] body)
+        //{
+        //    using (var connection = factory.CreateConnection())
+        //    {
+        //        using (var channel = connection.CreateModel())
+        //        {
+        //            channel.BasicPublish(exchange: exchangeName,
+        //                    routingKey: "",
+        //                    basicProperties: null,
+        //                    body: body);
+        //        }
+        //    }
+        //}
         
-        public void DeleteExchange(string name)
-        {
-            using (var connection = factory.CreateConnection())
-            {
-                using (var channel = connection.CreateModel())
-                {
-                    channel.ExchangeDelete(exchange: name);
-                }
-            }
-        }
+        //public void DeleteExchange(string name)
+        //{
+        //    using (var connection = factory.CreateConnection())
+        //    {
+        //        using (var channel = connection.CreateModel())
+        //        {
+        //            channel.ExchangeDelete(exchange: name);
+        //        }
+        //    }
+        //}
     }
 }

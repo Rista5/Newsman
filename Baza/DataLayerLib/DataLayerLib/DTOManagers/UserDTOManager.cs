@@ -163,13 +163,7 @@ namespace DataLayerLib.DTOManagers
             {
                 session = DataLayer.GetSession();
                 User user = session.Load<User>(userId);
-                //IEnumerable<User> qresult = from u in session.Query<User>()
-                //                            where u.Username == newUsername
-                //                            select u;
-                //bool usernameInUse = false;
-                //foreach (User u in qresult)
-                //    if (u.Username.Equals(newUsername) && u.Id != userId)
-                //        usernameInUse = true;
+
                 bool usernameInUse = ValidateUsername(session, user.Id, user.Username);
                 if (usernameInUse)
                 {
@@ -193,6 +187,10 @@ namespace DataLayerLib.DTOManagers
                 session.SaveOrUpdate(user);
                 session.Flush();
                 session.Close();
+
+                MessageQueueManager menager = MessageQueueManager.Instance;
+                menager.PublishMessage(1, user.Id, new UserDTO(user), false);
+
                 result = true;
             }
             catch (Exception ex)

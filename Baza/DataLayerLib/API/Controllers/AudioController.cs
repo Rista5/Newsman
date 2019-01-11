@@ -20,15 +20,15 @@ namespace API.Controllers
         }
 
         [HttpGet]
-        [Route("api/Picture/FromNews/{id}")]
-        public IEnumerable<AudioDTO> GetPictureByNews(int newsID)
+        [Route("api/Audio/FromNews/{id}")]
+        public IEnumerable<AudioDTO> GetAudioByNews(int newsID)
         {
             return AudioDTOManager.GetAudiosForNews(newsID);
         }
 
         [HttpGet]
         [ActionName("DefaultAction")]
-        public AudioDTO GetPictureById(int id)
+        public AudioDTO GetAudioById(int id)
         {
             return AudioDTOManager.GetAudio(id);
         }
