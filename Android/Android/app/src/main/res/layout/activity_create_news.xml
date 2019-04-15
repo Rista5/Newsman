@@ -1,0 +1,51 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context=".activities.CreateNewsActivity">
+
+    <EditText
+        android:id="@+id/create_new_news_title"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:hint="@string/create_news_title_hint"/>
+    <Button
+        android:id="@+id/create_new_news_chose_background_image"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="@string/create_news_chose_background_image_button"
+        android:layout_below="@+id/create_new_news_title"/>
+    <ImageView
+        android:id="@+id/create_new_news_bacground"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:adjustViewBounds="true"
+        android:minHeight="32dp"
+        android:layout_below="@+id/create_new_news_chose_background_image"
+        tools:src="@drawable/mountain"/>
+    <EditText
+        android:id="@+id/create_new_news_content"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/create_new_news_bacground"
+        android:hint="@string/create_news_content"/>
+    <Button
+        android:id="@+id/create_new_news_add_image"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="@string/create_news_add_image"
+        android:layout_below="@+id/create_new_news_content"/>
+
+    <android.support.v7.widget.RecyclerView
+        android:id="@+id/rv_create_news_pictures"
+        android:padding="4dp"
+        android:scrollbars="horizontal"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/create_new_news_add_image">
+
+    </android.support.v7.widget.RecyclerView>
+
+</RelativeLayout>

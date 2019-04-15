@@ -1,0 +1,91 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:card_view="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    xmlns:tools="http://schemas.android.com/tools">
+
+    <android.support.v7.widget.CardView xmlns:android="http://schemas.android.com/apk/res/android"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:elevation="3dp"
+        app:cardCornerRadius="8dp">
+
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical">
+
+            <ImageView
+                android:id="@+id/news_item_img"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:adjustViewBounds="true"
+                android:minHeight="32dp"
+                android:src="@drawable/mountain" />
+
+            <TextView
+                android:id="@+id/news_item_title"
+                style="@style/TitleStyle"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_alignLeft="@+id/news_item_img"
+                android:layout_alignTop="@+id/news_item_img"
+                android:textAlignment="center"
+                android:text="Fake title" />
+
+            <ImageView
+                android:id="@+id/news_item_overflow_list"
+                android:layout_width="@dimen/ic_news_card_overflow_width"
+                android:layout_height="@dimen/ic_news_card_overflow_height"
+                android:layout_alignRight="@+id/news_item_img"
+                android:layout_alignBottom="@id/news_item_img"
+                android:src="@drawable/ic_action_more_vert"/>
+
+            <TextView
+                android:id="@+id/news_item_post_date"
+                style="@style/InfoStyle"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_below="@+id/news_item_img"
+                android:text="@string/news_card_date" />
+
+            <TextView
+                android:id="@+id/news_item_post_date_value"
+                style="@style/TextStyle"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_below="@+id/news_item_img"
+                android:layout_toRightOf="@+id/news_item_post_date"
+                android:text="some date" />
+
+            <TextView
+                android:id="@+id/news_item_last_user_update"
+                style="@style/InfoStyle"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_below="@+id/news_item_post_date"
+                android:text="@string/news_card_news_updating_user" />
+
+            <TextView
+                android:id="@+id/news_item_post_last_user_update_value"
+                style="@style/TextStyle"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_below="@+id/news_item_post_date"
+                android:layout_toRightOf="@+id/news_item_last_user_update"
+                android:text="some date" />
+
+            <TextView
+                android:id="@+id/news_item_text_content"
+                style="@style/TextStyle"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_below="@+id/news_item_post_last_user_update_value"
+                android:text="This is some text, aslkdjwiefjas dklfjakldfjalkdjal skdjalskdjlkcxvklasdasdasd...." />
+        </RelativeLayout>
+
+    </android.support.v7.widget.CardView>
+</LinearLayout>
+

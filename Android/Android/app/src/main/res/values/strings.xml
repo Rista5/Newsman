@@ -1,0 +1,15 @@
+<resources>
+    <string name="app_name">Newsman</string>
+
+
+    <string name="news_card_date">Post date:</string>
+    <string name="news_card_news_updating_user">Last update by:</string>
+
+    <string name="create_news_chose_background_image_button">Set backgroud image</string>
+    <string name="create_news_add_image">Add image to news</string>
+    <string name="create_news_title_hint">Insert News title</string>
+    <string name="create_news_content">Insert content text</string>
+
+    <string name="action_subscribe_to_news">Subscribe to news</string>
+    <string name="action_create_new_news">Create news</string>
+</resources>
