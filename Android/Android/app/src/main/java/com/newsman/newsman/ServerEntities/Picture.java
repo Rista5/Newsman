@@ -12,6 +12,16 @@ public class Picture {
     private byte[] pictureData;
     //    private Bitmap PictureData;
 
+    public Picture() {}
+
+    public Picture(int id, String name, String description, int belongsToNewsId, byte[] pictureData) {
+        this.id = id;
+        this.name = name;
+        this.description = description;
+        this.belongsToNewsId = belongsToNewsId;
+        this.pictureData = pictureData;
+    }
+
 
     public int getId() {
         return id;

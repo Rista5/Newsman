@@ -9,10 +9,8 @@ import android.support.v7.widget.RecyclerView;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
-import android.widget.PopupMenu;
-import android.widget.TextView;
 
-import com.newsman.newsman.Entities.NewsItem;
+import com.newsman.newsman.ServerEntities.News;
 import com.newsman.newsman.R;
 import com.newsman.newsman.adapters.NewsListAdapter;
 
@@ -24,7 +22,7 @@ public class NewsListActivity extends AppCompatActivity {
 
     private RecyclerView recyclerView;
     private NewsListAdapter adapter;
-    private List<NewsItem> newsItemList;
+    private List<News> newsList;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -32,11 +30,11 @@ public class NewsListActivity extends AppCompatActivity {
         setContentView(R.layout.activity_news_list);
 
         recyclerView = (RecyclerView) findViewById(R.id.rv_news_list);
-        newsItemList = new ArrayList<>();
+        newsList = new ArrayList<>();
 
         prepareNews();
 
-        adapter = new NewsListAdapter(this, newsItemList);
+        adapter = new NewsListAdapter(this, newsList);
 
         RecyclerView.LayoutManager mLayoutManager =
                 new LinearLayoutManager(this, LinearLayoutManager.VERTICAL, false);
@@ -71,26 +69,26 @@ public class NewsListActivity extends AppCompatActivity {
     }
 
     private void prepareNews() {
-        NewsItem newsItem = new NewsItem("Title1", new Date(), "User1", "this is content asdasdas");
-        newsItemList.add(newsItem);
+        News newsItem = new News( 1,"Title1", "this is content asdasdas", null, new Date().toString());
+        newsList.add(newsItem);
 
-        newsItem = new NewsItem("Title2", new Date(), "User2", "this is content2 asdasdas");
-        newsItemList.add(newsItem);
+        newsItem = new News( 2,"Title2", "this is content asdasdas", null, new Date().toString());
+        newsList.add(newsItem);
 
-        newsItem = new NewsItem("Title3", new Date(), "User3", "this is content3 asdasdas");
-        newsItemList.add(newsItem);
+        newsItem = new News( 3,"Title3", "this is content asdasdas", null, new Date().toString());
+        newsList.add(newsItem);
 
-        newsItem = new NewsItem("Title4", new Date(), "User4", "this is content4 asdasdas");
-        newsItemList.add(newsItem);
+        newsItem = new News( 4,"Title4", "this is content asdasdas", null, new Date().toString());
+        newsList.add(newsItem);
 
-        newsItem = new NewsItem("Title5", new Date(), "User5", "this is content5 asdasdas");
-        newsItemList.add(newsItem);
+        newsItem = new News( 5,"Title5", "this is content asdasdas", null, new Date().toString());
+        newsList.add(newsItem);
 
-        newsItem = new NewsItem("Title6", new Date(), "User6", "this is content6 asdasdas");
-        newsItemList.add(newsItem);
+        newsItem = new News( 6,"Title6", "this is content asdasdas", null, new Date().toString());
+        newsList.add(newsItem);
 
-        newsItem = new NewsItem("Title7", new Date(), "User7", "this is content7 asdasdas");
-        newsItemList.add(newsItem);
+        newsItem = new News( 7, "Title7", "this is content asdasdas", null, new Date().toString());
+        newsList.add(newsItem);
 
     }
 }

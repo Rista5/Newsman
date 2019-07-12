@@ -1,5 +1,6 @@
 package com.newsman.newsman.Database;
 
+import android.arch.lifecycle.LiveData;
 import android.arch.persistence.room.Dao;
 import android.arch.persistence.room.Delete;
 import android.arch.persistence.room.Insert;
@@ -15,17 +16,17 @@ import java.util.List;
 public abstract class UserDao {
 
     @Query("SELECT * FROM user WHERE id = :id")
-    abstract User loadUser(int id);
+    public abstract LiveData<User> loadUser(int id);
 
     @Query("SELECT * FROM user")
-    abstract List<User> loadUsers();
+    public abstract LiveData<List<User>> loadUsers();
 
     @Insert(onConflict = OnConflictStrategy.REPLACE)
-    abstract void insertUser(User user);
+    public abstract void insertUser(User user);
 
     @Update(onConflict = OnConflictStrategy.REPLACE)
-    abstract void updateUser(User user);
+    public abstract void updateUser(User user);
 
     @Delete
-    abstract void deleteUser(User user);
+    public abstract void deleteUser(User user);
 }

@@ -1,11 +1,14 @@
 package com.newsman.newsman;
 
 import android.annotation.SuppressLint;
+import android.arch.lifecycle.LiveData;
+import android.arch.lifecycle.Observer;
 import android.content.Context;
 import android.content.Intent;
 import android.graphics.Typeface;
 import android.os.Handler;
 import android.os.Message;
+import android.support.annotation.Nullable;
 import android.support.v4.content.res.ResourcesCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
@@ -67,7 +70,7 @@ public class MainActivity extends AppCompatActivity {
                         @Override
                         public void run() {
                             for(News n: news) {
-                                mDB.newsDao().saveNews(n);
+                                mDB.newsDao().updateNews(n);
                             }
                             Log.d("DB", "news successfully saved");
                         }
@@ -87,16 +90,20 @@ public class MainActivity extends AppCompatActivity {
         mTestDbButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                logNews();
+            }
+        });
+    }
 
-                AppExecutors.getInstance().getDatabaseIO().execute(new Runnable() {
-                    @Override
-                    public void run() {
-                        List<News> news = mDB.newsDao().getAllNews();
-                        for(News n:news) {
-                            Log.d("DB", "news id: "+n.getId());
-                        }
-                    }
-                });
+    private void logNews() {
+        LiveData<List<News>> liveNews = mDB.newsDao().loadAllNews();
+        liveNews.observe(this, new Observer<List<News>>() {
+            @Override
+            public void onChanged(@Nullable List<News> news) {
+                Log.d("THIS", this.toString());
+                for(News n:news) {
+                    Log.d("DB", "news id: "+n.getId());
+                }
             }
         });
     }

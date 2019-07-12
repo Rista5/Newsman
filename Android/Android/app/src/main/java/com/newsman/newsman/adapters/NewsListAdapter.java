@@ -14,7 +14,7 @@ import android.widget.PopupMenu;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.newsman.newsman.Entities.NewsItem;
+import com.newsman.newsman.ServerEntities.News;
 import com.newsman.newsman.R;
 import com.newsman.newsman.activities.NewsDisplayActivity;
 
@@ -23,9 +23,9 @@ import java.util.List;
 public class NewsListAdapter extends RecyclerView.Adapter<NewsListAdapter.NewsItemViewHolder> {
 
     private Context mContext;
-    private List<NewsItem> newsItemList;
+    private List<News> newsItemList;
 
-    public NewsListAdapter(Context context, List<NewsItem> newsItemList) {
+    public NewsListAdapter(Context context, List<News> newsItemList) {
         this.mContext = context;
         this.newsItemList = newsItemList;
     }
@@ -39,11 +39,12 @@ public class NewsListAdapter extends RecyclerView.Adapter<NewsListAdapter.NewsIt
 
     @Override
     public void onBindViewHolder(@NonNull final NewsItemViewHolder newsItemViewHolder, int position) {
-        NewsItem newsItem = newsItemList.get(position);
-        newsItemViewHolder.title.setText(newsItem.getTitle());
-        newsItemViewHolder.dateModified.setText(newsItem.getLastModified().toString());
-        newsItemViewHolder.userModifier.setText(newsItem.getUserModifier());
-        newsItemViewHolder.content.setText(newsItem.getContent());
+        String USER_MODIFIER = "USER_MODIFIER";
+        News news = newsItemList.get(position);
+        newsItemViewHolder.title.setText(news.getTitle());
+        newsItemViewHolder.dateModified.setText(news.getLastModified().toString());
+        newsItemViewHolder.userModifier.setText(USER_MODIFIER);
+        newsItemViewHolder.content.setText(news.getContent());
 
         newsItemViewHolder.overflow.setOnClickListener(new View.OnClickListener() {
             @Override

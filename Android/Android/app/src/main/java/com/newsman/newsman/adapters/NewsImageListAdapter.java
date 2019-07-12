@@ -9,7 +9,7 @@ import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
 
-import com.newsman.newsman.Entities.Picture;
+import com.newsman.newsman.ServerEntities.Picture;
 import com.newsman.newsman.R;
 
 import java.util.List;

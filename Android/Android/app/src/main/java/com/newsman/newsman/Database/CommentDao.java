@@ -1,5 +1,6 @@
 package com.newsman.newsman.Database;
 
+import android.arch.lifecycle.LiveData;
 import android.arch.persistence.room.Dao;
 import android.arch.persistence.room.Delete;
 import android.arch.persistence.room.Insert;
@@ -14,8 +15,14 @@ import java.util.List;
 @Dao
 public abstract class CommentDao {
 
+    @Query("SELECT * FROM comment WHERE id = :commentId")
+    public abstract LiveData<Comment> getCommentById(int commentId);
+
+    @Query("SELECT * FROM comment WHERE belongsToNewsId = :newId ORDER BY postDate")
+    public abstract LiveData<List<Comment>> getCommentsForNews(int newId);
+
     @Query("SELECT * FROM comment")
-    public abstract List<Comment> loadComments();
+    public abstract LiveData<List<Comment>> loadComments();
 
     @Insert(onConflict = OnConflictStrategy.REPLACE)
     public abstract void insertComment(Comment comment);

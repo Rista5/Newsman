@@ -7,7 +7,7 @@ import android.support.v7.widget.DefaultItemAnimator;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 
-import com.newsman.newsman.Entities.Picture;
+import com.newsman.newsman.ServerEntities.Picture;
 import com.newsman.newsman.R;
 import com.newsman.newsman.adapters.NewsImageListAdapter;
 

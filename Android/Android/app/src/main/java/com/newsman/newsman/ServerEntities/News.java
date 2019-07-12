@@ -43,7 +43,7 @@ public class News implements Serializable {
         this.id = id;
         this.title = title;
         this.content = content;
-        this.comments = comments;
+        this.comments = (comments != null) ? comments : new ArrayList<Comment>();
         try{
             this.lastModified = DateGetter.getDate(lastModified);
         }
