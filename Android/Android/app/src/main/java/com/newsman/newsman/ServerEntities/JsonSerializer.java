@@ -69,10 +69,12 @@ public class JsonSerializer {
             }
         }
         jsonReader.endObject();
-        return new Comment(id,content,user,newsId, postDate);
+        Comment comment = new Comment(id,content,user.getId(),newsId, postDate);
+        comment.setCreatedBy(user);
+        return comment;
     }
 
-    private static User readUser(JsonReader reader) throws IOException {
+    public static User readUser(JsonReader reader) throws IOException {
         String username = null;
         int id =0;
         reader.beginObject();

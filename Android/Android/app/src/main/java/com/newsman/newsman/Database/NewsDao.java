@@ -21,10 +21,10 @@ public abstract class NewsDao {
 
     @Transaction
     @Query("SELECT * FROM news WHERE id = :id")
-    abstract LiveData<News> loadNewsById(int id);
+    public abstract LiveData<News> loadNewsById(int id);
 
     @Transaction
-    @Query("SELECT * FROM news ORDER BY lastModified")
+    @Query("SELECT * FROM news ORDER BY lastModified DESC")
     public abstract LiveData<List<News>> loadAllNews();
 
     @Insert(onConflict = OnConflictStrategy.REPLACE)

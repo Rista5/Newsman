@@ -14,6 +14,7 @@ import android.widget.PopupMenu;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.newsman.newsman.Auxiliary.Constant;
 import com.newsman.newsman.ServerEntities.News;
 import com.newsman.newsman.R;
 import com.newsman.newsman.activities.NewsDisplayActivity;
@@ -39,12 +40,13 @@ public class NewsListAdapter extends RecyclerView.Adapter<NewsListAdapter.NewsIt
 
     @Override
     public void onBindViewHolder(@NonNull final NewsItemViewHolder newsItemViewHolder, int position) {
-        String USER_MODIFIER = "USER_MODIFIER";
+        String USER_MODIFIER = "USER_MODIFIER_NOT_FOUND";
         News news = newsItemList.get(position);
         newsItemViewHolder.title.setText(news.getTitle());
         newsItemViewHolder.dateModified.setText(news.getLastModified().toString());
         newsItemViewHolder.userModifier.setText(USER_MODIFIER);
         newsItemViewHolder.content.setText(news.getContent());
+        newsItemViewHolder.setPositionInList(position);
 
         newsItemViewHolder.overflow.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -73,6 +75,7 @@ public class NewsListAdapter extends RecyclerView.Adapter<NewsListAdapter.NewsIt
     public class NewsItemViewHolder extends RecyclerView.ViewHolder {
         private TextView title, dateModified, userModifier, content;
         private ImageView backgroud, overflow;
+        private int positionInList = -1;
 
 
         public NewsItemViewHolder(@NonNull View itemView, final Context context) {
@@ -87,7 +90,9 @@ public class NewsListAdapter extends RecyclerView.Adapter<NewsListAdapter.NewsIt
             itemView.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
+                    if(positionInList == -1) return;
                     Intent intent = new Intent(context, NewsDisplayActivity.class);
+                    intent.putExtra(Constant.NEWS_EXTRA_ID_KEY, newsItemList.get(positionInList).getId());
                     context.startActivity(intent);
                 }
             });
@@ -140,6 +145,16 @@ public class NewsListAdapter extends RecyclerView.Adapter<NewsListAdapter.NewsIt
         public void setBackgroud(ImageView backgroud) {
             this.backgroud = backgroud;
         }
+
+
+        public int getPositionInList() {
+            return positionInList;
+        }
+
+        public void setPositionInList(int positionInList) {
+            this.positionInList = positionInList;
+        }
+
     }
 
     class MenuItemClickListener implements PopupMenu.OnMenuItemClickListener {

@@ -24,7 +24,7 @@ public class News implements Serializable {
     private String title;
     private String content;
     private Date lastModified;
-//    @Relation(parentColumn = "id", entityColumn = "belongsToNewsId", entity = Comment.class)
+
     @Ignore
     private List<Comment> comments;
     @Ignore
@@ -49,6 +49,7 @@ public class News implements Serializable {
         }
         catch (ParseException e) {
             e.printStackTrace();
+            this.lastModified = new Date();
         }
     }
 

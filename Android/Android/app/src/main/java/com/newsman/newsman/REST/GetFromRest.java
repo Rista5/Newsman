@@ -1,5 +1,6 @@
 package com.newsman.newsman.REST;
 
+import android.content.Context;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
@@ -13,58 +14,60 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.io.Serializable;
+import java.io.UnsupportedEncodingException;
 import java.net.HttpURLConnection;
+import java.net.MalformedURLException;
 import java.net.URL;
 import java.util.ArrayList;
+import java.util.List;
 
 public abstract class GetFromRest {
     private String ipAddress;
     private String route;
-    private String bundleKey;
-    public GetFromRest(String ipAddress, String bundleKey){
+
+    public GetFromRest(String ipAddress) {
         this.ipAddress = ipAddress;
-        this.bundleKey = bundleKey;
     }
 
     public abstract Serializable readObject(JsonReader jsonReader) throws IOException;
+
     public abstract String getRoute();
 
-    public void Get(final Handler hanlder) {
+    public abstract void readJsonArray(JsonReader jsonReader) throws IOException;
+
+    public abstract void updateDB(Context context);
+
+    public void Get(final Context context) {
         AppExecutors.getInstance().getNetworkIO().execute(
                 new Runnable() {
                     @Override
                     public void run() {
                         try {
-                            URL url = new URL("http://" +  ipAddress + ":52752/api" + getRoute());
-                            HttpURLConnection myConnection = (HttpURLConnection) url.openConnection();
-                            myConnection.setRequestProperty("Accept", "Application/json");
+                            HttpURLConnection httpConnection =
+                                    (HttpURLConnection) RestConnectionFactory
+                                            .createConnection(getRoute());
+                            httpConnection.setRequestProperty("Accept", "Application/json");
 
-                            String text = "";
                             ArrayList<Serializable> list = null;
-                            if (myConnection.getResponseCode() == 200) {
-                                InputStream responseBody = myConnection.getInputStream();
+                            if (httpConnection.getResponseCode() == 200) {
+                                InputStream responseBody = httpConnection.getInputStream();
                                 InputStreamReader isr = new InputStreamReader(responseBody, "UTF-8");
                                 JsonReader jsonReader = new JsonReader(isr);
 
-                                list = new ArrayList<>();
-                                jsonReader.beginArray();
-                                while(jsonReader.hasNext()){
-                                    list.add(readObject(jsonReader));
-                                }
+                                readJsonArray(jsonReader);
                                 jsonReader.close();
                             }
-                            myConnection.disconnect();
-                            Message msg = hanlder.obtainMessage();
+                            httpConnection.disconnect();
+                            updateDB(context);
 
-                            Bundle bundle = new Bundle();
-                            bundle.putSerializable(bundleKey, list);
-                            msg.setData(bundle);
-                            hanlder.sendMessage(msg);
-                        } catch (Exception ex) {
-                            ex.printStackTrace();
+                        } catch (UnsupportedEncodingException e) {
+                            e.printStackTrace();
+                        } catch (MalformedURLException e) {
+                            e.printStackTrace();
+                        } catch (IOException e) {
+                            e.printStackTrace();
                         }
                     }
                 });
-
     }
 }

@@ -13,7 +13,7 @@ import com.newsman.newsman.ServerEntities.Comment;
 import com.newsman.newsman.ServerEntities.News;
 import com.newsman.newsman.ServerEntities.User;
 
-@Database(entities = {News.class, User.class, Comment.class}, version = 1, exportSchema = false)
+@Database(entities = {News.class, User.class, Comment.class}, version = 2, exportSchema = false)
 @TypeConverters(DateConverter.class)
 public abstract class AppDatabase extends RoomDatabase {
 
@@ -29,6 +29,10 @@ public abstract class AppDatabase extends RoomDatabase {
                 Log.d(LOG_TAG, "Creating new database instance");
                 sInstance = Room.databaseBuilder(context.getApplicationContext(),
                         AppDatabase.class, AppDatabase.DATABSE_NAME)
+                        //TODO remove main thread queries, only enabled for debugging purpose
+                        //TODO remove destructive migration
+                        .allowMainThreadQueries()
+                        .fallbackToDestructiveMigration()
                         .build();
             }
         }

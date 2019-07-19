@@ -3,11 +3,13 @@ package com.newsman.newsman.ServerEntities;
 import android.arch.persistence.room.Entity;
 import android.arch.persistence.room.PrimaryKey;
 
+import java.io.Serializable;
+
 /**
  * Created by Me on 1/9/2019.
  */
 @Entity(tableName = "user")
-public class User {
+public class User implements Serializable {
 
     @PrimaryKey(autoGenerate = false)
     private int id;

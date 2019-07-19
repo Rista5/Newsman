@@ -16,7 +16,10 @@ import java.util.List;
 public abstract class UserDao {
 
     @Query("SELECT * FROM user WHERE id = :id")
-    public abstract LiveData<User> loadUser(int id);
+    public abstract LiveData<User> loadUserById(int id);
+
+    @Query("SELECT * FROM user WHERE id = :id")
+    public abstract User getUserByIdNonLive(int id);
 
     @Query("SELECT * FROM user")
     public abstract LiveData<List<User>> loadUsers();

@@ -21,6 +21,7 @@ import com.newsman.newsman.Database.AppDatabase;
 import com.newsman.newsman.REST.GetNewsFromRest;
 import com.newsman.newsman.ServerEntities.News;
 import com.newsman.newsman.activities.NewsListActivity;
+import com.newsman.newsman.message_queue.MQClient;
 
 import java.io.Serializable;
 import java.util.List;
@@ -47,6 +48,8 @@ public class MainActivity extends AppCompatActivity {
         button.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                new GetNewsFromRest(IP_ADDRESSE).Get(mContext);
+                AppExecutors.getInstance().getMQHandler().execute(new MQClient(IP_ADDRESSE, mContext));
                 Intent intent = new Intent(mContext, NewsListActivity.class);
                 startActivity(intent);
             }
@@ -82,7 +85,7 @@ public class MainActivity extends AppCompatActivity {
         mLoadNewsButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                new GetNewsFromRest(IP_ADDRESSE, KEY).Get(handler);
+//                new GetNewsFromRest(IP_ADDRESSE, KEY).Get(handler);
             }
         });
 

@@ -27,4 +27,14 @@
         <item name="android:fontFamily">@font/new_rocker</item>
     </style>
 
+    <style name="CommentStyle" parent="AppTheme">
+        <item name="android:background">@drawable/comment_border</item>
+        <item name="android:textColor">#FFFFFF</item>
+    </style>
+
+    <style name="BoldText">
+        <item name="android:textStyle">bold</item>
+    </style>
+
+
 </resources>

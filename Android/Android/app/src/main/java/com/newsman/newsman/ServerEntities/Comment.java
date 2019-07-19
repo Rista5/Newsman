@@ -26,11 +26,12 @@ import static android.arch.persistence.room.ForeignKey.CASCADE;
                     parentColumns = "id",
                     childColumns = "belongsToNewsId",
                     onDelete = CASCADE),
-                @ForeignKey(
-                        entity = User.class,
-                        parentColumns = "id",
-                        childColumns = "createdById",
-                        onDelete = CASCADE)
+                // izglda da ovaj foreignKey ne omogucava da postoje 2 komentara koja je napisao isti user, zasto??
+//                @ForeignKey(
+//                        entity = User.class,
+//                        parentColumns = "id",
+//                        childColumns = "createdById",
+//                        onDelete = CASCADE)
         },
         indices = {
                 @Index("belongsToNewsId"),
@@ -52,12 +53,12 @@ public class Comment implements Serializable {
     }
 
     @Ignore
-    public Comment(int id, String content, User createdBy, int belongsToNewsId, String postDate) {
+    public Comment(int id, String content, int createdById, int belongsToNewsId, String postDate) {
         this.id = id;
         this.content = content;
         this.belongsToNewsId = belongsToNewsId;
-        this.createdBy = createdBy;
-        this.setCreatedBy(createdBy);
+        this.createdById = createdById;
+//        this.setCreatedBy(createdBy);
         try{
             this.postDate = DateGetter.getDate(postDate);
         }

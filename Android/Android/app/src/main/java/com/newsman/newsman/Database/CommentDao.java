@@ -18,8 +18,14 @@ public abstract class CommentDao {
     @Query("SELECT * FROM comment WHERE id = :commentId")
     public abstract LiveData<Comment> getCommentById(int commentId);
 
-    @Query("SELECT * FROM comment WHERE belongsToNewsId = :newId ORDER BY postDate")
-    public abstract LiveData<List<Comment>> getCommentsForNews(int newId);
+    @Query("SELECT * FROM comment WHERE belongsToNewsId = :newsId ORDER BY postDate")
+    public abstract LiveData<List<Comment>> getCommentsForNews(int newsId);
+
+    @Query("SELECT * FROM comment WHERE id = :commentId")
+    public abstract Comment getCommentByIdNonLive(int commentId);
+
+    @Query("SELECT * FROM comment WHERE belongsToNewsId = :newsId ORDER BY postDate")
+    public abstract List<Comment> getCommentsForNewsNonLive(int newsId);
 
     @Query("SELECT * FROM comment")
     public abstract LiveData<List<Comment>> loadComments();

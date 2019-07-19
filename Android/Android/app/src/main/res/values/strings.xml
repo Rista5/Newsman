@@ -9,7 +9,16 @@
     <string name="create_news_add_image">Add image to news</string>
     <string name="create_news_title_hint">Insert News title</string>
     <string name="create_news_content">Insert content text</string>
+    <string name="create_news_post_news_button">Post news</string>
+    <string name="create_news_cancel_button">Cancel</string>
+    <string name="create_news_toast_message">News must have at least title and content to be created!</string>
 
     <string name="action_subscribe_to_news">Subscribe to news</string>
     <string name="action_create_new_news">Create news</string>
+
+    <string name="news_display_pictures_title">Pictures:</string>
+    <string name="news_display_comments_title">Comments:</string>
+
+    <string name="comment_item_date_text">Post date:  </string>
+
 </resources>

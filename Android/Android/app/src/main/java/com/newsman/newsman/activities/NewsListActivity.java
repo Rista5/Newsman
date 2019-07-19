@@ -1,6 +1,9 @@
 package com.newsman.newsman.activities;
 
+import android.arch.lifecycle.LiveData;
+import android.arch.lifecycle.Observer;
 import android.content.Intent;
+import android.support.annotation.Nullable;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.DefaultItemAnimator;
@@ -10,6 +13,8 @@ import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
 
+import com.newsman.newsman.Auxiliary.DateGetter;
+import com.newsman.newsman.Database.AppDatabase;
 import com.newsman.newsman.ServerEntities.News;
 import com.newsman.newsman.R;
 import com.newsman.newsman.adapters.NewsListAdapter;
@@ -69,26 +74,35 @@ public class NewsListActivity extends AppCompatActivity {
     }
 
     private void prepareNews() {
-        News newsItem = new News( 1,"Title1", "this is content asdasdas", null, new Date().toString());
-        newsList.add(newsItem);
-
-        newsItem = new News( 2,"Title2", "this is content asdasdas", null, new Date().toString());
-        newsList.add(newsItem);
-
-        newsItem = new News( 3,"Title3", "this is content asdasdas", null, new Date().toString());
-        newsList.add(newsItem);
-
-        newsItem = new News( 4,"Title4", "this is content asdasdas", null, new Date().toString());
-        newsList.add(newsItem);
-
-        newsItem = new News( 5,"Title5", "this is content asdasdas", null, new Date().toString());
-        newsList.add(newsItem);
-
-        newsItem = new News( 6,"Title6", "this is content asdasdas", null, new Date().toString());
-        newsList.add(newsItem);
-
-        newsItem = new News( 7, "Title7", "this is content asdasdas", null, new Date().toString());
-        newsList.add(newsItem);
+        LiveData<List<News>> liveNews = AppDatabase.getInstance(this).newsDao().loadAllNews();
+        liveNews.observe(this, new Observer<List<News>>() {
+            @Override
+            public void onChanged(@Nullable List<News> news) {
+                newsList.clear();
+                newsList.addAll(news);
+                adapter.notifyDataSetChanged();
+            }
+        });
+//        News newsItem = new News( 1,"Title1", "this is content asdasdas", null, new Date().toString());
+//        newsList.add(newsItem);
+//
+//        newsItem = new News( 2,"Title2", "this is content asdasdas", null, new Date().toString());
+//        newsList.add(newsItem);
+//
+//        newsItem = new News( 3,"Title3", "this is content asdasdas", null, new Date().toString());
+//        newsList.add(newsItem);
+//
+//        newsItem = new News( 4,"Title4", "this is content asdasdas", null, new Date().toString());
+//        newsList.add(newsItem);
+//
+//        newsItem = new News( 5,"Title5", "this is content asdasdas", null, new Date().toString());
+//        newsList.add(newsItem);
+//
+//        newsItem = new News( 6,"Title6", "this is content asdasdas", null, new Date().toString());
+//        newsList.add(newsItem);
+//
+//        newsItem = new News( 7, "Title7", "this is content asdasdas", null, new Date().toString());
+//        newsList.add(newsItem);
 
     }
 }

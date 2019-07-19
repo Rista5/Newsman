@@ -1,51 +1,71 @@
 <?xml version="1.0" encoding="utf-8"?>
-<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-    xmlns:tools="http://schemas.android.com/tools"
-    android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    tools:context=".activities.CreateNewsActivity">
-
-    <EditText
-        android:id="@+id/create_new_news_title"
+    xmlns:tools="http://schemas.android.com/tools">
+    <!--for scrolling if there is too much text-->
+    <ScrollView
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:hint="@string/create_news_title_hint"/>
-    <Button
-        android:id="@+id/create_new_news_chose_background_image"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="@string/create_news_chose_background_image_button"
-        android:layout_below="@+id/create_new_news_title"/>
-    <ImageView
-        android:id="@+id/create_new_news_bacground"
+        android:layout_height="match_parent">
+    <RelativeLayout
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:adjustViewBounds="true"
-        android:minHeight="32dp"
-        android:layout_below="@+id/create_new_news_chose_background_image"
-        tools:src="@drawable/mountain"/>
-    <EditText
-        android:id="@+id/create_new_news_content"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_below="@+id/create_new_news_bacground"
-        android:hint="@string/create_news_content"/>
-    <Button
-        android:id="@+id/create_new_news_add_image"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="@string/create_news_add_image"
-        android:layout_below="@+id/create_new_news_content"/>
+        android:layout_height="match_parent"
+        tools:context=".activities.CreateNewsActivity">
 
-    <android.support.v7.widget.RecyclerView
-        android:id="@+id/rv_create_news_pictures"
-        android:padding="4dp"
-        android:scrollbars="horizontal"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_below="@+id/create_new_news_add_image">
+        <EditText
+            android:id="@+id/create_new_news_title"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:hint="@string/create_news_title_hint"/>
+        <Button
+            android:id="@+id/create_new_news_chose_background_image_button"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/create_news_chose_background_image_button"
+            android:layout_below="@+id/create_new_news_title"/>
+        <ImageView
+            android:id="@+id/create_new_news_background"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:adjustViewBounds="true"
+            android:minHeight="32dp"
+            android:layout_below="@+id/create_new_news_chose_background_image_button"
+            tools:src="@drawable/mountain"/>
+        <EditText
+            android:id="@+id/create_new_news_content"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/create_new_news_background"
+            android:hint="@string/create_news_content"/>
+        <Button
+            android:id="@+id/create_new_news_add_image_button"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/create_news_add_image"
+            android:layout_below="@+id/create_new_news_content"/>
 
-    </android.support.v7.widget.RecyclerView>
+        <android.support.v7.widget.RecyclerView
+            android:id="@+id/rv_create_news_pictures"
+            android:padding="4dp"
+            android:scrollbars="horizontal"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/create_new_news_add_image_button">
 
-</RelativeLayout>
+        </android.support.v7.widget.RecyclerView>
+
+        <Button
+            android:id="@+id/create_new_news_post_news"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/create_news_post_news_button"
+            android:layout_below="@+id/rv_create_news_pictures"/>
+        <Button
+            android:id="@+id/create_new_news_cancel"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/create_news_cancel_button"
+            android:layout_toRightOf="@+id/create_new_news_post_news"
+            android:layout_below="@+id/rv_create_news_pictures"/>
+    </RelativeLayout>
+    </ScrollView>
+</layout>
