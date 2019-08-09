@@ -39,11 +39,13 @@ public class News implements Serializable {
     }
 
     @Ignore
-    public News(int id, String title, String content, ArrayList<Comment> comments, String lastModified) {
+    public News(int id, String title, String content,
+                List<Comment> comments, String lastModified, List<Picture> pictures) {
         this.id = id;
         this.title = title;
         this.content = content;
         this.comments = (comments != null) ? comments : new ArrayList<Comment>();
+        this.pictures = (pictures != null) ? pictures : new ArrayList<Picture>();
         try{
             this.lastModified = DateGetter.getDate(lastModified);
         }

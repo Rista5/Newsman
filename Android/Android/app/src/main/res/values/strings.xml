@@ -18,7 +18,18 @@
 
     <string name="news_display_pictures_title">Pictures:</string>
     <string name="news_display_comments_title">Comments:</string>
+    <string name="news_display_create_picture">Add picture</string>
 
     <string name="comment_item_date_text">Post date:  </string>
 
+    <string name="create_comment_post_button_text">Post comment</string>
+    <string name="create_comment_content_hint">Insert comment text</string>
+
+    <string name="create_picture_name_hint">Insert picture name</string>
+    <string name="create_picture_description_hint">Insert picture description</string>
+    <string name="create_picture_post_button">Post picture</string>
+    <string name="create_picture_cancel_button">Cancel</string>
+    <string name="create_picture_capture_button">Capture with camera</string>
+    <string name="create_picture_pick_from_gallery_button">Pick from gallery</string>
+    <string name="create_picture_validation_toast">Picture must be set</string>
 </resources>

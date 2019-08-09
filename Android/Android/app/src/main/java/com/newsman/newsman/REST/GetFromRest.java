@@ -22,12 +22,9 @@ import java.util.ArrayList;
 import java.util.List;
 
 public abstract class GetFromRest {
-    private String ipAddress;
     private String route;
 
-    public GetFromRest(String ipAddress) {
-        this.ipAddress = ipAddress;
-    }
+    public GetFromRest() {}
 
     public abstract Serializable readObject(JsonReader jsonReader) throws IOException;
 

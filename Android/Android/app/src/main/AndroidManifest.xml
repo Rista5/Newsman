@@ -6,6 +6,7 @@
     <uses-permission android:name="android.permission.INTERNET" />
     <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
     <uses-permission android:name="android.permission.ACCESS_WIFI_STATE" />
+    <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
 
     <application
         android:allowBackup="true"
@@ -14,15 +15,19 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
-        <activity android:name=".activities.CreateNewsActivity"
-            android:parentActivityName=".activities.NewsListActivity"></activity>
+        <activity android:name=".activities.UpdateNewsActivity"></activity>
+        <activity android:name=".activities.CreatePictureActivity" />
+        <activity android:name=".activities.ImageDisplayActivity" />
         <activity
-            android:name=".activities.NewsDisplayActivity"
+            android:name=".activities.CreateNewsActivity"
+            android:parentActivityName=".activities.NewsListActivity" />
+        <activity
+            android:name=".activities.DisplayNewsActivity"
             android:parentActivityName=".activities.NewsListActivity" />
         <activity
             android:name=".activities.NewsListActivity"
-            android:parentActivityName=".MainActivity" />
-        <activity android:name=".MainActivity">
+            android:parentActivityName=".activities.MainActivity" />
+        <activity android:name=".activities.MainActivity">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 

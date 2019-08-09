@@ -79,39 +79,63 @@
                 android:layout_below="@+id/news_item_last_user_update_value"
                 android:text="This is some text, aslkdjwiefjas dklfjakldfjalkdjal skdjalskdjlkcxvklasdasdasd...." />
 
-            <TextView
-                android:id="@+id/news_item_pictures_title"
-                style="@style/TitleStyle"
+            <FrameLayout
+                android:id="@+id/news_item_pictures_fragment"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:text="@string/news_display_pictures_title"
                 android:layout_below="@+id/news_item_text_content"/>
 
-            <android.support.v7.widget.RecyclerView
-                android:id="@+id/rv_news_pictures"
-                android:padding="4dp"
-                android:scrollbars="horizontal"
+            <FrameLayout
+                android:id="@+id/news_item_comments_fragment"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_below="@+id/news_item_pictures_title">
-            </android.support.v7.widget.RecyclerView>
+                android:layout_below="@+id/news_item_pictures_fragment"/>
+            <!--<TextView-->
+                <!--android:id="@+id/news_item_pictures_title"-->
+                <!--style="@style/TitleStyle"-->
+                <!--android:layout_width="wrap_content"-->
+                <!--android:layout_height="wrap_content"-->
+                <!--android:text="@string/news_display_pictures_title"-->
+                <!--android:layout_below="@+id/news_item_text_content"/>-->
 
-            <TextView
-                android:id="@+id/news_item_comments_title"
-                style="@style/TitleStyle"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:text="@string/news_display_comments_title"
-                android:layout_below="@+id/rv_news_pictures"/>
+            <!--<Button-->
+                <!--android:id="@+id/news_item_create_picture_button"-->
+                <!--android:layout_width="wrap_content"-->
+                <!--android:layout_height="wrap_content"-->
+                <!--android:layout_alignRight="@id/news_item_text_content"-->
+                <!--android:layout_alignTop="@+id/news_item_pictures_title"-->
+                <!--android:text="@string/news_display_create_picture"/>-->
 
-            <LinearLayout
-                android:id="@+id/news_item_comments_list"
-                android:layout_height="wrap_content"
-                android:layout_width="wrap_content"
-                android:layout_below="@+id/news_item_comments_title"
-                android:orientation="vertical">
+            <!--<android.support.v7.widget.RecyclerView-->
+                <!--android:id="@+id/rv_news_pictures"-->
+                <!--android:padding="4dp"-->
+                <!--android:scrollbars="horizontal"-->
+                <!--android:layout_width="match_parent"-->
+                <!--android:layout_height="wrap_content"-->
+                <!--android:layout_below="@+id/news_item_pictures_title">-->
+            <!--</android.support.v7.widget.RecyclerView>-->
 
-            </LinearLayout>
+            <!--<TextView-->
+                <!--android:id="@+id/news_item_comments_title"-->
+                <!--style="@style/TitleStyle"-->
+                <!--android:layout_width="match_parent"-->
+                <!--android:layout_height="wrap_content"-->
+                <!--android:text="@string/news_display_comments_title"-->
+                <!--android:layout_below="@+id/rv_news_pictures"/>-->
+
+            <!--<LinearLayout-->
+                <!--android:id="@+id/news_item_comments_list"-->
+                <!--android:layout_height="wrap_content"-->
+                <!--android:layout_width="wrap_content"-->
+                <!--android:layout_below="@+id/news_item_comments_title"-->
+                <!--android:orientation="vertical">-->
+
+            <!--</LinearLayout>-->
+            <!--<FrameLayout-->
+                <!--android:id="@+id/news_item_create_comment_fragment"-->
+                <!--android:layout_width="match_parent"-->
+                <!--android:layout_height="wrap_content"-->
+                <!--android:layout_below="@+id/news_item_comments_list"/>-->
         </RelativeLayout>
     </ScrollView>
 

@@ -5,19 +5,16 @@ import android.content.Intent;
 import android.support.annotation.NonNull;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
-import android.view.MenuInflater;
-import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
-import android.widget.PopupMenu;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import com.newsman.newsman.Auxiliary.Constant;
+import com.newsman.newsman.Auxiliary.PopUpMenuController;
 import com.newsman.newsman.ServerEntities.News;
 import com.newsman.newsman.R;
-import com.newsman.newsman.activities.NewsDisplayActivity;
+import com.newsman.newsman.activities.DisplayNewsActivity;
 
 import java.util.List;
 
@@ -51,7 +48,7 @@ public class NewsListAdapter extends RecyclerView.Adapter<NewsListAdapter.NewsIt
         newsItemViewHolder.overflow.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                showPopupMenu(view);
+                PopUpMenuController.showMenu(mContext, view);
             }
         });
     }
@@ -60,17 +57,6 @@ public class NewsListAdapter extends RecyclerView.Adapter<NewsListAdapter.NewsIt
     public int getItemCount() {
         return newsItemList.size();
     }
-
-    private void showPopupMenu(View view) {
-        // menu inflation
-        PopupMenu popup = new PopupMenu(mContext, view);
-        MenuInflater inflater = popup.getMenuInflater();
-        inflater.inflate(R.menu.news_list_item_menu, popup.getMenu());
-        popup.setOnMenuItemClickListener(new MenuItemClickListener());
-        popup.show();
-    }
-
-
 
     public class NewsItemViewHolder extends RecyclerView.ViewHolder {
         private TextView title, dateModified, userModifier, content;
@@ -91,7 +77,7 @@ public class NewsListAdapter extends RecyclerView.Adapter<NewsListAdapter.NewsIt
                 @Override
                 public void onClick(View v) {
                     if(positionInList == -1) return;
-                    Intent intent = new Intent(context, NewsDisplayActivity.class);
+                    Intent intent = new Intent(context, DisplayNewsActivity.class);
                     intent.putExtra(Constant.NEWS_EXTRA_ID_KEY, newsItemList.get(positionInList).getId());
                     context.startActivity(intent);
                 }
@@ -155,21 +141,5 @@ public class NewsListAdapter extends RecyclerView.Adapter<NewsListAdapter.NewsIt
             this.positionInList = positionInList;
         }
 
-    }
-
-    class MenuItemClickListener implements PopupMenu.OnMenuItemClickListener {
-
-        public MenuItemClickListener() {}
-
-        @Override
-        public boolean onMenuItemClick(MenuItem item) {
-            switch (item.getItemId()) {
-                case R.id.action_subscribe_to_news:
-                    Toast.makeText(mContext, "Successfuly subscribed to news!", Toast.LENGTH_SHORT).show();
-                    return true;
-                default:
-            }
-            return false;
-        }
     }
 }

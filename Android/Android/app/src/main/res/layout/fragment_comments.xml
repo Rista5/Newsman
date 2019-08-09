@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android" android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical">
+    <TextView
+        android:id="@+id/news_item_comments_title"
+        style="@style/TitleStyle"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="@string/news_display_comments_title"
+        android:layout_below="@+id/rv_news_pictures"/>
+
+    <LinearLayout
+        android:id="@+id/news_item_comments_list"
+        android:layout_height="wrap_content"
+        android:layout_width="wrap_content"
+        android:layout_below="@+id/news_item_comments_title"
+        android:orientation="vertical">
+
+    </LinearLayout>
+    <FrameLayout
+        android:id="@+id/news_item_create_comment_fragment"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/news_item_comments_list"/>
+</LinearLayout>

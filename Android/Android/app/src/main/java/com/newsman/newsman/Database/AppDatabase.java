@@ -11,9 +11,10 @@ import android.util.Log;
 import com.newsman.newsman.Auxiliary.DateConverter;
 import com.newsman.newsman.ServerEntities.Comment;
 import com.newsman.newsman.ServerEntities.News;
+import com.newsman.newsman.ServerEntities.Picture;
 import com.newsman.newsman.ServerEntities.User;
 
-@Database(entities = {News.class, User.class, Comment.class}, version = 2, exportSchema = false)
+@Database(entities = {News.class, User.class, Comment.class, Picture.class}, version = 3, exportSchema = false)
 @TypeConverters(DateConverter.class)
 public abstract class AppDatabase extends RoomDatabase {
 
@@ -42,4 +43,5 @@ public abstract class AppDatabase extends RoomDatabase {
     public abstract NewsDao newsDao();
     public abstract UserDao userDao();
     public abstract CommentDao commentDao();
+    public abstract PictureDao pictureDao();
 }

@@ -83,7 +83,6 @@ public class CreateNewsActivity extends AppCompatActivity {
         news.setId(-1);
         news.setAudioRecordings(new ArrayList<Audio>());
         news.setPictures(new ArrayList<Picture>());
-
         return news;
     }
 }

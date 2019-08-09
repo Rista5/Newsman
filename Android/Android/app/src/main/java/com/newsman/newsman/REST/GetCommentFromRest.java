@@ -3,6 +3,7 @@ package com.newsman.newsman.REST;
 import android.content.Context;
 import android.util.JsonReader;
 
+import com.newsman.newsman.Auxiliary.Constant;
 import com.newsman.newsman.Database.AppDatabase;
 import com.newsman.newsman.Database.CommentDao;
 import com.newsman.newsman.Database.UserDao;
@@ -18,12 +19,7 @@ import java.util.List;
 
 public class GetCommentFromRest extends GetFromRest {
 
-    private static String ROUTE = "/comments/";
     private List<Comment> commentList;
-
-    public GetCommentFromRest(String ipAddress) {
-        super(ipAddress);
-    }
 
     @Override
     public Comment readObject(JsonReader jsonReader) throws IOException {
@@ -32,7 +28,7 @@ public class GetCommentFromRest extends GetFromRest {
 
     @Override
     public String getRoute() {
-        return ROUTE;
+        return Constant.COMMENT_ROUTE;
     }
 
     @Override

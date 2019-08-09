@@ -14,25 +14,24 @@ import org.json.JSONObject;
 import java.util.ArrayList;
 import java.util.List;
 
-public class UpdateNews extends UpdateObject {
+public class InsertNews extends InsertObject {
 
     private News news;
-    private List<UpdateComment> updateComments;
-    private List<UpdatePicture> updatePictures;
+    private List<InsertComment> insertComments;
+    private List<InsertPicture> insertPictures;
 
-    public UpdateNews(JSONObject json, Context context) throws JSONException {
-        super(json,context);
-        news = parseNews(json);
+    public InsertNews(JSONObject json, Context context) {
+        super(json, context);
     }
 
     @Override
-    public void updateRecord() {
-        AppDatabase.getInstance(mContext).newsDao().updateNews(news);
-        for(UpdateComment updateComment: updateComments) {
-            updateComment.updateRecord();
+    public void insertRecord() throws JSONException {
+        AppDatabase.getInstance(mContext).newsDao().insertNews(news);
+        for(InsertComment insertComment: insertComments){
+            insertComment.insertRecord();
         }
-        for(UpdatePicture updatePicture: updatePictures) {
-            updatePicture.updateRecord();
+        for(InsertPicture insertPicture: insertPictures) {
+            insertPicture.insertRecord();
         }
     }
 
@@ -41,14 +40,14 @@ public class UpdateNews extends UpdateObject {
         String title = json.getString("Title");
         String content = json.getString("Content");
         JSONArray commentsJson = json.getJSONArray("Comments");
-        updateComments = new ArrayList<>(commentsJson.length());
+        insertComments = new ArrayList<>(commentsJson.length());
         for(int i=0; i<commentsJson.length(); i++) {
-            updateComments.add(new UpdateComment(commentsJson.getJSONObject(i), mContext));
+            insertComments.add(new InsertComment(commentsJson.getJSONObject(i), mContext));
         }
         JSONArray picturesArray = json.getJSONArray("Pictures");
-        updatePictures = new ArrayList<>(picturesArray.length());
+        insertPictures = new ArrayList<>(picturesArray.length());
         for(int i=0; i<picturesArray.length(); i++) {
-            updatePictures.add(new UpdatePicture(picturesArray.getJSONObject(i), mContext));
+            insertPictures.add(new InsertPicture(picturesArray.getJSONObject(i), mContext));
         }
         List<Comment> comments = new ArrayList<>();
         List<Picture> pictures = new ArrayList<>();

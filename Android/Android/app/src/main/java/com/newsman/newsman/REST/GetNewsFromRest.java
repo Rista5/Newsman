@@ -3,13 +3,16 @@ package com.newsman.newsman.REST;
 import android.content.Context;
 import android.util.JsonReader;
 
+import com.newsman.newsman.Auxiliary.Constant;
 import com.newsman.newsman.Database.AppDatabase;
 import com.newsman.newsman.Database.CommentDao;
 import com.newsman.newsman.Database.NewsDao;
+import com.newsman.newsman.Database.PictureDao;
 import com.newsman.newsman.Database.UserDao;
 import com.newsman.newsman.ServerEntities.Comment;
 import com.newsman.newsman.ServerEntities.JsonSerializer;
 import com.newsman.newsman.ServerEntities.News;
+import com.newsman.newsman.ServerEntities.Picture;
 import com.newsman.newsman.ServerEntities.User;
 
 import java.io.IOException;
@@ -20,12 +23,7 @@ import java.util.logging.Handler;
 
 public class GetNewsFromRest extends GetFromRest {
 
-    private static String ROUTE = "/News/";
     private List<News> newsList;
-
-    public GetNewsFromRest(String ipAddress){
-        super(ipAddress);
-    }
 
     @Override
     public News readObject(JsonReader jsonReader)throws IOException {
@@ -34,7 +32,7 @@ public class GetNewsFromRest extends GetFromRest {
 
     @Override
     public String getRoute() {
-        return ROUTE;
+        return Constant.NEWS_ROUTE;
     }
 
     @Override
@@ -51,6 +49,7 @@ public class GetNewsFromRest extends GetFromRest {
         NewsDao newsDao = AppDatabase.getInstance(context).newsDao();
         CommentDao commentDao = AppDatabase.getInstance(context).commentDao();
         UserDao userDao = AppDatabase.getInstance(context).userDao();
+        PictureDao pictureDao = AppDatabase.getInstance(context).pictureDao();
         //TODO try to perform update at once, without for loop
         //TODO try to find better aproach for update of comments and users
         for(News n: newsList) {
@@ -59,7 +58,9 @@ public class GetNewsFromRest extends GetFromRest {
                 userDao.insertUser(c.getCreatedBy());
                 commentDao.insertComment(c);
             }
+            for(Picture p: n.getPictures()) {
+                pictureDao.insertPicture(p);
+            }
         }
     }
-
 }

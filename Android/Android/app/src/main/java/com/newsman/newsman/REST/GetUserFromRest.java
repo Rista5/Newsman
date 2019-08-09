@@ -3,6 +3,7 @@ package com.newsman.newsman.REST;
 import android.content.Context;
 import android.util.JsonReader;
 
+import com.newsman.newsman.Auxiliary.Constant;
 import com.newsman.newsman.Database.AppDatabase;
 import com.newsman.newsman.Database.UserDao;
 import com.newsman.newsman.ServerEntities.JsonSerializer;
@@ -13,12 +14,8 @@ import java.io.Serializable;
 
 public class GetUserFromRest extends GetFromRest {
 
-    private static String ROUTE = "/User/";
     private User user;
 
-    public GetUserFromRest(String ipAddress) {
-        super(ipAddress);
-    }
 
     @Override
     public User readObject(JsonReader jsonReader) throws IOException {
@@ -27,7 +24,7 @@ public class GetUserFromRest extends GetFromRest {
 
     @Override
     public String getRoute() {
-        return ROUTE;
+        return Constant.USER_ROUTE;
     }
 
     @Override

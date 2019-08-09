@@ -83,26 +83,5 @@ public class NewsListActivity extends AppCompatActivity {
                 adapter.notifyDataSetChanged();
             }
         });
-//        News newsItem = new News( 1,"Title1", "this is content asdasdas", null, new Date().toString());
-//        newsList.add(newsItem);
-//
-//        newsItem = new News( 2,"Title2", "this is content asdasdas", null, new Date().toString());
-//        newsList.add(newsItem);
-//
-//        newsItem = new News( 3,"Title3", "this is content asdasdas", null, new Date().toString());
-//        newsList.add(newsItem);
-//
-//        newsItem = new News( 4,"Title4", "this is content asdasdas", null, new Date().toString());
-//        newsList.add(newsItem);
-//
-//        newsItem = new News( 5,"Title5", "this is content asdasdas", null, new Date().toString());
-//        newsList.add(newsItem);
-//
-//        newsItem = new News( 6,"Title6", "this is content asdasdas", null, new Date().toString());
-//        newsList.add(newsItem);
-//
-//        newsItem = new News( 7, "Title7", "this is content asdasdas", null, new Date().toString());
-//        newsList.add(newsItem);
-
     }
 }
