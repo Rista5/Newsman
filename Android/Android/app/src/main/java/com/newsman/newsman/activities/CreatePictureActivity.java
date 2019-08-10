@@ -14,12 +14,12 @@ import android.widget.ImageView;
 import android.widget.Toast;
 
 import com.newsman.newsman.Auxiliary.Constant;
+import com.newsman.newsman.Auxiliary.PictureConverter;
+import com.newsman.newsman.Auxiliary.PictureLoader;
 import com.newsman.newsman.R;
 import com.newsman.newsman.REST.PutPictureToRest;
 import com.newsman.newsman.ServerEntities.Picture;
 
-import java.io.ByteArrayInputStream;
-import java.io.ByteArrayOutputStream;
 import java.io.FileNotFoundException;
 import java.io.IOException;
 
@@ -29,7 +29,6 @@ public class CreatePictureActivity extends AppCompatActivity {
     private ImageView pictureView;
     private Button postButton, cancelButton, captureButton, pickGalleryButton;
     private Bitmap pictureBitmap;
-
     private int newsId = -1;
 
     @Override
@@ -90,46 +89,24 @@ public class CreatePictureActivity extends AppCompatActivity {
     }
 
     private void captcurePhoto() {
-        Intent takePictureIntent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
-        if(takePictureIntent.resolveActivity(getPackageManager())!=null) {
-            startActivityForResult(takePictureIntent, Constant.REQUEST_IMAGE_CAPTURE);
-        }
+        PictureLoader.capturePhoto(this);
     }
     //mozda pravi problem sa rezolucijama slike, pogledaj na netu
     private void pickPhotoFromGallery() {
-        Intent galleryIntent = new Intent(Intent.ACTION_PICK,
-                MediaStore.Images.Media.EXTERNAL_CONTENT_URI);
-        if(galleryIntent.resolveActivity(getPackageManager())!=null) {
-            startActivityForResult(galleryIntent, Constant.RESULT_LOAD_IMAGE);
-        }
+        PictureLoader.loadPictureFromGallery(this);
     }
 
     @Override
     protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
-        if (requestCode == Constant.REQUEST_IMAGE_CAPTURE && resultCode == RESULT_OK) {
-            Bundle extras = data.getExtras();
-            pictureBitmap = (Bitmap) extras.get("data");
-            pictureView.setImageBitmap(pictureBitmap);
-        } else if(requestCode == Constant.RESULT_LOAD_IMAGE && resultCode == RESULT_OK){
-            Uri pictureUri = data.getData();
-            try{
-                pictureBitmap = MediaStore.Images.Media.getBitmap(this.getContentResolver(), pictureUri);
-                pictureView.setImageBitmap(pictureBitmap);
-            } catch (FileNotFoundException e) {
-                e.printStackTrace();
-            } catch (IOException e) {
-                e.printStackTrace();
-            }
-        }
+        pictureBitmap = PictureLoader.getResultingBitmap(requestCode, resultCode, data, this);
+        pictureView.setImageBitmap(pictureBitmap);
     }
 
     private Picture createNewPicture() {
         int id = -1;
         String name = nameEditText.getText().toString();
         String description = descriptionEditText.getText().toString();
-        ByteArrayOutputStream bos = new ByteArrayOutputStream();
-        pictureBitmap.compress(Bitmap.CompressFormat.PNG, 100, bos);
-        byte[] data = bos.toByteArray();
+        byte[] data = PictureConverter.getBitmapBytes(pictureBitmap);
         return new Picture(id, name, description, newsId, data);
 
     }

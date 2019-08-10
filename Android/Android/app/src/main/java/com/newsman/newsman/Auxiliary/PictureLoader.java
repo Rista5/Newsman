@@ -1,9 +1,15 @@
 package com.newsman.newsman.Auxiliary;
 
+import android.app.Activity;
 import android.content.Context;
+import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
+import android.net.Uri;
+import android.os.Bundle;
 import android.os.Environment;
+import android.provider.MediaStore;
+import android.support.annotation.Nullable;
 
 import com.newsman.newsman.ServerEntities.Picture;
 
@@ -17,6 +23,8 @@ import java.io.IOException;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
 import java.io.OutputStreamWriter;
+
+import static android.app.Activity.RESULT_OK;
 
 // verovatno nece trebati, posto mogu slike u bazu da se cuvaju
 public class PictureLoader {
@@ -59,7 +67,6 @@ public class PictureLoader {
 
             bmp.compress(format, 100, oos);
             oos.close();
-//            oos.notifyAll();
             fos.close();
 
         } catch (FileNotFoundException e) {
@@ -106,5 +113,37 @@ public class PictureLoader {
         } else {
             return Bitmap.CompressFormat.WEBP;
         }
+    }
+
+    public static void loadPictureFromGallery(Context context){
+        Intent galleryIntent = new Intent(Intent.ACTION_PICK,
+                MediaStore.Images.Media.EXTERNAL_CONTENT_URI);
+        if(galleryIntent.resolveActivity(context.getPackageManager())!=null) {
+            ((Activity) context).startActivityForResult(galleryIntent, Constant.RESULT_LOAD_IMAGE);
+        }
+    }
+
+    public static void capturePhoto(Context context) {
+        Intent takePictureIntent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
+        if(takePictureIntent.resolveActivity(context.getPackageManager())!=null) {
+            ((Activity) context).startActivityForResult(takePictureIntent, Constant.REQUEST_IMAGE_CAPTURE);
+        }
+    }
+
+    public static Bitmap getResultingBitmap(int requestCode, int resultCode, @Nullable Intent data, Context context) {
+        if (requestCode == Constant.REQUEST_IMAGE_CAPTURE && resultCode == RESULT_OK) {
+            Bundle extras = data.getExtras();
+            return (Bitmap) extras.get("data");
+        } else if(requestCode == Constant.RESULT_LOAD_IMAGE && resultCode == RESULT_OK){
+            Uri pictureUri = data.getData();
+            try{
+                return MediaStore.Images.Media.getBitmap(context.getContentResolver(), pictureUri);
+            } catch (FileNotFoundException e) {
+                e.printStackTrace();
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+        }
+        return null;
     }
 }

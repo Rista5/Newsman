@@ -9,6 +9,7 @@ import android.support.v7.widget.Toolbar;
 import android.view.MenuItem;
 
 import com.newsman.newsman.Auxiliary.Constant;
+import com.newsman.newsman.Auxiliary.PictureConverter;
 import com.newsman.newsman.Auxiliary.ZoomableImageView;
 import com.newsman.newsman.R;
 
@@ -24,14 +25,10 @@ public class ImageDisplayActivity extends AppCompatActivity {
         setContentView(R.layout.activity_image_display);
         zoomableImage = findViewById(R.id.image_display_image_view);
 
-//        Toolbar toolbar = (Toolbar) findViewById(R.id.);
-//        setSupportActionBar(toolbar);
-
         Bundle extras = getIntent().getExtras();
         if(extras!=null) {
             byte[] data = extras.getByteArray(Constant.IMAGE_DISPLAY_KEY);
-            ByteArrayInputStream bis = new ByteArrayInputStream(data);
-            Bitmap bmp = BitmapFactory.decodeStream(bis);
+            Bitmap bmp = PictureConverter.getBitmap(data);
             zoomableImage.setImageBitmap(bmp);
 
             if (getSupportActionBar() != null){

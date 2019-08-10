@@ -15,6 +15,7 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.newsman.newsman.Auxiliary.Constant;
+import com.newsman.newsman.Auxiliary.PictureConverter;
 import com.newsman.newsman.ServerEntities.Picture;
 import com.newsman.newsman.R;
 import com.newsman.newsman.activities.ImageDisplayActivity;
@@ -45,8 +46,8 @@ public class NewsImageListAdapter extends RecyclerView.Adapter<NewsImageListAdap
     public void onBindViewHolder(@NonNull NewsImageViewHolder newsImageViewHolder, int position) {
         Picture pictureItem = pictureItemList.get(position);
         newsImageViewHolder.title.setText(pictureItem.getName());
-        ByteArrayInputStream bis = new ByteArrayInputStream(pictureItem.getPictureData());
-        newsImageViewHolder.imageView.setImageBitmap(BitmapFactory.decodeStream(bis));
+        newsImageViewHolder.imageView.setImageBitmap(
+                PictureConverter.getBitmap(pictureItem.getPictureData()));
     }
 
     @Override
@@ -68,13 +69,10 @@ public class NewsImageListAdapter extends RecyclerView.Adapter<NewsImageListAdap
             imageView.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    int bmpQuality = 100;
                     Intent intent = new Intent(context, ImageDisplayActivity.class);
 
-                    ByteArrayOutputStream bos = new ByteArrayOutputStream();
-                    Bitmap bmp = ((BitmapDrawable)imageView.getDrawable()).getBitmap();
-                    bmp.compress(Bitmap.CompressFormat.PNG, bmpQuality, bos);
-                    byte[] data = bos.toByteArray();
+                    Bitmap bmp = PictureConverter.getImageViewBitmap(imageView);
+                    byte[] data = PictureConverter.getBitmapBytes(bmp);
 
                     Bundle bundle = new Bundle();
                     bundle.putByteArray(Constant.IMAGE_DISPLAY_KEY, data);

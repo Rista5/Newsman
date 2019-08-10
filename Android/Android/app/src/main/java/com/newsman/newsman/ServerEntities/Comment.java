@@ -26,12 +26,6 @@ import static android.arch.persistence.room.ForeignKey.CASCADE;
                     parentColumns = "id",
                     childColumns = "belongsToNewsId",
                     onDelete = CASCADE),
-                // izglda da ovaj foreignKey ne omogucava da postoje 2 komentara koja je napisao isti user, zasto??
-//                @ForeignKey(
-//                        entity = User.class,
-//                        parentColumns = "id",
-//                        childColumns = "createdById",
-//                        onDelete = CASCADE)
         },
         indices = {
                 @Index("belongsToNewsId"),
@@ -58,7 +52,6 @@ public class Comment implements Serializable {
         this.content = content;
         this.belongsToNewsId = belongsToNewsId;
         this.createdById = createdById;
-//        this.setCreatedBy(createdBy);
         try{
             this.postDate = DateGetter.getDate(postDate);
         }

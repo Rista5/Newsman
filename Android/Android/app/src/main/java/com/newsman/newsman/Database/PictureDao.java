@@ -25,6 +25,10 @@ public abstract class PictureDao {
     @Query("SELECT * FROM picture WHERE id = :id")
     public abstract LiveData<Picture> getPicture(int id);
 
+    @Transaction
+    @Query("SELECT * FROM picture WHERE belongsToNewsId = :newsId")
+    public abstract List<Picture> getPicturesForNewsNonLive(int newsId);
+
     @Insert(onConflict = OnConflictStrategy.REPLACE)
     public abstract void insertPicture(Picture picture);
 

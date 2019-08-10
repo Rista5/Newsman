@@ -19,6 +19,7 @@ import android.widget.Button;
 import android.widget.ImageView;
 
 import com.newsman.newsman.AppExecutors;
+import com.newsman.newsman.Auxiliary.PictureConverter;
 import com.newsman.newsman.Auxiliary.PictureLoader;
 import com.newsman.newsman.Database.AppDatabase;
 import com.newsman.newsman.R;
@@ -43,7 +44,7 @@ public class MainActivity extends AppCompatActivity {
     private Button mTestDbButton;
     private Button mTestPicture;
     private ImageView mImageView;
-    private Button mRestPictureButton;
+    private Button mRestPictureButton, mTestUpdate;
     private String IP_ADDRESSE = "192.168.1.7";
     private String KEY = "key";
     private AppDatabase mDB = null;
@@ -82,6 +83,14 @@ public class MainActivity extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 getPictureRest();
+            }
+        });
+        mTestUpdate = findViewById(R.id.test_update_activity);
+        mTestUpdate.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent(mContext, UpdateNewsActivity.class);
+                startActivity(intent);
             }
         });
 
@@ -153,14 +162,8 @@ public class MainActivity extends AppCompatActivity {
             Bundle extras = data.getExtras();
             Bitmap bmp = (Bitmap) extras.get("data");
             Picture picture = generateTestPicture(bmp);
-            //mImageView.setImageBitmap(bmp);
             new PutPictureToRest(picture).Post(this);
 
-//            PictureLoader.savePictureData(this, picture);
-//            PictureLoader.loadPictureData(this, picture);
-//            ByteArrayInputStream bais = new ByteArrayInputStream(picture.getPictureData());
-//            Bitmap res = BitmapFactory.decodeStream(bais);
-//            mImageView.setImageBitmap(res);
         }
     }
 
@@ -184,8 +187,7 @@ public class MainActivity extends AppCompatActivity {
             @Override
             public void onChanged(@Nullable Picture picture) {
                 if(picture!=null) {
-                    ByteArrayInputStream bis = new ByteArrayInputStream(picture.getPictureData());
-                    Bitmap bmp = BitmapFactory.decodeStream(bis);
+                    Bitmap bmp = PictureConverter.getBitmap(picture.getPictureData());
                     mImageView.setImageBitmap(bmp);
                 }
             }
