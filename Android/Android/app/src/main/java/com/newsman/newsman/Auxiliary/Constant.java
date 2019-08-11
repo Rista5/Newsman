@@ -3,7 +3,7 @@ package com.newsman.newsman.Auxiliary;
 import com.newsman.newsman.ServerEntities.UserWithPassword;
 
 public class Constant {
-    private static String IP_ADDRESS = "192.168.1.7";
+    private static String IP_ADDRESS = "192.168.1.8";
     public static final String NEWS_BUNDLE_KEY = "news";
     public static final String NEWS_EXTRA_ID_KEY = "news_extra_id_key";
 

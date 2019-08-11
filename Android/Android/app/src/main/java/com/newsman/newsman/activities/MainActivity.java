@@ -19,6 +19,7 @@ import android.widget.Button;
 import android.widget.ImageView;
 
 import com.newsman.newsman.AppExecutors;
+import com.newsman.newsman.Auxiliary.Constant;
 import com.newsman.newsman.Auxiliary.PictureConverter;
 import com.newsman.newsman.Auxiliary.PictureLoader;
 import com.newsman.newsman.Database.AppDatabase;
@@ -45,7 +46,6 @@ public class MainActivity extends AppCompatActivity {
     private Button mTestPicture;
     private ImageView mImageView;
     private Button mRestPictureButton, mTestUpdate;
-    private String IP_ADDRESSE = "192.168.1.7";
     private String KEY = "key";
     private AppDatabase mDB = null;
 
@@ -64,7 +64,7 @@ public class MainActivity extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 new GetNewsFromRest().Get(mContext);
-                AppExecutors.getInstance().getMQHandler().execute(new MQClient(IP_ADDRESSE, mContext));
+                AppExecutors.getInstance().getMQHandler().execute(new MQClient(Constant.getIpAddress(), mContext));
                 Intent intent = new Intent(mContext, NewsListActivity.class);
                 startActivity(intent);
             }
@@ -89,7 +89,10 @@ public class MainActivity extends AppCompatActivity {
         mTestUpdate.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                Bundle bundle = new Bundle();
+                bundle.putInt(Constant.NEWS_EXTRA_ID_KEY, 4);
                 Intent intent = new Intent(mContext, UpdateNewsActivity.class);
+                intent.putExtras(bundle);
                 startActivity(intent);
             }
         });

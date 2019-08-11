@@ -21,7 +21,7 @@ public class UpdateComment extends UpdateObject {
     @Override
     public void updateRecord() {
         updateUser.updateRecord();
-        AppDatabase.getInstance(mContext).commentDao().updateComment(comment);
+        AppDatabase.getInstance(mContext).commentDao().insertComment(comment);
     }
 
     private Comment parseComment(JSONObject json) throws JSONException {

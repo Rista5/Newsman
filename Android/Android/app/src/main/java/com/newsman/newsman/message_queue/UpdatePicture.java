@@ -20,7 +20,7 @@ class UpdatePicture extends UpdateObject{
 
     @Override
     public void updateRecord() {
-        AppDatabase.getInstance(mContext).pictureDao().updatePicture(picture);
+        AppDatabase.getInstance(mContext).pictureDao().insertPicture(picture);
     }
 
     private Picture parsePicture(JSONObject json) throws JSONException {

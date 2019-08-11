@@ -27,7 +27,7 @@ public class UpdateNews extends UpdateObject {
 
     @Override
     public void updateRecord() {
-        AppDatabase.getInstance(mContext).newsDao().updateNews(news);
+        AppDatabase.getInstance(mContext).newsDao().insertNews(news);
         for(UpdateComment updateComment: updateComments) {
             updateComment.updateRecord();
         }

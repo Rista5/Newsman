@@ -46,6 +46,7 @@ public class PicturesFragment extends Fragment {
         rvPicture = rootView.findViewById(R.id.rv_news_pictures);
         addPictureButton = rootView.findViewById(R.id.news_item_create_picture_button);
         setUpPictureAdapter();
+        addButtonListener();
         return rootView;
     }
 

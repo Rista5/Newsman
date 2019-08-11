@@ -19,7 +19,7 @@ public class UpdateUser extends UpdateObject {
 
     @Override
     public void updateRecord() {
-        AppDatabase.getInstance(mContext).userDao().updateUser(user);
+        AppDatabase.getInstance(mContext).userDao().insertUser(user);
     }
 
     private User parseUser(JSONObject json) throws JSONException {
