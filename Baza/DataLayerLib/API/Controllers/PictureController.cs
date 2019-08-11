@@ -32,16 +32,22 @@ namespace API.Controllers
             return PictureDTOManager.GetPicture(id);
         }
 
-        public bool PostPic(PictureDTO pic)
+        [HttpPut]
+        [ActionName("DefaultAction")]
+        public bool CreatePicture(PictureDTO pic)
         {
             return PictureDTOManager.CreatePicture(pic);
         }
 
+        [HttpDelete]
+        [ActionName("DefaultAction")]
         public bool DeletePicture(int id)
         {
             return PictureDTOManager.DeletePicture(id);
         }
 
+        [HttpPost]
+        [ActionName("DefaultAction")]
         public bool UpdatePicture(PictureDTO pic)
         {
             return PictureDTOManager.UpdatePicture(pic);

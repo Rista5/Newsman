@@ -338,7 +338,7 @@ namespace DataLayerLib
                 Picture picture = session.Load<Picture>(pictureId);
                 result = new PictureDTO(picture);
                 MultimediaLoader.IMultimediaLoader loader = new MultimediaLoader.FileSystemLoader();
-                result.PictureData = loader.GetMedia(picture.Id, picture.BelongsTo.Id, picture.Name);
+                result.SetPictureBytes(loader.GetMedia(picture.Id, picture.BelongsTo.Id, picture.Name));
                 session.Close();
             }
             catch (Exception ex)

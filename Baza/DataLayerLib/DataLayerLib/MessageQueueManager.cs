@@ -4,6 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using RabbitMQ.Client;
+using Newtonsoft.Json;
 
 
 namespace DataLayerLib
@@ -62,21 +63,28 @@ namespace DataLayerLib
                     body: data);
         }
 
-        public void PublishMessage(int newsId,int objId,  object obj,bool delete)
+        public void PublishMessage(int newsId, int objId,  object obj, MessageOperation operation)
         {
-            string routingKey = GenerateRoutingKey(newsId, objId, obj, delete);
+            string routingKey = GenerateRoutingKey(newsId, objId, obj, operation);
             byte[] data = SerializeObject(obj);
             PublishMessage(routingKey, data);
         }
 
-        public static string GenerateRoutingKey(int newsId, int objId, object obj, bool delete = false)
+        public static string GenerateRoutingKey(int newsId, int objId, object obj, MessageOperation operation)
         {
             string result = "";
             result = "News." + newsId + ".";
-            if (delete)
-                result += "Delete.";
-            else
-                result += "Update.";
+            switch (operation)
+            {
+                case MessageOperation.Insert: result += "Insert.";
+                    break;
+                case MessageOperation.Update: result += "Update.";
+                    break;
+                case MessageOperation.Delete: result += "Delete.";
+                    break;
+                default: result += "Update.";
+                    break;
+            }
             result += obj.GetType().Name + "." + objId;
             return result;
         }
@@ -84,73 +92,16 @@ namespace DataLayerLib
         public static byte[] SerializeObject (object obj)
         {
             byte[] result = null;
-            string json = Newtonsoft.Json.JsonConvert.SerializeObject(obj);
+            string json = JsonConvert.SerializeObject(obj);
             result = Encoding.Default.GetBytes(json);
             return result;
         }
+    }
 
-
-        //public void DeclareExchange(string name)
-        //{
-        //    using (var connection = factory.CreateConnection())
-        //    {
-        //        using (var channel = connection.CreateModel())
-        //        {
-        //            channel.ExchangeDeclare(exchange: name, type: "topic");
-        //        }
-        //    }
-        //}
-
-        //public void DeclareExchange(string name,string type)
-        //{
-        //    using (var connection = factory.CreateConnection())
-        //    {
-        //        using (var channel = connection.CreateModel())
-        //        {
-        //            channel.ExchangeDeclare(exchange: name, type: type);
-        //        }
-        //    }
-        //}
-
-        //public void PublishMessage(string exchangeName)
-        //{
-        //    using (var connection = factory.CreateConnection())
-        //    {
-        //        using (var channel = connection.CreateModel())
-        //        {
-        //            string message = exchangeName;//"News updated";
-        //            var body = Encoding.Default.GetBytes(message);
-        //            channel.BasicPublish(exchange: exchangeName,
-        //                    routingKey: "",
-        //                    basicProperties: null,
-        //                    body: body);
-        //        }
-        //    }
-        //}
-
-        //public void PublishMessage(string exchangeName, byte[] body)
-        //{
-        //    using (var connection = factory.CreateConnection())
-        //    {
-        //        using (var channel = connection.CreateModel())
-        //        {
-        //            channel.BasicPublish(exchange: exchangeName,
-        //                    routingKey: "",
-        //                    basicProperties: null,
-        //                    body: body);
-        //        }
-        //    }
-        //}
-        
-        //public void DeleteExchange(string name)
-        //{
-        //    using (var connection = factory.CreateConnection())
-        //    {
-        //        using (var channel = connection.CreateModel())
-        //        {
-        //            channel.ExchangeDelete(exchange: name);
-        //        }
-        //    }
-        //}
+    public enum MessageOperation
+    {
+        Insert = 0,
+        Update = 1,
+        Delete = 2,
     }
 }

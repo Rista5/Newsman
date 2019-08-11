@@ -97,8 +97,11 @@ namespace DataLayerLib.DTOManagers
                 comment.BelongsTo = belongsTo;
                 session.Save(comment);
                 session.Flush();
-                session.Close();
 
+                MessageQueueManager menager = MessageQueueManager.Instance;
+                menager.PublishMessage(comment.BelongsTo.Id, comment.Id, new CommentDTO(comment), MessageOperation.Insert);
+
+                session.Close();
                 result = true;
             }
             catch (Exception ex)
@@ -132,7 +135,7 @@ namespace DataLayerLib.DTOManagers
                 session.Flush();
 
                 MessageQueueManager menager = MessageQueueManager.Instance;
-                menager.PublishMessage(comment.BelongsTo.Id, comment.Id, new CommentDTO(comment), false);
+                menager.PublishMessage(comment.BelongsTo.Id, comment.Id, new CommentDTO(comment), MessageOperation.Insert);
 
                 session.Close();
 
@@ -160,7 +163,7 @@ namespace DataLayerLib.DTOManagers
                 session.Flush();
 
                 MessageQueueManager menager = MessageQueueManager.Instance;
-                menager.PublishMessage(comment.BelongsTo.Id, comment.Id, new CommentDTO(comment), false);
+                menager.PublishMessage(comment.BelongsTo.Id, comment.Id, new CommentDTO(comment), MessageOperation.Update);
 
                 session.Close();
                 result = true;
@@ -188,7 +191,7 @@ namespace DataLayerLib.DTOManagers
                 session.Flush();
 
                 MessageQueueManager menager = MessageQueueManager.Instance;
-                menager.PublishMessage(comment.BelongsTo.Id, comment.Id, new CommentDTO(comment), false);
+                menager.PublishMessage(comment.BelongsTo.Id, comment.Id, new CommentDTO(comment), MessageOperation.Update);
 
                 session.Close();
                 result = true;

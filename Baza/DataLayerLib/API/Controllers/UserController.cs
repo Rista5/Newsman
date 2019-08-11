@@ -16,7 +16,7 @@ namespace API.Controllers
 
         public IEnumerable<UserDTO> GetAllUsers()
         {
-            return UserDTOManager.GetALlUsers();
+            return UserDTOManager.GetAllUsers();
         }
 
         public UserDTO GetUserbyID(int id)
@@ -32,16 +32,22 @@ namespace API.Controllers
         public bool Put(int id, [FromBody] UserPasswordsDTO passwords)
         {
             return UserDTOManager.UpdateUserPassword(id, passwords);
-            //return UserDTOManager.UpdateUser(id, passwords.OldPassword,username)
         }
         public bool DeleteUser(int id)
         {
             return UserDTOManager.DeleteUser(id);
         }
 
-        public bool Post([FromUri] string username, [FromBody]string password)
+        public bool Put([FromBody] UserWithPassword user)
         {
-            return UserDTOManager.CreateUser(username, password);//.GetDesciption();
+            return UserDTOManager.CreateUser(user.Username, user.Password);
         }
+    }
+
+    // POCO class for Put method
+    public class UserWithPassword
+    {
+        public string Username { get; set; }
+        public string Password { get; set; }
     }
 }

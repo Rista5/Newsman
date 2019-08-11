@@ -121,7 +121,7 @@ namespace DataLayerLib
 
         private void btnGetAllUsers_Click(object sender, EventArgs e)
         {
-            List<UserDTO> userDTOs = DTOManagers.UserDTOManager.GetALlUsers();
+            List<UserDTO> userDTOs = DTOManagers.UserDTOManager.GetAllUsers();
             foreach (UserDTO dto in userDTOs)
                 MessageBox.Show(dto.ToString());
         }
@@ -203,7 +203,7 @@ namespace DataLayerLib
 
         private void btnCreateComment_Click(object sender, EventArgs e)
         {
-            List<UserDTO> users = DTOManagers.UserDTOManager.GetALlUsers();
+            List<UserDTO> users = DTOManagers.UserDTOManager.GetAllUsers();
             List<NewsDTO> news = DTOManagers.NewsDTOManager.GetAllNews();
             CreateCommentForm form = new CreateCommentForm(users, news);
             if(form.ShowDialog() == DialogResult.OK)
@@ -246,7 +246,7 @@ namespace DataLayerLib
 
         private void btnCreateNews_Click(object sender, EventArgs e)
         {
-            List<UserDTO> users = DTOManagers.UserDTOManager.GetALlUsers();
+            List<UserDTO> users = DTOManagers.UserDTOManager.GetAllUsers();
             CreateNewsForm form = new CreateNewsForm(users);
             if(form.ShowDialog() == DialogResult.OK)
             {
@@ -261,7 +261,7 @@ namespace DataLayerLib
         {
             int idNews = int.Parse(txtUpdateNews.Text);
             NewsDTO news = DTOManagers.NewsDTOManager.GetNews(idNews);
-            List<UserDTO> users = DTOManagers.UserDTOManager.GetALlUsers();
+            List<UserDTO> users = DTOManagers.UserDTOManager.GetAllUsers();
             CreateNewsForm form = new CreateNewsForm(users, news.Title, news.Content);
             if(form.ShowDialog() == DialogResult.OK)
             {
@@ -276,7 +276,7 @@ namespace DataLayerLib
         {
             int pictureId = int.Parse(txtUpdatePicture.Text);
             PictureDTO picture = DTOManagers.PictureDTOManager.GetPicture(pictureId);
-            CreatePictureForm form = new CreatePictureForm(picture.Name, picture.Description, picture.PictureData);
+            CreatePictureForm form = new CreatePictureForm(picture.Name, picture.Description, picture.GetPictureBytes());
             if(form.ShowDialog() == DialogResult.OK)
             {
                 if (DTOManagers.PictureDTOManager.UpdatePicture(picture.Id, form.PictureName, form.Description, form.PictureData))

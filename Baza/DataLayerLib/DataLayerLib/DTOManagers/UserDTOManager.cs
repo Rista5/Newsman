@@ -12,7 +12,7 @@ namespace DataLayerLib.DTOManagers
 {
     public class UserDTOManager
     {
-        public static List<UserDTO> GetALlUsers()
+        public static List<UserDTO> GetAllUsers()
         {
             List<UserDTO> users = new List<UserDTO>();
             ISession session = null;
@@ -189,7 +189,7 @@ namespace DataLayerLib.DTOManagers
                 session.Close();
 
                 MessageQueueManager menager = MessageQueueManager.Instance;
-                menager.PublishMessage(1, user.Id, new UserDTO(user), false);
+                menager.PublishMessage(1, user.Id, new UserDTO(user), MessageOperation.Update);
 
                 result = true;
             }

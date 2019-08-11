@@ -13,7 +13,7 @@ namespace DataLayerLib.DTOs
         public string Name { get; set; }
         public string Description { get; set; }
         public int BelongsToNewsId { get; set; }
-        public byte[] AudioData { get; set; }
+        public string AudioData { get; set; }
 
         public AudioDTO() { AudioData = null; }
         public AudioDTO(Audio audio)
@@ -22,6 +22,16 @@ namespace DataLayerLib.DTOs
             Name = audio.Name;
             Description = audio.Description;
             BelongsToNewsId = audio.BelongsTo.Id;
+        }
+
+        public void SetAudioBytes(byte[] data)
+        {
+            AudioData = Encoding.Default.GetString(data);
+        }
+
+        public byte[] GetAudioBytes()
+        {
+            return Encoding.Default.GetBytes(AudioData);
         }
 
         public override string ToString()

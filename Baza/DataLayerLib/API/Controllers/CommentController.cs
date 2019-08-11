@@ -45,15 +45,15 @@ namespace API.Controllers
         }
 
         // POST api/values
-        public bool Post([FromBody]CommentSimpleDTO value)
-        {
-            return CommentDTOManager.CreateComment(value.CreatedBy, value.BelongsToNewsId, value.Content);
-        }
-
-        // PUT api/values/5
-        public bool Put(int id, string content)
+        public bool Post(int id, string content)
         {
             return CommentDTOManager.UpdateComment(id, content);
+        }
+
+        // PUT api/values
+        public bool Put([FromBody]CommentSimpleDTO value)
+        {
+            return CommentDTOManager.CreateComment(value.CreatedBy, value.BelongsToNewsId, value.Content);
         }
 
         // DELETE api/values/5

@@ -6,13 +6,23 @@ using System.Threading.Tasks;
 using DataLayerLib.DTOs;
 using NHibernate;
 using DataLayerLib.Entities;
-
-
+using DataLayerLib.MultimediaLoader;
 
 namespace DataLayerLib.DTOManagers
 {
     public class NewsDTOManager
     {
+        private static IMultimediaLoader _loader;
+        static IMultimediaLoader Loader
+        {
+            get
+            {
+                if (_loader == null)
+                    _loader = new FileSystemLoader();
+                return _loader;
+            }
+        }
+
         public static List<NewsDTO> GetAllNews()
         {
             List<NewsDTO> news = new List<NewsDTO>();
@@ -25,6 +35,12 @@ namespace DataLayerLib.DTOManagers
                                             select n;
                 foreach (News n in retData)
                     news.Add(new NewsDTO(n));
+                //TODO change this
+                foreach(NewsDTO n in news)
+                {
+                    foreach (PictureDTO p in n.Pictures)
+                        p.SetPictureBytes(Loader.GetMedia(p.Id, p.BelongsToNewsId, p.Name));
+                }
                 session.Close();
             }
             catch (Exception ex)
@@ -136,7 +152,7 @@ namespace DataLayerLib.DTOManagers
 
 
                 MessageQueueManager manager = MessageQueueManager.Instance;
-                manager.PublishMessage(news.Id, news.Id, new NewsDTO(news), false);
+                manager.PublishMessage(news.Id, news.Id, new NewsDTO(news), MessageOperation.Insert);
 
                 session.Close();
 
@@ -176,7 +192,7 @@ namespace DataLayerLib.DTOManagers
                 transaction.Commit();
 
                 MessageQueueManager manager = MessageQueueManager.Instance;
-                manager.PublishMessage(newNews.Id, newNews.Id, new NewsDTO(newNews), false);
+                manager.PublishMessage(newNews.Id, newNews.Id, new NewsDTO(newNews), MessageOperation.Insert);
 
                 session.Close();
 
@@ -215,7 +231,7 @@ namespace DataLayerLib.DTOManagers
                 session.Flush();
 
                 MessageQueueManager manager = MessageQueueManager.Instance;
-                manager.PublishMessage(news.Id, news.Id, new NewsDTO(news), false);
+                manager.PublishMessage(news.Id, news.Id, new NewsDTO(news), MessageOperation.Update);
 
                 session.Close();
 
@@ -255,7 +271,7 @@ namespace DataLayerLib.DTOManagers
 
 
                 MessageQueueManager manager = MessageQueueManager.Instance;
-                manager.PublishMessage(news.Id, news.Id, new NewsDTO(news), false);
+                manager.PublishMessage(news.Id, news.Id, new NewsDTO(news), MessageOperation.Update);
 
                 session.Close();
 

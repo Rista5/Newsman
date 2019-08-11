@@ -26,7 +26,7 @@ namespace DataLayerLib.DTOManagers
                 foreach (Picture p in retData)
                 {
                     PictureDTO picDto = new PictureDTO(p);
-                    picDto.PictureData = Loader.GetMedia(p.Id, p.BelongsTo.Id, p.Name);
+                    picDto.SetPictureBytes(Loader.GetMedia(p.Id, p.BelongsTo.Id, p.Name));
                     pictures.Add(picDto);
                 }
                 session.Close();
@@ -77,7 +77,7 @@ namespace DataLayerLib.DTOManagers
                 Picture picture = session.Load<Picture>(pictureId);
                 result = new PictureDTO(picture);
                 MultimediaLoader.IMultimediaLoader loader = new MultimediaLoader.FileSystemLoader();
-                result.PictureData = loader.GetMedia(picture.Id,picture.BelongsTo.Id , picture.Name);
+                result.SetPictureBytes(loader.GetMedia(picture.Id,picture.BelongsTo.Id , picture.Name));
                 session.Close();
             }
             catch (Exception ex)
@@ -113,9 +113,10 @@ namespace DataLayerLib.DTOManagers
                 }
 
                 PictureDTO dto = new PictureDTO(picture);
-                dto.PictureData = pictureData;
+                //dto.PictureData = pictureData;
+                dto.SetPictureBytes(pictureData);
                 MessageQueueManager menager = MessageQueueManager.Instance;
-                menager.PublishMessage(picture.BelongsTo.Id, picture.Id, dto, false);
+                menager.PublishMessage(picture.BelongsTo.Id, picture.Id, dto, MessageOperation.Insert);
 
                 session.Close();
 
@@ -152,11 +153,13 @@ namespace DataLayerLib.DTOManagers
                 if (picturedto.PictureData != null)
                 {
                     MultimediaLoader.IMultimediaLoader loader = new MultimediaLoader.FileSystemLoader();
-                    loader.SaveMedia(picture.Id, picturedto.BelongsToNewsId, picture.Name, picturedto.PictureData);
-                }
+                    loader.SaveMedia(picture.Id, picturedto.BelongsToNewsId, picture.Name, picturedto.GetPictureBytes());
 
-                MessageQueueManager menager = MessageQueueManager.Instance;
-                menager.PublishMessage(picture.BelongsTo.Id, picture.Id, picturedto, false);
+                    MessageQueueManager menager = MessageQueueManager.Instance;
+                    PictureDTO message = new PictureDTO(picture);
+                    message.PictureData = picturedto.PictureData;
+                    menager.PublishMessage(picture.BelongsTo.Id, picture.Id, picturedto, MessageOperation.Insert);
+                }
 
                 session.Close();
 
@@ -193,9 +196,9 @@ namespace DataLayerLib.DTOManagers
                 }
 
                 PictureDTO dto = new PictureDTO(picture);
-                dto.PictureData = pictureData;
+                dto.SetPictureBytes(pictureData);
                 MessageQueueManager manager = MessageQueueManager.Instance;
-                manager.PublishMessage(picture.BelongsTo.Id, picture.Id, dto,false);
+                manager.PublishMessage(picture.BelongsTo.Id, picture.Id, dto, MessageOperation.Update);
 
                 session.Close();
 
@@ -229,11 +232,11 @@ namespace DataLayerLib.DTOManagers
                 if (pic.PictureData != null)
                 {
                     MultimediaLoader.IMultimediaLoader loader = new MultimediaLoader.FileSystemLoader();
-                    loader.SaveMedia(picture.Id,pic.BelongsToNewsId, pic.Name, pic.PictureData);
+                    loader.SaveMedia(picture.Id,pic.BelongsToNewsId, pic.Name, pic.GetPictureBytes());
                 }
 
                 MessageQueueManager manager = MessageQueueManager.Instance;
-                manager.PublishMessage(picture.BelongsTo.Id, picture.Id, pic, false);
+                manager.PublishMessage(picture.BelongsTo.Id, picture.Id, pic, MessageOperation.Update);
 
                 session.Close();
 

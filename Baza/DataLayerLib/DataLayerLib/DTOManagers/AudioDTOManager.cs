@@ -141,7 +141,7 @@ namespace DataLayerLib.DTOManagers
                 if (audioDTO.AudioData != null)
                 {
                     MultimediaLoader.IMultimediaLoader loader = new MultimediaLoader.FileSystemLoader();
-                    loader.SaveMedia(audio.Id, audioDTO.BelongsToNewsId, audio.Name, audioDTO.AudioData);
+                    loader.SaveMedia(audio.Id, audioDTO.BelongsToNewsId, audio.Name, audioDTO.GetAudioBytes());
                 }
 
                 result = true;
@@ -200,7 +200,7 @@ namespace DataLayerLib.DTOManagers
                 if(audioDTO.AudioData!=null)
                 {
                     MultimediaLoader.IMultimediaLoader loader = new MultimediaLoader.FileSystemLoader();
-                    loader.SaveMedia(audio.Id,audioDTO.BelongsToNewsId, audio.Name, audioDTO.AudioData);
+                    loader.SaveMedia(audio.Id,audioDTO.BelongsToNewsId, audio.Name, audioDTO.GetAudioBytes());
                 }
                 result = true;
             }
