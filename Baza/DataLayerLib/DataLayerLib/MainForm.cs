@@ -1,4 +1,6 @@
-﻿using DataLayerLib.DTOs;
+﻿using DataLayerLib.DTOManagers;
+using DataLayerLib.DTOManagersInterfaces;
+using DataLayerLib.DTOs;
 using DataLayerLib.Entities;
 using NHibernate;
 using System;
@@ -15,8 +17,10 @@ namespace DataLayerLib
 {
     public partial class MainForm : Form
     {
+        INewsDTOManager manager;
         public MainForm()
         {
+            manager = new NewsDTOManager();
             InitializeComponent();
         }
 
@@ -114,7 +118,7 @@ namespace DataLayerLib
 
         private void btnGetAllNews_Click(object sender, EventArgs e)
         {
-            List<NewsDTO> newsDTO = DTOManagers.NewsDTOManager.GetAllNews();
+            List<NewsDTO> newsDTO = manager.GetAllNews();
             foreach (NewsDTO dto in newsDTO)
                 MessageBox.Show(dto.ToString());
         }
@@ -158,7 +162,7 @@ namespace DataLayerLib
         private void btnNewsModifiedByUser_Click(object sender, EventArgs e)
         {
             int id = int.Parse(txtNewsModifiedByUser.Text);
-            List<NewsDTO> dtos = DTOManagers.NewsDTOManager.GetNewsModifiedByUser(id);
+            List<NewsDTO> dtos = manager.GetNewsModifiedByUser(id);
             foreach (NewsDTO dto in dtos)
                 MessageBox.Show(dto.ToString());
         }
@@ -204,7 +208,7 @@ namespace DataLayerLib
         private void btnCreateComment_Click(object sender, EventArgs e)
         {
             List<UserDTO> users = DTOManagers.UserDTOManager.GetALlUsers();
-            List<NewsDTO> news = DTOManagers.NewsDTOManager.GetAllNews();
+            List<NewsDTO> news = manager.GetAllNews();
             CreateCommentForm form = new CreateCommentForm(users, news);
             if(form.ShowDialog() == DialogResult.OK)
             {
@@ -217,7 +221,7 @@ namespace DataLayerLib
 
         private void btnCreatePicture_Click(object sender, EventArgs e)
         {
-            List<NewsDTO> news = DTOManagers.NewsDTOManager.GetAllNews();
+            List<NewsDTO> news = manager.GetAllNews();
             CreatePictureForm form = new CreatePictureForm(news);
             if(form.ShowDialog()==DialogResult.OK)
             {
@@ -250,7 +254,7 @@ namespace DataLayerLib
             CreateNewsForm form = new CreateNewsForm(users);
             if(form.ShowDialog() == DialogResult.OK)
             {
-                if(DTOManagers.NewsDTOManager.CreateNews(form.Title,form.Content,form.User_ID))
+                if(manager.CreateNews(form.Title,form.Content,form.User_ID))
                     MessageBox.Show("Uspesno kreirana vest");
                 else
                     MessageBox.Show("Greska");
@@ -260,12 +264,12 @@ namespace DataLayerLib
         private void btnUpdateNews_Click(object sender, EventArgs e)
         {
             int idNews = int.Parse(txtUpdateNews.Text);
-            NewsDTO news = DTOManagers.NewsDTOManager.GetNews(idNews);
+            NewsDTO news = manager.GetNews(idNews);
             List<UserDTO> users = DTOManagers.UserDTOManager.GetALlUsers();
             CreateNewsForm form = new CreateNewsForm(users, news.Title, news.Content);
             if(form.ShowDialog() == DialogResult.OK)
             {
-                if(DTOManagers.NewsDTOManager.UpdateNews(form.User_ID,news.Id,form.Title, form.Content))
+                if(manager.UpdateNews(form.User_ID,news.Id,form.Title, form.Content))
                     MessageBox.Show("Uspesno azurirana vest");
                 else
                     MessageBox.Show("Greska");
@@ -289,7 +293,7 @@ namespace DataLayerLib
         private void btnDeleteNews_Click(object sender, EventArgs e)
         {
             int newsId = int.Parse(txtUpdateNews.Text);
-            if (DTOManagers.NewsDTOManager.DeleteNews(newsId))
+            if (manager.DeleteNews(newsId))
                 MessageBox.Show("Vest je obrisana");
             else
                 MessageBox.Show("Greska");

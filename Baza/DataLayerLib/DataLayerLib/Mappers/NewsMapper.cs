@@ -19,6 +19,8 @@ namespace DataLayerLib.Mappers
             Map(x => x.Content, "Content");
             Map(x => x.LastModified, "Last_modified");
 
+            References(x => x.BackgroundPicture, "Background_picture").LazyLoad();
+
             HasMany(x => x.Pictures).KeyColumn("Id_news").LazyLoad().Cascade.All().Inverse();
             HasMany(x => x.AudioRecordings).KeyColumn("Id_news").LazyLoad().Cascade.All().Inverse();
             HasMany(x => x.Comments).KeyColumn("Id_news").LazyLoad().Cascade.All().Inverse();

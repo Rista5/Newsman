@@ -6,14 +6,13 @@ using System.Threading.Tasks;
 using DataLayerLib.DTOs;
 using NHibernate;
 using DataLayerLib.Entities;
-
-
+using DataLayerLib.DTOManagersInterfaces;
 
 namespace DataLayerLib.DTOManagers
 {
-    public class NewsDTOManager
+    public class NewsDTOManager : INewsDTOManager
     {
-        public static List<NewsDTO> GetAllNews()
+        public List<NewsDTO> GetAllNews()
         {
             List<NewsDTO> news = new List<NewsDTO>();
             ISession session = null;
@@ -36,7 +35,7 @@ namespace DataLayerLib.DTOManagers
             return news;
         }
 
-        public static List<NewsDTO> GetNewsModifiedByUser(int userId)
+        public List<NewsDTO> GetNewsModifiedByUser(int userId)
         {
             List<NewsDTO> news = new List<NewsDTO>();
             ISession session = null;
@@ -63,7 +62,7 @@ namespace DataLayerLib.DTOManagers
             return news;
         }
 
-        public static NewsDTO GetNews(int newsId)
+        public NewsDTO GetNews(int newsId)
         {
             ISession session = null;
             NewsDTO result = null;
@@ -83,7 +82,7 @@ namespace DataLayerLib.DTOManagers
             return result;
         }
 
-        public static News GetFullNews(int newsId)
+        public News GetFullNews(int newsId)
         {
             ISession session = null;
             News result = null;
@@ -102,7 +101,7 @@ namespace DataLayerLib.DTOManagers
             return result;
         }
 
-        public static bool CreateNews(string title, string content,
+        public bool CreateNews(string title, string content,
             int userId)
         {
             bool result = false;
@@ -152,7 +151,7 @@ namespace DataLayerLib.DTOManagers
             return result;
         }
 
-        public static bool CreateNews(NewsDTO news, int userId)
+        public bool CreateNews(NewsDTO news, int userId)
         {
             bool result = false;
             ISession session = null;
@@ -191,7 +190,7 @@ namespace DataLayerLib.DTOManagers
             return result;
         }
 
-        public static bool UpdateNews(int userId, int newsId,
+        public bool UpdateNews(int userId, int newsId,
             string title, string content)
         {
             bool result = false;
@@ -230,7 +229,7 @@ namespace DataLayerLib.DTOManagers
             return result;
         }
 
-        public static bool UpdateNews(NewsDTO newsDTO, int userId)
+        public bool UpdateNews(NewsDTO newsDTO, int userId)
         {
             bool result = false;
             ISession session = null;
@@ -271,7 +270,7 @@ namespace DataLayerLib.DTOManagers
             return result;
         }
 
-        public static bool DeleteNews(int newsId)
+        public bool DeleteNews(int newsId)
         {
             ISession session = null;
             bool result = false;
@@ -298,7 +297,7 @@ namespace DataLayerLib.DTOManagers
             return result;
         }
 
-        public static bool DeleteNewsModifiaction(int modificationId)
+        public  bool DeleteNewsModifiaction(int modificationId)
         {
             ISession session = null;
             bool result = false;
@@ -321,7 +320,7 @@ namespace DataLayerLib.DTOManagers
             return result;
         }
 
-        public static News ExpandDTO(NewsDTO newsDTO)
+        public News ExpandDTO(NewsDTO newsDTO)
         {
             News news = new News();
             news.LastModified = newsDTO.LasModified;
