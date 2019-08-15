@@ -13,14 +13,12 @@ import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
 
-import com.newsman.newsman.Auxiliary.DateGetter;
 import com.newsman.newsman.Database.AppDatabase;
 import com.newsman.newsman.ServerEntities.News;
 import com.newsman.newsman.R;
 import com.newsman.newsman.adapters.NewsListAdapter;
 
 import java.util.ArrayList;
-import java.util.Date;
 import java.util.List;
 
 public class NewsListActivity extends AppCompatActivity {
@@ -74,7 +72,7 @@ public class NewsListActivity extends AppCompatActivity {
     }
 
     private void prepareNews() {
-        LiveData<List<News>> liveNews = AppDatabase.getInstance(this).newsDao().loadAllNews();
+        LiveData<List<News>> liveNews = AppDatabase.getInstance(this).newsDao().getAllNews();
         liveNews.observe(this, new Observer<List<News>>() {
             @Override
             public void onChanged(@Nullable List<News> news) {

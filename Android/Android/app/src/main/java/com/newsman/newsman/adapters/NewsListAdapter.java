@@ -39,6 +39,7 @@ public class NewsListAdapter extends RecyclerView.Adapter<NewsListAdapter.NewsIt
     public void onBindViewHolder(@NonNull final NewsItemViewHolder newsItemViewHolder, int position) {
         String USER_MODIFIER = "USER_MODIFIER_NOT_FOUND";
         News news = newsItemList.get(position);
+        final int newsId = news.getId();
         newsItemViewHolder.title.setText(news.getTitle());
         newsItemViewHolder.dateModified.setText(news.getLastModified().toString());
         newsItemViewHolder.userModifier.setText(USER_MODIFIER);
@@ -48,7 +49,7 @@ public class NewsListAdapter extends RecyclerView.Adapter<NewsListAdapter.NewsIt
         newsItemViewHolder.overflow.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                PopUpMenuController.showMenu(mContext, view);
+                PopUpMenuController.showMenu(mContext, view, newsId);
             }
         });
     }
@@ -78,7 +79,7 @@ public class NewsListAdapter extends RecyclerView.Adapter<NewsListAdapter.NewsIt
                 public void onClick(View v) {
                     if(positionInList == -1) return;
                     Intent intent = new Intent(context, DisplayNewsActivity.class);
-                    intent.putExtra(Constant.NEWS_EXTRA_ID_KEY, newsItemList.get(positionInList).getId());
+                    intent.putExtra(Constant.NEWS_BUNDLE_KEY, newsItemList.get(positionInList).getId());
                     context.startActivity(intent);
                 }
             });

@@ -6,7 +6,6 @@ import android.arch.lifecycle.Observer;
 import android.content.Context;
 import android.content.Intent;
 import android.graphics.Bitmap;
-import android.graphics.BitmapFactory;
 import android.os.Handler;
 import android.os.Message;
 import android.provider.MediaStore;
@@ -21,19 +20,17 @@ import android.widget.ImageView;
 import com.newsman.newsman.AppExecutors;
 import com.newsman.newsman.Auxiliary.Constant;
 import com.newsman.newsman.Auxiliary.PictureConverter;
-import com.newsman.newsman.Auxiliary.PictureLoader;
 import com.newsman.newsman.Database.AppDatabase;
 import com.newsman.newsman.R;
-import com.newsman.newsman.REST.GetNewsFromRest;
-import com.newsman.newsman.REST.GetPictureByIdFromRest;
-import com.newsman.newsman.REST.GetPictureFromRest;
-import com.newsman.newsman.REST.PutPictureToRest;
+import com.newsman.newsman.REST.Get.GetNewsFromRest;
+import com.newsman.newsman.REST.Get.GetPictureByIdFromRest;
+import com.newsman.newsman.REST.Put.ConnectionStrategy.Put;
+import com.newsman.newsman.REST.Put.RestConnector;
+import com.newsman.newsman.REST.Put.WriteJson.WritePicture;
 import com.newsman.newsman.ServerEntities.News;
 import com.newsman.newsman.ServerEntities.Picture;
-import com.newsman.newsman.activities.NewsListActivity;
 import com.newsman.newsman.message_queue.MQClient;
 
-import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
 import java.util.Date;
 import java.util.List;
@@ -90,7 +87,7 @@ public class MainActivity extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 Bundle bundle = new Bundle();
-                bundle.putInt(Constant.NEWS_EXTRA_ID_KEY, 4);
+                bundle.putInt(Constant.NEWS_BUNDLE_KEY, 4);
                 Intent intent = new Intent(mContext, UpdateNewsActivity.class);
                 intent.putExtras(bundle);
                 startActivity(intent);
@@ -140,7 +137,7 @@ public class MainActivity extends AppCompatActivity {
     }
 
     private void logNews() {
-        LiveData<List<News>> liveNews = mDB.newsDao().loadAllNews();
+        LiveData<List<News>> liveNews = mDB.newsDao().getAllNews();
         liveNews.observe(this, new Observer<List<News>>() {
             @Override
             public void onChanged(@Nullable List<News> news) {
@@ -165,8 +162,8 @@ public class MainActivity extends AppCompatActivity {
             Bundle extras = data.getExtras();
             Bitmap bmp = (Bitmap) extras.get("data");
             Picture picture = generateTestPicture(bmp);
-            new PutPictureToRest(picture).Post(this);
-
+//            new PutPictureToRest(picture).put();
+            new RestConnector(new Put(new WritePicture(picture)), Constant.PICTURE_ROUTE).run();
         }
     }
 

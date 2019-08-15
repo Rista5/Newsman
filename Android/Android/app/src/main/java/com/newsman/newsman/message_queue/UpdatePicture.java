@@ -9,18 +9,28 @@ import com.newsman.newsman.ServerEntities.Picture;
 import org.json.JSONException;
 import org.json.JSONObject;
 
-class UpdatePicture extends UpdateObject{
+class UpdatePicture extends DBUpdate {
 
     private Picture picture;
 
-    public UpdatePicture(JSONObject json, Context context) throws JSONException {
-        super(json, context);
+    UpdatePicture(String operation, JSONObject json, Context context) throws JSONException {
+        super(operation, json, context);
         picture = parsePicture(json);
     }
 
     @Override
-    public void updateRecord() {
-        AppDatabase.getInstance(mContext).pictureDao().insertPicture(picture);
+    public void update() {
+        switch (mOperation) {
+            case MQClient.opInsert:
+                AppDatabase.getInstance(mContext).pictureDao().insertPicture(picture);
+                break;
+            case MQClient.opUpdate:
+                AppDatabase.getInstance(mContext).pictureDao().updatePicture(picture);
+                break;
+            case MQClient.opDelete:
+                AppDatabase.getInstance(mContext).pictureDao().deletePicture(picture);
+                break;
+        }
     }
 
     private Picture parsePicture(JSONObject json) throws JSONException {
@@ -31,5 +41,4 @@ class UpdatePicture extends UpdateObject{
         byte[] data = Base64.decode(json.getString("PictureData"), Base64.DEFAULT);
         return new Picture(pictureId, name, description, newsId, data);
     }
-
 }

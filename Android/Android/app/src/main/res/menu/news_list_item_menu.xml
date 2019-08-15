@@ -1,5 +1,9 @@
 <?xml version="1.0" encoding="utf-8"?>
 <menu xmlns:android="http://schemas.android.com/apk/res/android">
     <item android:id="@+id/action_subscribe_to_news"
-        android:title="@string/action_subscribe_to_news"></item>
+        android:title="@string/action_subscribe_to_news"/>
+    <item android:id="@+id/action_unsubscribe_from_news"
+        android:title="@string/action_unsubscribe_from_news"/>
+    <item android:id="@+id/action_update_news"
+        android:title="@string/action_update_news"/>
 </menu>

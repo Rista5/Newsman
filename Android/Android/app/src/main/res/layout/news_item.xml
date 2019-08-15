@@ -37,8 +37,8 @@
 
             <ImageView
                 android:id="@+id/news_item_overflow_list"
-                android:layout_width="@dimen/ic_news_card_overflow_width"
-                android:layout_height="@dimen/ic_news_card_overflow_height"
+                android:layout_width="@dimen/icon_width"
+                android:layout_height="@dimen/icon_height"
                 android:layout_alignRight="@+id/news_item_img"
                 android:layout_alignBottom="@id/news_item_img"
                 android:src="@drawable/ic_action_more_vert"/>

@@ -5,13 +5,19 @@ import android.content.Context;
 import org.json.JSONException;
 import org.json.JSONObject;
 
-public class DBUpdateFactory {
-    public static DBUpdateObject createInstance(JSONObject json, Context context,
-                                                String operation, String type) throws JSONException {
-        if(operation.equals("Update")) {
-            return UpdateFactory.CreateUpdateObject(type, json, context);
-        } else {
-            return InsertFactory.createInsertObject(type, json, context);
+class DBUpdateFactory {
+    static DBUpdate createInstance(String type, String operation, JSONObject jsonObject,
+                                   Context context) throws JSONException {
+        switch (type) {
+            case "UserDTO":
+                return new UpdateUser(operation, jsonObject, context);
+            case "NewsDTO":
+                return new UpdateNews(operation, jsonObject, context);
+            case "CommentDTO":
+                return new UpdateComment(operation, jsonObject, context);
+            case "PictureDTO":
+                return new UpdatePicture(operation, jsonObject, context);
         }
+        return new NullUpdate(operation, jsonObject, context);
     }
 }

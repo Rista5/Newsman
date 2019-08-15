@@ -2,8 +2,6 @@ package com.newsman.newsman.activities;
 
 import android.content.Intent;
 import android.graphics.Bitmap;
-import android.net.Uri;
-import android.provider.MediaStore;
 import android.support.annotation.Nullable;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
@@ -17,11 +15,7 @@ import com.newsman.newsman.Auxiliary.Constant;
 import com.newsman.newsman.Auxiliary.PictureConverter;
 import com.newsman.newsman.Auxiliary.PictureLoader;
 import com.newsman.newsman.R;
-import com.newsman.newsman.REST.PutPictureToRest;
 import com.newsman.newsman.ServerEntities.Picture;
-
-import java.io.FileNotFoundException;
-import java.io.IOException;
 
 public class CreatePictureActivity extends AppCompatActivity {
 
@@ -37,7 +31,7 @@ public class CreatePictureActivity extends AppCompatActivity {
         setContentView(R.layout.activity_create_picture);
         Bundle extras = getIntent().getExtras();
         if(extras != null) {
-            newsId = extras.getInt(Constant.NEWS_EXTRA_ID_KEY);
+            newsId = extras.getInt(Constant.NEWS_BUNDLE_KEY);
         }
 
         setViews();
@@ -69,7 +63,13 @@ public class CreatePictureActivity extends AppCompatActivity {
                     toast.setText(R.string.create_picture_validation_toast);
                     toast.show();
                 } else {
-                    new PutPictureToRest(createNewPicture()).Post(getApplicationContext());
+                    //TODO pozovi u svakom aktivitiju
+//                    new PutPictureToRest(createNewPicture()).run(getApplicationContext());
+                    Intent data = new Intent();
+                    Bundle bundle = new Bundle();
+                    bundle.putSerializable(Constant.PICTURE_BUNDLE_KEY, createNewPicture());
+                    data.putExtras(bundle);
+                    setResult(RESULT_OK, data);
                     finish();
                 }
             }
@@ -108,7 +108,6 @@ public class CreatePictureActivity extends AppCompatActivity {
         String description = descriptionEditText.getText().toString();
         byte[] data = PictureConverter.getBitmapBytes(pictureBitmap);
         return new Picture(id, name, description, newsId, data);
-
     }
 
     private boolean testInput() {

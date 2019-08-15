@@ -2,11 +2,6 @@ package com.newsman.newsman.message_queue;
 
 import android.content.Context;
 
-import com.newsman.newsman.AppExecutors;
-import com.newsman.newsman.Database.AppDatabase;
-import com.newsman.newsman.ServerEntities.Comment;
-import com.newsman.newsman.ServerEntities.News;
-import com.newsman.newsman.ServerEntities.User;
 import com.rabbitmq.client.AMQP;
 import com.rabbitmq.client.Channel;
 import com.rabbitmq.client.Connection;
@@ -14,15 +9,17 @@ import com.rabbitmq.client.ConnectionFactory;
 import com.rabbitmq.client.DefaultConsumer;
 import com.rabbitmq.client.Envelope;
 
-import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.io.IOException;
-import java.util.ArrayList;
 import java.util.concurrent.TimeoutException;
 
 public class MQClient implements Runnable {
+
+    final static String opInsert = "Insert";
+    final static String opUpdate = "Update";
+    final static String opDelete = "Delete";
 
     private String host = null;
     private ConnectionFactory factory;
@@ -30,6 +27,7 @@ public class MQClient implements Runnable {
 
     public MQClient(String host, Context context){
         this.host = host;
+        this.context = context;
         factory = new ConnectionFactory();
         factory.setHost(host);
         factory.setPort(5672);
@@ -53,8 +51,8 @@ public class MQClient implements Runnable {
                                 String routingKey = envelope.getRoutingKey();
                                 String[] routes = routingKey.split("\\.");
                                 try {
-                                    UpdateObject updateObject = UpdateFactory.CreateUpdateObject(routes[3], new JSONObject(new String(body)), context);
-                                    updateObject.updateRecord();
+                                    DBUpdate updateDB = DBUpdateFactory.createInstance(routes[3], routes[2], new JSONObject(new String(body)), context);
+                                    updateDB.update();
                                 } catch (JSONException e) {
                                     e.printStackTrace();
                                 }

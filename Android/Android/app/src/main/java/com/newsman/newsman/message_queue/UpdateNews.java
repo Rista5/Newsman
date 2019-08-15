@@ -14,25 +14,35 @@ import org.json.JSONObject;
 import java.util.ArrayList;
 import java.util.List;
 
-public class UpdateNews extends UpdateObject {
+public class UpdateNews extends DBUpdate {
 
     private News news;
     private List<UpdateComment> updateComments;
     private List<UpdatePicture> updatePictures;
 
-    public UpdateNews(JSONObject json, Context context) throws JSONException {
-        super(json,context);
+    UpdateNews(String operation, JSONObject json, Context context) throws JSONException {
+        super(operation, json, context);
         news = parseNews(json);
     }
 
     @Override
-    public void updateRecord() {
-        AppDatabase.getInstance(mContext).newsDao().insertNews(news);
-        for(UpdateComment updateComment: updateComments) {
-            updateComment.updateRecord();
+    public void update() {
+        switch (mOperation) {
+            case MQClient.opInsert:
+                AppDatabase.getInstance(mContext).newsDao().insertNews(news);
+                break;
+            case MQClient.opUpdate:
+                AppDatabase.getInstance(mContext).newsDao().updateNews(news);
+                break;
+            case MQClient.opDelete:
+                AppDatabase.getInstance(mContext).newsDao().deleteNews(news);
+                break;
         }
-        for(UpdatePicture updatePicture: updatePictures) {
-            updatePicture.updateRecord();
+        for(UpdateComment updateComment : updateComments){
+            updateComment.update();
+        }
+        for(UpdatePicture updatePicture : updatePictures) {
+            updatePicture.update();
         }
     }
 
@@ -43,12 +53,12 @@ public class UpdateNews extends UpdateObject {
         JSONArray commentsJson = json.getJSONArray("Comments");
         updateComments = new ArrayList<>(commentsJson.length());
         for(int i=0; i<commentsJson.length(); i++) {
-            updateComments.add(new UpdateComment(commentsJson.getJSONObject(i), mContext));
+            updateComments.add(new UpdateComment(mOperation, commentsJson.getJSONObject(i), mContext));
         }
         JSONArray picturesArray = json.getJSONArray("Pictures");
         updatePictures = new ArrayList<>(picturesArray.length());
         for(int i=0; i<picturesArray.length(); i++) {
-            updatePictures.add(new UpdatePicture(picturesArray.getJSONObject(i), mContext));
+            updatePictures.add(new UpdatePicture(mOperation, picturesArray.getJSONObject(i), mContext));
         }
         List<Comment> comments = new ArrayList<>();
         List<Picture> pictures = new ArrayList<>();

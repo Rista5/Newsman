@@ -12,7 +12,7 @@ import android.widget.EditText;
 
 import com.newsman.newsman.Auxiliary.Constant;
 import com.newsman.newsman.R;
-import com.newsman.newsman.REST.PutCommentToRest;
+import com.newsman.newsman.REST.Put.PutCommentToRest;
 import com.newsman.newsman.ServerEntities.Comment;
 
 public class CreateCommentFragment extends Fragment {
@@ -23,7 +23,7 @@ public class CreateCommentFragment extends Fragment {
     public static CreateCommentFragment newInstance(int newsId) {
         CreateCommentFragment ccf = new CreateCommentFragment();
         Bundle bundle = new Bundle();
-        bundle.putInt(Constant.NEWS_EXTRA_ID_KEY, newsId);
+        bundle.putInt(Constant.NEWS_BUNDLE_KEY, newsId);
         ccf.setArguments(bundle);
         return ccf;
     }
@@ -39,7 +39,7 @@ public class CreateCommentFragment extends Fragment {
             public void onClick(View v) {
                 //TODO get user and send new comment to rest
                 Comment comment = createComment();
-                new PutCommentToRest(comment).Post(getActivity().getApplicationContext());
+                new PutCommentToRest(comment).put();
             }
         });
         return rootView;
@@ -49,7 +49,7 @@ public class CreateCommentFragment extends Fragment {
         Comment comment = new Comment();
         comment.setId(-1);
         comment.setContent(contentEditText.getText().toString());
-        comment.setBelongsToNewsId(getArguments().getInt(Constant.NEWS_EXTRA_ID_KEY));
+        comment.setBelongsToNewsId(getArguments().getInt(Constant.NEWS_BUNDLE_KEY));
         comment.setCreatedById(Constant.USER_ID);
         return comment;
     }

@@ -4,15 +4,16 @@ import com.newsman.newsman.ServerEntities.UserWithPassword;
 
 public class Constant {
     private static String IP_ADDRESS = "192.168.1.8";
-    public static final String NEWS_BUNDLE_KEY = "news";
-    public static final String NEWS_EXTRA_ID_KEY = "news_extra_id_key";
+    public static final String NEWS_BUNDLE_KEY = "news_bundle_key";
+    public static final String PICTURE_BUNDLE_KEY = "image_bundle_key";
+    public static final int PICTURE_REQUEST_CODE = 12;
 
-    public static String USER_ROUTE = "/User/";
-    public static String NEWS_ROUTE = "/News/";
-    public static String COMMENT_ROUTE = "/Comment/";
-    public static String PICTURE_ROUTE = "/Picture/";
+    public static final String USER_ROUTE = "/User/";
+    public static final String NEWS_ROUTE = "/News/";
+    public static final String COMMENT_ROUTE = "/Comment/";
+    public static final String PICTURE_ROUTE = "/Picture/";
 
-    public static String IMAGE_DISPLAY_KEY = "image_display_key";
+    public static final String IMAGE_DISPLAY_KEY = "image_display_key";
 
     public static final int REQUEST_IMAGE_CAPTURE = 1;
     public static final int RESULT_LOAD_IMAGE = 2;

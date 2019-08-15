@@ -9,8 +9,16 @@ import java.net.URL;
 
 public class RestConnectionFactory {
 
-    public static HttpURLConnection createConnection(String route) throws IOException {
+    public static HttpURLConnection createConnection(String route, String type) throws IOException {
         URL url = new URL("http://" + Constant.getIpAddress() + ":52752/api" + route);
-        return (HttpURLConnection) url.openConnection();
+        HttpURLConnection connection = (HttpURLConnection) url.openConnection();
+        connection.setRequestMethod(type);
+        connection.setRequestProperty("Content-Type", "application/json");
+        connection.setRequestProperty("Accept","application/json");
+        if(type.equals("PUT") || type.equals("POST"))
+            connection.setDoOutput(true);
+        if(type.equals("GET"))
+            connection.setDoInput(true);
+        return connection;
     }
 }

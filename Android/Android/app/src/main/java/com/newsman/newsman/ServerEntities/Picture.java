@@ -32,6 +32,14 @@ public class Picture implements Serializable {
         this.pictureData = pictureData;
     }
 
+    @Override
+    public boolean equals(Object obj) {
+        if(obj instanceof Picture){
+            Picture p = (Picture) obj;
+            return p.getId() == this.getId();
+        }
+        return false;
+    }
 
     public int getId() {
         return id;
