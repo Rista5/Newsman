@@ -38,6 +38,9 @@ namespace DataLayerLib.DTOManagers
                 //TODO change this
                 foreach(NewsDTO n in news)
                 {
+                    n.BackgroundPicture.SetPictureBytes(Loader.GetMedia(n.BackgroundPicture.Id,
+                                                                        n.BackgroundPicture.BelongsToNewsId,
+                                                                        n.BackgroundPicture.Name));
                     foreach (PictureDTO p in n.Pictures)
                         p.SetPictureBytes(Loader.GetMedia(p.Id, p.BelongsToNewsId, p.Name));
                 }
@@ -219,6 +222,57 @@ namespace DataLayerLib.DTOManagers
                 News news = session.Load<News>(newsId);
                 news.Title = title;
                 news.Content = content;
+                news.LastModified = DateTime.Today;
+
+                NewsModified modification = new NewsModified();
+                modification.ModificationDate = DateTime.Today;
+                modification.News = news;
+                modification.User = user;
+
+                session.SaveOrUpdate(news);
+                session.Save(modification);
+                session.Flush();
+
+                MessageQueueManager manager = MessageQueueManager.Instance;
+                manager.PublishMessage(news.Id, news.Id, new NewsDTO(news), MessageOperation.Update);
+
+                session.Close();
+
+                result = true;
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine(ex.Message);
+                if (session != null)
+                    session.Close();
+            }
+            return result;
+        }
+
+        public static bool UpdateNews(SimpleNewsDTO simpleDTO, int userId)
+        {
+            bool result = false;
+            ISession session = null;
+            try
+            {
+                session = DataLayer.GetSession();
+                User user = session.Load<User>(userId);
+                News news = session.Load<News>(simpleDTO.Id);
+                news.Title = simpleDTO.Title;
+                news.Content = simpleDTO.Content;
+
+                if (simpleDTO.BackgroundPicture != null)
+                {
+                    Picture backgroundPic = new Picture();
+                    backgroundPic.Description = simpleDTO.BackgroundPicture.Description;
+                    backgroundPic.BelongsTo = news;
+                    backgroundPic.Name = simpleDTO.BackgroundPicture.Name;
+                    news.BackgroundPicture = backgroundPic;
+
+                    Loader.SaveMedia(backgroundPic.Id, news.Id, backgroundPic.Name, simpleDTO.BackgroundPicture.GetPictureBytes());
+                }
+                else
+                    news.BackgroundPicture = null;
                 news.LastModified = DateTime.Today;
 
                 NewsModified modification = new NewsModified();

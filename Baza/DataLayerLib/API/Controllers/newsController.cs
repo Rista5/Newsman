@@ -45,6 +45,13 @@ namespace API.Controllers
             return NewsDTOManager.UpdateNews(news, userId);
         }
 
+        [HttpPost]
+        [Route("api/News/{userId}")]
+        public bool UpdateNews([FromBody] SimpleNewsDTO simpleDTO, int userId)
+        {
+            return NewsDTOManager.UpdateNews(simpleDTO, userId);
+        }
+
         [HttpDelete]
         [Route("api/DeleteNews/{userId}")]
         public bool DeleteNews(int userId)

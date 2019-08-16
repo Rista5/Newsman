@@ -124,12 +124,14 @@
     <Compile Include="DTOManagers\CommentDTOManager.cs" />
     <Compile Include="DTOManagers\NewsDTOManager.cs" />
     <Compile Include="DTOManagers\PictureDTOManager.cs" />
+    <Compile Include="DTOManagers\SimpleNewsDTOManager.cs" />
     <Compile Include="DTOManagers\UserDTOManager.cs" />
     <Compile Include="DTOs\AudioDTO.cs" />
     <Compile Include="DTOs\CommentDTO.cs" />
     <Compile Include="DTOs\CommentSimpleDTO.cs" />
     <Compile Include="DTOs\NewsDTO.cs" />
     <Compile Include="DTOs\PictureDTO.cs" />
+    <Compile Include="DTOs\SimpleNewsDTO.cs" />
     <Compile Include="DTOs\UserDTO.cs" />
     <Compile Include="DTOs\UserPasswordsDTO.cs" />
     <Compile Include="Entities\Audio.cs" />

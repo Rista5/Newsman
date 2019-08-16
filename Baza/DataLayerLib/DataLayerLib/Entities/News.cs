@@ -12,6 +12,7 @@ namespace DataLayerLib.Entities
         public virtual string Title { get; set; }
         public virtual string Content { get; set; }
         public virtual DateTime LastModified { get; set; }
+        public virtual Picture BackgroundPicture { get; set; }
         public virtual IList<NewsModified> Modifications { get; set; }
         public virtual IList<Picture> Pictures { get; set; }
         public virtual IList<Audio> AudioRecordings { get; set; }

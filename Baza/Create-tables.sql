@@ -5,6 +5,7 @@ Id_news         int(32) NOT NULL AUTO_INCREMENT,
 Title         varchar(40),
 Content         varchar(1000),
 Last_modified         date,
+Background_picture int(32),
 PRIMARY KEY (Id_news)
 );
 
@@ -41,6 +42,8 @@ PRIMARY KEY(Id_picture)
 
 
 ALTER TABLE Picture ADD CONSTRAINT Id_news_FK_picture FOREIGN KEY(Id_news) REFERENCES News(Id_news);
+
+ALTER TABLE News ADD CONSTRAINT Id_picture_FK_news FOREIGN KEY(Id_picture) REFERENCES Picture(Id_picture);
 
 CREATE TABLE Audio(
 Description         varchar(30),
