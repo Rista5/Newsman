@@ -13,6 +13,7 @@ namespace DataLayerLib.DTOs
         public string Title { get; set; }
         public string Content { get; set; }
         public DateTime LasModified { get; set; }
+        public int LastModifiedUser { get; set; }
         public PictureDTO BackgroundPicture { get; set; }
         public IList<CommentDTO> Comments { get; set; }
         public IList<PictureDTO> Pictures { get; set; }
@@ -30,9 +31,13 @@ namespace DataLayerLib.DTOs
             Title = news.Title;
             Content = news.Content;
             LasModified = news.LastModified;
+            var newestDate = news.Modifications.Max(x => x.ModificationDate);
+            LastModifiedUser = news.Modifications.First(x => x.ModificationDate == newestDate).Id;
+
             if (news.BackgroundPicture != null)
                 BackgroundPicture = new PictureDTO(news.BackgroundPicture);
             else BackgroundPicture = null;
+
             Pictures = new List<PictureDTO>(news.Pictures.Count);
             foreach (Picture picture in news.Pictures)
                 Pictures.Add(new PictureDTO(picture));

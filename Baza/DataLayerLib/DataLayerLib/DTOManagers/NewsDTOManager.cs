@@ -131,6 +131,7 @@ namespace DataLayerLib.DTOManagers
                 session = DataLayer.GetSession();
                 News news = new News();
                 User user = session.Load<User>(userId);
+
                 NewsModified modifiaction = new NewsModified();
                 modifiaction.ModificationDate = DateTime.Today;
                 modifiaction.User = user;
