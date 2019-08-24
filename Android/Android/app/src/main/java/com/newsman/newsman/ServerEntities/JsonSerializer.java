@@ -1,9 +1,10 @@
 package com.newsman.newsman.ServerEntities;
 
+import android.graphics.Bitmap;
 import android.util.Base64;
 import android.util.JsonWriter;
 
-import com.newsman.newsman.REST.Put.PutPictureToRest;
+import com.newsman.newsman.Auxiliary.PictureConverter;
 
 import java.io.IOException;
 
@@ -30,11 +31,25 @@ public class JsonSerializer {
         jsonWriter.endObject();
     }
 
-    public static void writeNews(JsonWriter jsonWriter, News news) throws IOException {
+    public static void writeNews(JsonWriter jsonWriter, News news, Bitmap background) throws IOException {
         jsonWriter.beginObject();
         jsonWriter.name("Id").value(news.getId());
         jsonWriter.name("Title").value(news.getTitle());
         jsonWriter.name("Content").value(news.getContent());
+
+        jsonWriter.name("BackgroundPicture");
+        if(background != null) {
+            Picture pic = new Picture(
+                    news.getBackgroundId(),
+                    "",
+                    "",
+                    news.getId(),
+                    PictureConverter.getBitmapBytes(background)
+            );
+            writePicture(jsonWriter, pic);
+        } else {
+            jsonWriter.nullValue();
+        }
 
         jsonWriter.name("Comments");
         jsonWriter.beginArray();
@@ -58,7 +73,10 @@ public class JsonSerializer {
         jsonWriter.name("Id").value(news.getId());
         jsonWriter.name("Title").value(news.getTitle());
         jsonWriter.name("Content").value(news.getContent());
-        jsonWriter.endArray();
+        jsonWriter.name("BackgroundPicture");
+        Picture back = new Picture(news.getBackgroundId(), "", "", news.getId(),
+                PictureConverter.getBitmapBytes(news.getBackgroundPicture()));
+        writePicture(jsonWriter, back);
         jsonWriter.endObject();
     }
 

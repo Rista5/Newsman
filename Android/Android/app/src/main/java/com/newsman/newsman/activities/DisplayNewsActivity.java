@@ -3,6 +3,8 @@ package com.newsman.newsman.activities;
 import android.arch.lifecycle.LifecycleOwner;
 import android.arch.lifecycle.LiveData;
 import android.arch.lifecycle.Observer;
+import android.content.Context;
+import android.content.Intent;
 import android.support.annotation.Nullable;
 import android.support.v4.app.FragmentManager;
 import android.support.v7.app.ActionBar;
@@ -12,9 +14,9 @@ import android.view.View;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import com.newsman.newsman.Auxiliary.PictureLoader;
 import com.newsman.newsman.Auxiliary.PopUpMenuController;
 import com.newsman.newsman.Database.AppDatabase;
-import com.newsman.newsman.Database.CommentDao;
 import com.newsman.newsman.Database.UserDao;
 import com.newsman.newsman.Auxiliary.Constant;
 import com.newsman.newsman.ServerEntities.Comment;
@@ -23,10 +25,7 @@ import com.newsman.newsman.ServerEntities.News;
 import com.newsman.newsman.ServerEntities.Picture;
 import com.newsman.newsman.R;
 import com.newsman.newsman.ServerEntities.User;
-import com.newsman.newsman.adapters.NewsImageListAdapter;
 import com.newsman.newsman.fragments.CommentsFragment;
-import com.newsman.newsman.fragments.CreateCommentFragment;
-import com.newsman.newsman.fragments.FragmentStrategies.SendToRest;
 import com.newsman.newsman.fragments.PicturesFragment;
 
 import java.util.ArrayList;
@@ -37,10 +36,8 @@ public class DisplayNewsActivity extends AppCompatActivity {
     private ImageView background, overflow;
     private TextView title, postDate, lastUpdateBy, content;
 
-    private NewsImageListAdapter adapter;
-
     private int newsId = -1;
-    private List<Picture> pictureList;
+    private Context mContext;
 
     private CommentsFragment commentsFragment;
     private PicturesFragment picturesFragment;
@@ -49,6 +46,7 @@ public class DisplayNewsActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_news_display);
+        mContext = this;
         Bundle extras = getIntent().getExtras();
         if(extras != null) {
             newsId = extras.getInt(Constant.NEWS_BUNDLE_KEY);
@@ -74,6 +72,17 @@ public class DisplayNewsActivity extends AppCompatActivity {
         getPictures();
     }
 
+
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
+        if(resultCode == RESULT_OK &&
+                requestCode == Constant.PICTURE_REQUEST_CODE) {
+            picturesFragment.onActivityResult(requestCode, resultCode, data);
+        }
+        super.onActivityResult(requestCode, resultCode, data);
+    }
+
+
     private void subscribeToLiveData() {
         final LifecycleOwner mOwner = this;
         LiveData<News> liveNews = AppDatabase.getInstance(this).newsDao().getNewsById(newsId);
@@ -83,9 +92,11 @@ public class DisplayNewsActivity extends AppCompatActivity {
                 title.setText(news.getTitle());
                 postDate.setText(news.getLastModified().toString());
                 content.setText(news.getContent());
+                //TODO razmisli da li moze ovo bolje
+                if(news.getBackgroundId() != Constant.INVALID_PICTURE_ID)
+                    background.setImageBitmap(PictureLoader.loadPictureData(mContext, news.getBackgroundId()));
             }
         });
-        final CommentDao commentDao = AppDatabase.getInstance(this).commentDao();
         LiveData<List<Comment>> liveComments =
                 AppDatabase.getInstance(this).commentDao().getCommentsForNews(newsId);
         //TODO moze li ovo bolje, pogotovo ovo sa username-om, mozda da postane ugnjezdeni entitet
@@ -106,13 +117,13 @@ public class DisplayNewsActivity extends AppCompatActivity {
     }
 
     private void getPictures(){
-        pictureList = new ArrayList<>();
         LiveData<List<Picture>> livePictres = AppDatabase.getInstance(this).pictureDao()
                 .getPicturesForNews(newsId);
+        final Context mContext = this;
         livePictres.observe(this, new Observer<List<Picture>>() {
             @Override
             public void onChanged(@Nullable List<Picture> pictures) {
-                picturesFragment.setPictureList(pictures);
+                picturesFragment.setPictureList(PictureLoader.loadPictureListData(mContext, pictures));
             }
         });
     }

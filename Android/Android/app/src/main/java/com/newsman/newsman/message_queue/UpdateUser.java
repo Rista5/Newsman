@@ -12,14 +12,16 @@ public class UpdateUser extends DBUpdate {
 
     private User user;
 
-    UpdateUser(String operation, JSONObject json, Context context) throws JSONException {
-        super(operation, json, context);
-        user = parseUser(json);
+    UpdateUser(MessageInfo info, Context context) throws JSONException {
+        super(info, context);
+        if(info.getJsonObject() != null) {
+            user = parseUser(info.getJsonObject());
+        }
     }
 
     @Override
     public void update() {
-        switch (mOperation) {
+        switch (messageInfo.getOperation()) {
             case MQClient.opInsert:
                 AppDatabase.getInstance(mContext).userDao().insertUser(user);
                 break;
@@ -27,7 +29,7 @@ public class UpdateUser extends DBUpdate {
                 AppDatabase.getInstance(mContext).userDao().updateUser(user);
                 break;
             case MQClient.opDelete:
-                AppDatabase.getInstance(mContext).userDao().deleteUser(user);
+                AppDatabase.getInstance(mContext).userDao().deleteUserById(messageInfo.getObjectId());
                 break;
         }
     }

@@ -2,6 +2,8 @@ package com.newsman.newsman.message_queue;
 
 import android.content.Context;
 
+import com.newsman.newsman.Auxiliary.Constant;
+import com.newsman.newsman.Auxiliary.DateGetter;
 import com.newsman.newsman.Database.AppDatabase;
 import com.newsman.newsman.ServerEntities.Comment;
 import com.newsman.newsman.ServerEntities.News;
@@ -17,31 +19,43 @@ import java.util.List;
 public class UpdateNews extends DBUpdate {
 
     private News news;
-    private List<UpdateComment> updateComments;
-    private List<UpdatePicture> updatePictures;
+    private List<DBUpdate> updateComments;
+    private List<DBUpdate> updatePictures;
 
-    UpdateNews(String operation, JSONObject json, Context context) throws JSONException {
-        super(operation, json, context);
-        news = parseNews(json);
+    UpdateNews(MessageInfo info, Context context) throws JSONException {
+        super(info, context);
+        if(info.getJsonObject() != null){
+            news = parseNews(info.getJsonObject());
+        }
     }
 
     @Override
     public void update() {
-        switch (mOperation) {
+        switch (messageInfo.getOperation()) {
             case MQClient.opInsert:
                 AppDatabase.getInstance(mContext).newsDao().insertNews(news);
+                updateSubobjects();
                 break;
             case MQClient.opUpdate:
                 AppDatabase.getInstance(mContext).newsDao().updateNews(news);
+                updateSubobjects();
                 break;
             case MQClient.opDelete:
-                AppDatabase.getInstance(mContext).newsDao().deleteNews(news);
+                AppDatabase.getInstance(mContext).newsDao()
+                        .deleteNewsById(messageInfo.getObjectId());
+                AppDatabase.getInstance(mContext).commentDao()
+                        .deleteCommentsForNews(messageInfo.getObjectId());
+                AppDatabase.getInstance(mContext).pictureDao()
+                        .deletePictureByIdWithData(mContext, messageInfo.getObjectId());
                 break;
         }
-        for(UpdateComment updateComment : updateComments){
+    }
+
+    private void updateSubobjects(){
+        for(DBUpdate updateComment : updateComments){
             updateComment.update();
         }
-        for(UpdatePicture updatePicture : updatePictures) {
+        for(DBUpdate updatePicture : updatePictures) {
             updatePicture.update();
         }
     }
@@ -53,16 +67,31 @@ public class UpdateNews extends DBUpdate {
         JSONArray commentsJson = json.getJSONArray("Comments");
         updateComments = new ArrayList<>(commentsJson.length());
         for(int i=0; i<commentsJson.length(); i++) {
-            updateComments.add(new UpdateComment(mOperation, commentsJson.getJSONObject(i), mContext));
+            JSONObject commJson = commentsJson.getJSONObject(i);
+            MessageInfo info = new MessageInfo(messageInfo.getNewsId(), commJson.getInt("Id"),
+                    messageInfo.getOperation(), commJson);
+            updateComments.add(new UpdateComment(info, mContext));
         }
         JSONArray picturesArray = json.getJSONArray("Pictures");
         updatePictures = new ArrayList<>(picturesArray.length());
         for(int i=0; i<picturesArray.length(); i++) {
-            updatePictures.add(new UpdatePicture(mOperation, picturesArray.getJSONObject(i), mContext));
+            JSONObject picJson = picturesArray.getJSONObject(i);
+            MessageInfo info = new MessageInfo(messageInfo.getNewsId(), picJson.getInt("Id"),
+                    messageInfo.getOperation(), picJson);
+            updatePictures.add(new UpdatePicture(info, mContext));
         }
         List<Comment> comments = new ArrayList<>();
         List<Picture> pictures = new ArrayList<>();
         String lastModified = json.getString("LasModified");
-        return new News(id,title,content,comments,lastModified, pictures);
+        // pozadina se ponasa kao klasicna slika prilikom update-a
+        int backId = -1;
+        JSONObject pictureJson = json.getJSONObject("BackgroundPicture");
+        if(pictureJson!=null && pictureJson.getInt("Id") != Constant.INVALID_PICTURE_ID) {
+            backId = pictureJson.getInt("Id");
+            MessageInfo info = new MessageInfo(messageInfo.getNewsId(), backId,
+                    messageInfo.getOperation(), pictureJson);
+            updatePictures.add(new UpdatePicture(info, mContext));
+        }
+        return new News(id,title,content,comments, DateGetter.parseDate(lastModified), pictures, backId);
     }
 }

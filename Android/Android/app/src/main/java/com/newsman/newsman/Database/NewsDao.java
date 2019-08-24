@@ -40,4 +40,6 @@ public abstract class NewsDao {
     @Delete
     public abstract void deleteNews(News news);
 
+    @Query("DELETE FROM news WHERE id = :newsId")
+    public abstract void deleteNewsById(int newsId);
 }

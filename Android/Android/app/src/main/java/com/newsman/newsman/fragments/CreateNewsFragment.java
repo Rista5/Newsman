@@ -22,10 +22,12 @@ public class CreateNewsFragment extends Fragment {
     private EditText content;
     private ImageView backgroundImage, gallery, capture;
     private SimpleNews news;
+    private boolean updated = false;
 
     public static CreateNewsFragment newInstance(SimpleNews news){
         CreateNewsFragment cnf = new CreateNewsFragment();
         cnf.news = news;
+        cnf.updated = false;
         return cnf;
     }
 
@@ -56,10 +58,17 @@ public class CreateNewsFragment extends Fragment {
 
     public SimpleNews getNews() {
         String newsTitle = title.getText().toString();
-        String newsContent = title.getText().toString();
-        Bitmap background = ((BitmapDrawable)backgroundImage.getDrawable()).getBitmap();
+        String newsContent = content.getText().toString();
+        int backId = news.getBackgroundId();
+        Bitmap background = null;
+        if(updated) {
+            background = ((BitmapDrawable)backgroundImage.getDrawable()).getBitmap();
+        }
+        else
+            background = news.getBackgroundPicture();
+
         return new SimpleNews(news.getId(), newsTitle, newsContent,
-                news.getLastModified(), background);
+                news.getLastModified(), background, backId);
     }
 
     private void setImageListeners(){
@@ -82,6 +91,18 @@ public class CreateNewsFragment extends Fragment {
         Bitmap bmp = PictureLoader.getResultingBitmap(requestCode, resultCode, data, getContext());
         if(bmp!=null){
             backgroundImage.setImageBitmap(bmp);
+            updated = true;
         }
+    }
+
+    private boolean textUpdated() {
+        boolean res = false;
+        res = res || !title.getText().toString().equals(news.getTitle()) ||
+                !content.getText().toString().equals(news.getContent());
+        return res;
+    }
+
+    public boolean getUpdateStatus() {
+        return updated || textUpdated();
     }
 }

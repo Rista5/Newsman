@@ -15,17 +15,16 @@ import android.widget.ImageView;
 
 import com.newsman.newsman.Auxiliary.Constant;
 import com.newsman.newsman.R;
-import com.newsman.newsman.REST.Put.PutPictureToRest;
 import com.newsman.newsman.ServerEntities.Picture;
 import com.newsman.newsman.activities.CreatePictureActivity;
-import com.newsman.newsman.adapters.NewsImageListAdapter;
+import com.newsman.newsman.adapters.PicturesListAdapter;
 
 import java.util.List;
 
 public class PicturesFragment extends Fragment {
 
     private List<Picture> pictureList;
-    private NewsImageListAdapter adapter;
+    private PicturesListAdapter adapter;
     private RecyclerView rvPicture;
     private ImageView addPicture;
     private int newsId;
@@ -51,7 +50,7 @@ public class PicturesFragment extends Fragment {
     }
 
     private void setUpPictureAdapter() {
-        adapter = new NewsImageListAdapter(getContext(), pictureList);
+        adapter = new PicturesListAdapter(getContext(), pictureList, sendToRest);
 
         RecyclerView.LayoutManager mLayoutManager =
                 new LinearLayoutManager(getContext(), LinearLayoutManager.HORIZONTAL, false);
@@ -61,12 +60,13 @@ public class PicturesFragment extends Fragment {
     }
 
     public void setPictureList(List<Picture> pictures) {
+        this.pictureList = pictures;
         adapter.setPictureList(pictures);
     }
 
-//    public void addPicture(Picture picture){
-//        adapter.addPicture(picture);
-//    }
+    public List<Picture> getPictureList(){
+        return adapter.getPictureList();
+    }
 
     private void addButtonListener() {
         addPicture.setOnClickListener(new View.OnClickListener() {
@@ -76,7 +76,7 @@ public class PicturesFragment extends Fragment {
                 Bundle bundle = new Bundle();
                 bundle.putInt(Constant.NEWS_BUNDLE_KEY, newsId);
                 intent.putExtras(bundle);
-                startActivityForResult(intent, Constant.PICTURE_REQUEST_CODE);
+                getActivity().startActivityForResult(intent, Constant.PICTURE_REQUEST_CODE);
             }
         });
     }
@@ -86,13 +86,10 @@ public class PicturesFragment extends Fragment {
         if(data == null)
             return;
         Bundle extras = data.getExtras();
-        if(extras != null) {
+        if(extras != null && extras.get(Constant.PICTURE_BUNDLE_KEY) != null &&
+                extras.get(Constant.PICTURE_BUNDLE_KEY) instanceof Picture) {
             Picture picture = (Picture) extras.get(Constant.PICTURE_BUNDLE_KEY);
-            if(sendToRest){
-                new PutPictureToRest(picture).put();
-            } else {
-                adapter.addPicture(picture);
-            }
+            adapter.addPicture(picture);
         }
     }
 }

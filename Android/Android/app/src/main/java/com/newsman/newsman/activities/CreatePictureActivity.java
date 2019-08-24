@@ -3,8 +3,10 @@ package com.newsman.newsman.activities;
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.support.annotation.Nullable;
+import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
@@ -34,8 +36,24 @@ public class CreatePictureActivity extends AppCompatActivity {
             newsId = extras.getInt(Constant.NEWS_BUNDLE_KEY);
         }
 
+        ActionBar actionBar = getSupportActionBar();
+        if (actionBar != null) {
+            actionBar.setDisplayHomeAsUpEnabled(true);
+        }
+
         setViews();
         setAllButtonListeners();
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        switch (item.getItemId()) {
+            case android.R.id.home:
+                finish();
+                return true;
+            default:
+                return super.onOptionsItemSelected(item);
+        }
     }
 
     private void setViews() {
@@ -63,14 +81,12 @@ public class CreatePictureActivity extends AppCompatActivity {
                     toast.setText(R.string.create_picture_validation_toast);
                     toast.show();
                 } else {
-                    //TODO pozovi u svakom aktivitiju
-//                    new PutPictureToRest(createNewPicture()).run(getApplicationContext());
                     Intent data = new Intent();
                     Bundle bundle = new Bundle();
                     bundle.putSerializable(Constant.PICTURE_BUNDLE_KEY, createNewPicture());
                     data.putExtras(bundle);
                     setResult(RESULT_OK, data);
-                    finish();
+                    CreatePictureActivity.super.onBackPressed();
                 }
             }
         });

@@ -20,13 +20,14 @@ import android.widget.ImageView;
 import com.newsman.newsman.AppExecutors;
 import com.newsman.newsman.Auxiliary.Constant;
 import com.newsman.newsman.Auxiliary.PictureConverter;
+import com.newsman.newsman.Auxiliary.PictureLoader;
 import com.newsman.newsman.Database.AppDatabase;
 import com.newsman.newsman.R;
-import com.newsman.newsman.REST.Get.GetNewsFromRest;
-import com.newsman.newsman.REST.Get.GetPictureByIdFromRest;
-import com.newsman.newsman.REST.Put.ConnectionStrategy.Put;
-import com.newsman.newsman.REST.Put.RestConnector;
-import com.newsman.newsman.REST.Put.WriteJson.WritePicture;
+import com.newsman.newsman.REST.ConnectionStrategy.Get;
+import com.newsman.newsman.REST.ReadJson.ReadComposite;
+import com.newsman.newsman.REST.ReadJson.ReadNews;
+import com.newsman.newsman.REST.ReadJson.ReadPicture;
+import com.newsman.newsman.REST.RestConnector;
 import com.newsman.newsman.ServerEntities.News;
 import com.newsman.newsman.ServerEntities.Picture;
 import com.newsman.newsman.message_queue.MQClient;
@@ -45,6 +46,7 @@ public class MainActivity extends AppCompatActivity {
     private Button mRestPictureButton, mTestUpdate;
     private String KEY = "key";
     private AppDatabase mDB = null;
+    private Button mImageSave;
 
     static final int REQUEST_IMAGE_CAPTURE = 1;
 
@@ -60,7 +62,9 @@ public class MainActivity extends AppCompatActivity {
         button.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                new GetNewsFromRest().Get(mContext);
+//                new GetNewsFromRest().Get(mContext);
+                new RestConnector(new Get(mContext, new ReadComposite(new ReadNews())),
+                        Constant.NEWS_ROUTE).execute();
                 AppExecutors.getInstance().getMQHandler().execute(new MQClient(Constant.getIpAddress(), mContext));
                 Intent intent = new Intent(mContext, NewsListActivity.class);
                 startActivity(intent);
@@ -83,6 +87,13 @@ public class MainActivity extends AppCompatActivity {
             }
         });
         mTestUpdate = findViewById(R.id.test_update_activity);
+        mImageSave = findViewById(R.id.test_save_img);
+        mImageSave.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                testPictureSave();
+            }
+        });
         mTestUpdate.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -158,13 +169,14 @@ public class MainActivity extends AppCompatActivity {
 
     @Override
     protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
-        if(requestCode == REQUEST_IMAGE_CAPTURE && resultCode == RESULT_OK) {
-            Bundle extras = data.getExtras();
-            Bitmap bmp = (Bitmap) extras.get("data");
-            Picture picture = generateTestPicture(bmp);
-//            new PutPictureToRest(picture).put();
-            new RestConnector(new Put(new WritePicture(picture)), Constant.PICTURE_ROUTE).run();
-        }
+        Bitmap bmp = PictureLoader.getResultingBitmap(requestCode, resultCode, data, this);
+        savePicture(bmp);
+//        if(requestCode == REQUEST_IMAGE_CAPTURE && resultCode == RESULT_OK) {
+//            Bundle extras = data.getExtras();
+//            Bitmap bmp = (Bitmap) extras.get("data");
+//            Picture picture = generateTestPicture(bmp);
+//            new RestConnector(new Put(new WritePicture(picture)), Constant.PICTURE_ROUTE).execute();
+//        }
     }
 
     private Picture generateTestPicture(Bitmap bmp) {
@@ -181,7 +193,7 @@ public class MainActivity extends AppCompatActivity {
     }
 
     private void getPictureRest() {
-        new GetPictureByIdFromRest(10).Get(this);
+        new RestConnector(new Get(this, new ReadPicture()), Constant.PICTURE_ROUTE+10);
         LiveData<Picture> livePicture = AppDatabase.getInstance(this).pictureDao().getPicture(10);
         livePicture.observe(this, new Observer<Picture>() {
             @Override
@@ -192,5 +204,16 @@ public class MainActivity extends AppCompatActivity {
                 }
             }
         });
+    }
+
+    private void testPictureSave(){
+        PictureLoader.loadPictureFromGallery(this);
+    }
+
+    private void savePicture(Bitmap bmp) {
+        int id = 100000;
+        PictureLoader.savePictureData(this, id, bmp);
+        Bitmap res = PictureLoader.loadPictureData(this, id);
+        mImageView.setImageBitmap(res);
     }
 }

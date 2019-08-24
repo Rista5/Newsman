@@ -16,7 +16,9 @@
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
         <activity android:name=".activities.UpdateNewsActivity"></activity>
-        <activity android:name=".activities.CreatePictureActivity" />
+        <activity
+            android:name=".activities.CreatePictureActivity" >
+        </activity>
         <activity android:name=".activities.ImageDisplayActivity" />
         <activity
             android:name=".activities.CreateNewsActivity"
@@ -30,7 +32,6 @@
         <activity android:name=".activities.MainActivity">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
-
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>

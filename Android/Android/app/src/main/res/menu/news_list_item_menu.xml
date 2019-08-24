@@ -6,4 +6,6 @@
         android:title="@string/action_unsubscribe_from_news"/>
     <item android:id="@+id/action_update_news"
         android:title="@string/action_update_news"/>
+    <item android:id="@+id/action_delete_news"
+        android:title="@string/action_delete_news"/>
 </menu>

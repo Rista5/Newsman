@@ -32,4 +32,7 @@ public abstract class UserDao {
 
     @Delete
     public abstract void deleteUser(User user);
+
+    @Query("DELETE FROM user WHERE id = :userId")
+    public abstract void deleteUserById(int userId);
 }

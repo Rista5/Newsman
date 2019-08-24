@@ -49,9 +49,17 @@ public class MQClient implements Runnable {
                             @Override
                             public void handleDelivery(String consumerTag, Envelope envelope, AMQP.BasicProperties properties, byte[] body) throws IOException {
                                 String routingKey = envelope.getRoutingKey();
+                                // route: News.1.Update.Picture.1
                                 String[] routes = routingKey.split("\\.");
                                 try {
-                                    DBUpdate updateDB = DBUpdateFactory.createInstance(routes[3], routes[2], new JSONObject(new String(body)), context);
+                                    JSONObject jsonObject = null;
+                                    String data = new String(body);
+                                    if(!data.equals(""))
+                                        jsonObject = new JSONObject(data);
+                                    MessageInfo info = new MessageInfo(Integer.parseInt(routes[1]),
+                                            Integer.parseInt(routes[4]), routes[2], jsonObject);
+                                    DBUpdate updateDB = DBUpdateFactory.createInstance(routes[3],
+                                            info, context);
                                     updateDB.update();
                                 } catch (JSONException e) {
                                     e.printStackTrace();
@@ -59,8 +67,6 @@ public class MQClient implements Runnable {
                             }
                         });
                 while(true){
-                    int a =5;
-                    a+=3;
                 }
             } catch (IOException e) {
                 e.printStackTrace();

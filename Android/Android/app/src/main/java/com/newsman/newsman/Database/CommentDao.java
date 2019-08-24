@@ -38,4 +38,10 @@ public abstract class CommentDao {
 
     @Delete
     public abstract void deleteComment(Comment comment);
+
+    @Query("DELETE FROM comment WHERE id = :commentId")
+    public abstract void deleteCommentById(int commentId);
+
+    @Query("DELETE FROM comment WHERE belongsToNewsId = :newsId")
+    public abstract void deleteCommentsForNews(int newsId);
 }

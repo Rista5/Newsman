@@ -1,21 +1,26 @@
 package com.newsman.newsman.activities;
 
+import android.content.Intent;
+import android.support.annotation.Nullable;
 import android.support.v4.app.FragmentManager;
+import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
 
+import com.newsman.newsman.AppExecutors;
 import com.newsman.newsman.Auxiliary.Constant;
+import com.newsman.newsman.Auxiliary.PictureLoader;
 import com.newsman.newsman.Database.AppDatabase;
 import com.newsman.newsman.R;
-import com.newsman.newsman.REST.Put.CompositeBuilder;
-import com.newsman.newsman.REST.Put.SendComponent;
-import com.newsman.newsman.REST.Put.UpdateBuilder;
+import com.newsman.newsman.REST.CompositeBuilder;
+import com.newsman.newsman.REST.UpdateBuilder;
 import com.newsman.newsman.ServerEntities.Comment;
 import com.newsman.newsman.ServerEntities.CommentWithUsername;
-import com.newsman.newsman.ServerEntities.HistoryList;
-import com.newsman.newsman.ServerEntities.HistoryObject;
+import com.newsman.newsman.Auxiliary.HistoryList.HistoryList;
+import com.newsman.newsman.Auxiliary.HistoryList.HistoryObject;
 import com.newsman.newsman.ServerEntities.News;
 import com.newsman.newsman.ServerEntities.Picture;
 import com.newsman.newsman.ServerEntities.SimpleNews;
@@ -46,13 +51,44 @@ public class UpdateNewsActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_update_news);
         // TODO verovatno je najbolje da se posalje vest umesto id, ali za sad nek ide iz db
+        //TODO back arrow
+
+
+        ActionBar actionBar = getSupportActionBar();
+        if (actionBar != null) {
+            actionBar.setDisplayHomeAsUpEnabled(true);
+        }
+
+
         Bundle extras = getIntent().getExtras();
         if(extras != null) {
             newsId = extras.getInt(Constant.NEWS_BUNDLE_KEY);
             setFragments();
             setUpViews();
-//            setFragmentData();
         }
+    }
+
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        switch (item.getItemId()) {
+            case android.R.id.home:
+                finish();
+                return true;
+            default:
+                return super.onOptionsItemSelected(item);
+        }
+    }
+
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
+        if(resultCode == RESULT_OK && (requestCode == Constant.REQUEST_LOAD_IMAGE
+                || requestCode == Constant.REQUEST_IMAGE_CAPTURE)) {
+            createNewsFragment.onActivityResult(requestCode, resultCode, data);
+        } else if((resultCode == RESULT_OK && requestCode == Constant.PICTURE_REQUEST_CODE)){
+            picturesFragment.onActivityResult(requestCode, resultCode, data);
+        }
+        super.onActivityResult(requestCode, resultCode, data);
     }
 
     private void setFragments() {
@@ -61,7 +97,7 @@ public class UpdateNewsActivity extends AppCompatActivity {
                 .newInstance(SimpleNews.getSimpleNews(news, this));
         List<Picture> pictures = AppDatabase.getInstance(this).pictureDao()
                 .getPicturesForNewsNonLive(newsId);
-        pictureHistoryList = new HistoryList<>(pictures);
+        pictureHistoryList = new HistoryList<>(PictureLoader.loadPictureListData(this, pictures));
         picturesFragment = PicturesFragment.newInstance(newsId, pictureHistoryList, false);
         commentList= AppDatabase.getInstance(this).commentDao()
                 .getCommentsForNewsNonLive(newsId);
@@ -86,26 +122,7 @@ public class UpdateNewsActivity extends AppCompatActivity {
         saveButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                List<HistoryObject<Picture>> history = pictureHistoryList.getHistory();
-                //TODO napravi update
-                UpdateBuilder ub = new CompositeBuilder();
-                if(newsChanged) {
-                    ub.createNews(getNewsData());
-                }
-                for(HistoryObject<Picture> h: history){
-                   switch (h.getOp()){
-                       case INSERT:
-                           ub.addPicture(h.getObject());
-                           break;
-                       case UPDATE:
-                           ub.updatePicture(h.getObject());
-                           break;
-                       case DELETE:
-                           ub.deletePicture(h.getObject());
-                           break;
-                   }
-                }
-                ub.getResult().sendRequest();
+                sendUpdateRequest();
             }
         });
         cancelButton.setOnClickListener(new View.OnClickListener() {
@@ -117,7 +134,7 @@ public class UpdateNewsActivity extends AppCompatActivity {
     }
 
     private SimpleNews getNewsData() {
-        return null;
+        return createNewsFragment.getNews();
     }
 
     private void setFragmentData() {
@@ -135,5 +152,29 @@ public class UpdateNewsActivity extends AppCompatActivity {
             cwu.add(new CommentWithUsername(c, u.getUsername()));
         }
         commentsFragment.setCommentList(cwu);
+    }
+
+    private void sendUpdateRequest() {
+        List<HistoryObject<Picture>> history = pictureHistoryList.getHistory();
+        //TODO napravi update
+        UpdateBuilder ub = new CompositeBuilder();
+        if(createNewsFragment.getUpdateStatus()) {
+            ub.createNews(getNewsData());
+        }
+        for(HistoryObject<Picture> h: history){
+            switch (h.getOp()){
+                case INSERT:
+                    ub.addPicture(h.getObject());
+                    break;
+                case UPDATE:
+                    ub.updatePicture(h.getObject());
+                    break;
+                case DELETE:
+                    ub.deletePicture(h.getObject());
+                    break;
+            }
+        }
+        AppExecutors.getInstance().getNetworkIO().execute(ub.getResult());
+        finish();
     }
 }

@@ -17,6 +17,7 @@
     <string name="action_create_new_news">Create news</string>
     <string name="action_unsubscribe_from_news">Unsubscribe from news</string>
     <string name="action_update_news">Update news</string>
+    <string name="action_delete_news">Delete news</string>
 
 
     <string name="news_display_pictures_title">Pictures:</string>

@@ -14,7 +14,16 @@ public class DateGetter {
     {
         SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss");
 
-        Date properDate = sdf.parse(date);
-        return properDate;
+        return sdf.parse(date);
+    }
+
+    public static Date parseDate(String dateString) {
+        Date date = new Date();
+        try{
+            date = DateGetter.getDate(dateString);
+        } catch (ParseException e) {
+            e.printStackTrace();
+        }
+        return date;
     }
 }

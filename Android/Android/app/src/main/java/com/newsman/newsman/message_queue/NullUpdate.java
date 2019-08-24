@@ -6,8 +6,8 @@ import org.json.JSONObject;
 
 public class NullUpdate extends DBUpdate {
 
-    NullUpdate(String operation, JSONObject json, Context context) {
-        super(operation, json, context);
+    NullUpdate(MessageInfo info, Context context) {
+        super(info, context);
     }
 
     @Override

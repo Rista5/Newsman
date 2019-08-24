@@ -9,12 +9,14 @@ import android.net.Uri;
 import android.os.Bundle;
 import android.os.Environment;
 import android.provider.MediaStore;
+import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
+import android.support.v4.content.AsyncTaskLoader;
 
+import com.newsman.newsman.ServerEntities.News;
 import com.newsman.newsman.ServerEntities.Picture;
+import com.newsman.newsman.ServerEntities.SimpleNews;
 
-import java.io.ByteArrayInputStream;
-import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
@@ -22,14 +24,20 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
-import java.io.OutputStreamWriter;
+import java.util.ArrayList;
+import java.util.List;
 
 import static android.app.Activity.RESULT_OK;
 
-// verovatno nece trebati, posto mogu slike u bazu da se cuvaju
-public class PictureLoader {
+public class PictureLoader extends AsyncTaskLoader<List<SimpleNews>> {
 
     private static String currentPicturePath;
+    private static List<News> newsList;
+
+    public PictureLoader(@NonNull Context context, List<News> news) {
+        super(context);
+        newsList = news;
+    }
 
     private static File createPictureFile(Context context, Picture picture) throws IOException {
         File storageDir = context.getExternalFilesDir(Environment.DIRECTORY_PICTURES);
@@ -45,27 +53,24 @@ public class PictureLoader {
         return image;
     }
 
-    public static void savePictureData(Context context, Picture picture){
+    public static void savePictureData(Context context, int pictureId, Bitmap bitmap){
         File imageFile = null;
+        String extension = ".png";
+        String pictureName = pictureId + extension;
         File storageDir = context.getExternalFilesDir(Environment.DIRECTORY_PICTURES);
-        imageFile = new File(storageDir.getPath(), picture.getName());
+        imageFile = new File(storageDir.getPath(), pictureName);
 
         if(imageFile.exists()){
             imageFile.delete();
         }
         try{
             imageFile.createNewFile();
-            //FileOutputStream fos = context.openFileOutput(imageFile.getPath(), Context.MODE_PRIVATE);
             FileOutputStream fos = new FileOutputStream(imageFile);
             ObjectOutputStream oos = null;
             // moze i samo da se sacuva kao byte array preko fos, ali ovako je sigurnije valjda
             oos = new ObjectOutputStream(fos);
-            ByteArrayInputStream byteArrayInputStream = new ByteArrayInputStream(picture.getPictureData());
-            Bitmap bmp = BitmapFactory.decodeStream(byteArrayInputStream);
 
-            Bitmap.CompressFormat format = getPictureFormat(picture);
-
-            bmp.compress(format, 100, oos);
+            bitmap.compress(Bitmap.CompressFormat.PNG, 100, oos);
             oos.close();
             fos.close();
 
@@ -76,25 +81,47 @@ public class PictureLoader {
         }
     }
 
-    public static void loadPictureData(Context context, Picture picture) {
+    public static Bitmap loadPictureData(Context context, int pictureId) {
         File imageFile = null;
         File storageDir = context.getExternalFilesDir(Environment.DIRECTORY_PICTURES);
-        imageFile = new File(storageDir.getPath(), picture.getName());
+        String extension = ".png";
+        String pictureName = pictureId + extension;
+        imageFile = new File(storageDir.getPath(), pictureName);
+        Bitmap result = null;
 
         if(!imageFile.exists()){
-            return;
+            return null;
         }
         try{
             FileInputStream fis = new FileInputStream(imageFile);
             ObjectInputStream ois = new ObjectInputStream(fis);
-            Bitmap bmp = BitmapFactory.decodeStream(ois);
-            ByteArrayOutputStream byteArrayOutputStream = new ByteArrayOutputStream();
-            bmp.compress(getPictureFormat(picture), 100, byteArrayOutputStream);
-            picture.setPictureData(byteArrayOutputStream.toByteArray());
+            result = BitmapFactory.decodeStream(ois);
         } catch (FileNotFoundException e) {
             e.printStackTrace();
         } catch (IOException e) {
             e.printStackTrace();
+        }
+        return result;
+    }
+
+    public static List<Picture> loadPictureListData(Context context, List<Picture> pictures){
+        for(Picture p: pictures) {
+            Bitmap bmp = PictureLoader.loadPictureData(context, p.getId());
+            if(bmp != null)
+                p.setPictureData(PictureConverter.getBitmapBytes(bmp));
+        }
+        return pictures;
+    }
+
+    public static void deletePictureData(Context context, int pictureId) {
+        File imageFile = null;
+        String extension = ".png";
+        String pictureName = pictureId + extension;
+        File storageDir = context.getExternalFilesDir(Environment.DIRECTORY_PICTURES);
+        imageFile = new File(storageDir.getPath(), pictureName);
+
+        if(imageFile.exists()){
+            imageFile.delete();
         }
     }
 
@@ -119,7 +146,7 @@ public class PictureLoader {
         Intent galleryIntent = new Intent(Intent.ACTION_PICK,
                 MediaStore.Images.Media.EXTERNAL_CONTENT_URI);
         if(galleryIntent.resolveActivity(context.getPackageManager())!=null) {
-            ((Activity) context).startActivityForResult(galleryIntent, Constant.RESULT_LOAD_IMAGE);
+            ((Activity) context).startActivityForResult(galleryIntent, Constant.REQUEST_LOAD_IMAGE);
         }
     }
 
@@ -134,7 +161,7 @@ public class PictureLoader {
         if (requestCode == Constant.REQUEST_IMAGE_CAPTURE && resultCode == RESULT_OK) {
             Bundle extras = data.getExtras();
             return (Bitmap) extras.get("data");
-        } else if(requestCode == Constant.RESULT_LOAD_IMAGE && resultCode == RESULT_OK){
+        } else if(requestCode == Constant.REQUEST_LOAD_IMAGE && resultCode == RESULT_OK){
             Uri pictureUri = data.getData();
             try{
                 return MediaStore.Images.Media.getBitmap(context.getContentResolver(), pictureUri);
@@ -145,5 +172,23 @@ public class PictureLoader {
             }
         }
         return null;
+    }
+
+
+
+    @Override
+    protected void onStartLoading() {
+        super.onStartLoading();
+        forceLoad();
+    }
+
+    @Nullable
+    @Override
+    public List<SimpleNews> loadInBackground() {
+        List<SimpleNews> simpleNewsList = new ArrayList<>(newsList.size());
+        for(News n: newsList) {
+            simpleNewsList.add(SimpleNews.getSimpleNews(n, getContext()));
+        }
+        return simpleNewsList;
     }
 }

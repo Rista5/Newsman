@@ -11,9 +11,12 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.newsman.newsman.Auxiliary.Constant;
+import com.newsman.newsman.Auxiliary.PictureConverter;
+import com.newsman.newsman.Auxiliary.PictureLoader;
 import com.newsman.newsman.Auxiliary.PopUpMenuController;
 import com.newsman.newsman.ServerEntities.News;
 import com.newsman.newsman.R;
+import com.newsman.newsman.ServerEntities.SimpleNews;
 import com.newsman.newsman.activities.DisplayNewsActivity;
 
 import java.util.List;
@@ -21,11 +24,11 @@ import java.util.List;
 public class NewsListAdapter extends RecyclerView.Adapter<NewsListAdapter.NewsItemViewHolder> {
 
     private Context mContext;
-    private List<News> newsItemList;
+    private List<SimpleNews> newsList;
 
-    public NewsListAdapter(Context context, List<News> newsItemList) {
+    public NewsListAdapter(Context context, List<SimpleNews> newsList) {
         this.mContext = context;
-        this.newsItemList = newsItemList;
+        this.newsList = newsList;
     }
     @NonNull
     @Override
@@ -38,13 +41,14 @@ public class NewsListAdapter extends RecyclerView.Adapter<NewsListAdapter.NewsIt
     @Override
     public void onBindViewHolder(@NonNull final NewsItemViewHolder newsItemViewHolder, int position) {
         String USER_MODIFIER = "USER_MODIFIER_NOT_FOUND";
-        News news = newsItemList.get(position);
+        SimpleNews news = newsList.get(position);
         final int newsId = news.getId();
         newsItemViewHolder.title.setText(news.getTitle());
         newsItemViewHolder.dateModified.setText(news.getLastModified().toString());
         newsItemViewHolder.userModifier.setText(USER_MODIFIER);
         newsItemViewHolder.content.setText(news.getContent());
-        newsItemViewHolder.setPositionInList(position);
+        if(news.getBackgroundId() != Constant.INVALID_PICTURE_ID)
+            newsItemViewHolder.backgroud.setImageBitmap(news.getBackgroundPicture());
 
         newsItemViewHolder.overflow.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -56,30 +60,36 @@ public class NewsListAdapter extends RecyclerView.Adapter<NewsListAdapter.NewsIt
 
     @Override
     public int getItemCount() {
-        return newsItemList.size();
+        return newsList.size();
+    }
+
+    public void setNewsList(List<SimpleNews> news) {
+        newsList.clear();
+        newsList.addAll(news);
+        notifyDataSetChanged();
     }
 
     public class NewsItemViewHolder extends RecyclerView.ViewHolder {
         private TextView title, dateModified, userModifier, content;
         private ImageView backgroud, overflow;
-        private int positionInList = -1;
 
 
-        public NewsItemViewHolder(@NonNull View itemView, final Context context) {
+        NewsItemViewHolder(@NonNull View itemView, final Context context) {
             super(itemView);
-            title = (TextView) itemView.findViewById(R.id.news_item_title);
-            dateModified = (TextView) itemView.findViewById(R.id.news_item_post_date_value);
-            userModifier = (TextView) itemView.findViewById(R.id.news_item_post_last_user_update_value);
-            content = (TextView) itemView.findViewById(R.id.news_item_text_content);
-            backgroud = (ImageView) itemView.findViewById(R.id.news_item_img);
-            overflow =  (ImageView) itemView.findViewById(R.id.news_item_overflow_list);
+            title = itemView.findViewById(R.id.news_item_title);
+            dateModified = itemView.findViewById(R.id.news_item_post_date_value);
+            userModifier = itemView.findViewById(R.id.news_item_post_last_user_update_value);
+            content = itemView.findViewById(R.id.news_item_text_content);
+            backgroud = itemView.findViewById(R.id.news_item_img);
+            overflow = itemView.findViewById(R.id.news_item_overflow_list);
 
             itemView.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
+                    int positionInList = getAdapterPosition();
                     if(positionInList == -1) return;
                     Intent intent = new Intent(context, DisplayNewsActivity.class);
-                    intent.putExtra(Constant.NEWS_BUNDLE_KEY, newsItemList.get(positionInList).getId());
+                    intent.putExtra(Constant.NEWS_BUNDLE_KEY, newsList.get(positionInList).getId());
                     context.startActivity(intent);
                 }
             });
@@ -133,14 +143,6 @@ public class NewsListAdapter extends RecyclerView.Adapter<NewsListAdapter.NewsIt
             this.backgroud = backgroud;
         }
 
-
-        public int getPositionInList() {
-            return positionInList;
-        }
-
-        public void setPositionInList(int positionInList) {
-            this.positionInList = positionInList;
-        }
 
     }
 }

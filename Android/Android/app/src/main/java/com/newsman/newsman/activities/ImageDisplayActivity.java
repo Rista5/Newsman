@@ -25,6 +25,11 @@ public class ImageDisplayActivity extends AppCompatActivity {
         setContentView(R.layout.activity_image_display);
         zoomableImage = findViewById(R.id.image_display_image_view);
 
+        ActionBar actionBar = getSupportActionBar();
+        if (actionBar != null) {
+            actionBar.setHomeButtonEnabled(true);
+        }
+
         Bundle extras = getIntent().getExtras();
         if(extras!=null) {
             byte[] data = extras.getByteArray(Constant.IMAGE_DISPLAY_KEY);

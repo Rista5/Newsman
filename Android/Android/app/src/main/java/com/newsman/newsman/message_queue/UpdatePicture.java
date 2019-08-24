@@ -11,29 +11,34 @@ import org.json.JSONObject;
 
 class UpdatePicture extends DBUpdate {
 
-    private Picture picture;
+    protected Picture picture;
 
-    UpdatePicture(String operation, JSONObject json, Context context) throws JSONException {
-        super(operation, json, context);
-        picture = parsePicture(json);
+    UpdatePicture(MessageInfo info, Context context) throws JSONException {
+        super(info, context);
+        if(info.getJsonObject() != null) {
+            picture = parsePicture(info.getJsonObject());
+        }
     }
 
     @Override
     public void update() {
-        switch (mOperation) {
+        switch (messageInfo.getOperation()) {
             case MQClient.opInsert:
-                AppDatabase.getInstance(mContext).pictureDao().insertPicture(picture);
+                AppDatabase.getInstance(mContext).pictureDao()
+                        .insertPictureWithLoader(mContext, picture);
                 break;
             case MQClient.opUpdate:
-                AppDatabase.getInstance(mContext).pictureDao().updatePicture(picture);
+                AppDatabase.getInstance(mContext).pictureDao()
+                        .updatePictureWithLoader(mContext, picture);
                 break;
             case MQClient.opDelete:
-                AppDatabase.getInstance(mContext).pictureDao().deletePicture(picture);
+                AppDatabase.getInstance(mContext).pictureDao()
+                        .deletePictureByIdWithData(mContext, messageInfo.getObjectId());
                 break;
         }
     }
 
-    private Picture parsePicture(JSONObject json) throws JSONException {
+    protected Picture parsePicture(JSONObject json) throws JSONException {
         int pictureId = json.getInt("Id");
         String name = json.getString("Name");
         String description = json.getString("Description");

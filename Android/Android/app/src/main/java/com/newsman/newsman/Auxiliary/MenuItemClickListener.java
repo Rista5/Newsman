@@ -8,6 +8,8 @@ import android.widget.PopupMenu;
 import android.widget.Toast;
 
 import com.newsman.newsman.R;
+import com.newsman.newsman.REST.ConnectionStrategy.Delete;
+import com.newsman.newsman.REST.RestConnector;
 import com.newsman.newsman.activities.UpdateNewsActivity;
 
 public class MenuItemClickListener implements PopupMenu.OnMenuItemClickListener {
@@ -28,13 +30,17 @@ public class MenuItemClickListener implements PopupMenu.OnMenuItemClickListener 
                 return true;
             case R.id.action_unsubscribe_from_news:
                 Toast.makeText(mContext, "Successfuly unsubscribed from news!", Toast.LENGTH_SHORT).show();
+                return true;
             case R.id.action_update_news:
                 Intent intent = new Intent(mContext, UpdateNewsActivity.class);
                 Bundle bundle = new Bundle();
                 bundle.putInt(Constant.NEWS_BUNDLE_KEY, newsId);
                 intent.putExtras(bundle);
                 mContext.startActivity(intent);
-
+                return true;
+            case R.id.action_delete_news:
+                new RestConnector(new Delete(newsId), Constant.NEWS_ROUTE).execute();
+                return true;
             default:
         }
         return false;

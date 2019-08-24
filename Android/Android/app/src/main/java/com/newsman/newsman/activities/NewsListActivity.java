@@ -3,7 +3,10 @@ package com.newsman.newsman.activities;
 import android.arch.lifecycle.LiveData;
 import android.arch.lifecycle.Observer;
 import android.content.Intent;
+import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
+import android.support.v4.app.LoaderManager;
+import android.support.v4.content.Loader;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.DefaultItemAnimator;
@@ -13,19 +16,22 @@ import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
 
+import com.newsman.newsman.Auxiliary.Constant;
+import com.newsman.newsman.Auxiliary.PictureLoader;
 import com.newsman.newsman.Database.AppDatabase;
 import com.newsman.newsman.ServerEntities.News;
 import com.newsman.newsman.R;
+import com.newsman.newsman.ServerEntities.SimpleNews;
 import com.newsman.newsman.adapters.NewsListAdapter;
 
 import java.util.ArrayList;
 import java.util.List;
 
-public class NewsListActivity extends AppCompatActivity {
+public class NewsListActivity extends AppCompatActivity implements LoaderManager.LoaderCallbacks<List<SimpleNews>>{
 
     private RecyclerView recyclerView;
     private NewsListAdapter adapter;
-    private List<News> newsList;
+    private List<SimpleNews> newsList;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -35,9 +41,9 @@ public class NewsListActivity extends AppCompatActivity {
         recyclerView = (RecyclerView) findViewById(R.id.rv_news_list);
         newsList = new ArrayList<>();
 
-        prepareNews();
-
         adapter = new NewsListAdapter(this, newsList);
+
+        prepareNews();
 
         RecyclerView.LayoutManager mLayoutManager =
                 new LinearLayoutManager(this, LinearLayoutManager.VERTICAL, false);
@@ -76,10 +82,43 @@ public class NewsListActivity extends AppCompatActivity {
         liveNews.observe(this, new Observer<List<News>>() {
             @Override
             public void onChanged(@Nullable List<News> news) {
-                newsList.clear();
-                newsList.addAll(news);
-                adapter.notifyDataSetChanged();
+//                adapter.setNewsList(news);
+                createLoader(news);
             }
         });
+    }
+
+    private void createLoader(List<News> news) {
+        Bundle data = new Bundle();
+        data.putParcelableArrayList(Constant.NEWS_BUNDLE_KEY, new ArrayList<News>(news));
+        LoaderManager loaderManager = LoaderManager.getInstance(this);
+        Loader<List<SimpleNews>> loader = loaderManager.getLoader(Constant.PICTURE_LOADER_ID);
+
+        if(loader == null) {
+            loader = loaderManager.initLoader(Constant.PICTURE_LOADER_ID, data, this);
+        } else {
+            loader = loaderManager.restartLoader(Constant.PICTURE_LOADER_ID, data, this);
+        }
+        loader.startLoading();
+    }
+
+    @NonNull
+    @Override
+    public Loader<List<SimpleNews>> onCreateLoader(int i, @Nullable Bundle bundle) {
+        List<News> news = new ArrayList<>();
+        if(bundle != null) {
+            news = bundle.getParcelableArrayList(Constant.NEWS_BUNDLE_KEY);
+        }
+        return new PictureLoader(this, news);
+    }
+
+    @Override
+    public void onLoadFinished(@NonNull Loader<List<SimpleNews>> loader, List<SimpleNews> simpleNews) {
+        adapter.setNewsList(simpleNews);
+    }
+
+    @Override
+    public void onLoaderReset(@NonNull Loader<List<SimpleNews>> loader) {
+
     }
 }

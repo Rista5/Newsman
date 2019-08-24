@@ -1,9 +1,12 @@
 package com.newsman.newsman.ServerEntities;
 
+import android.arch.persistence.room.ColumnInfo;
 import android.arch.persistence.room.Entity;
 import android.arch.persistence.room.Ignore;
 import android.arch.persistence.room.PrimaryKey;
 import android.arch.persistence.room.Relation;
+import android.os.Parcel;
+import android.os.Parcelable;
 
 import com.newsman.newsman.Auxiliary.DateGetter;
 
@@ -17,14 +20,17 @@ import java.util.List;
  * Created by Me on 1/10/2019.
  */
 @Entity(tableName = "news")
-public class News implements Serializable {
+public class News implements Serializable, Parcelable {
 
     @PrimaryKey(autoGenerate = false)
     private int id;
     private String title;
     private String content;
     private Date lastModified;
+    private int backgroundId;
 
+    @Ignore
+    private Picture backgroundPic;
     @Ignore
     private List<Comment> comments;
     @Ignore
@@ -40,20 +46,36 @@ public class News implements Serializable {
 
     @Ignore
     public News(int id, String title, String content,
-                List<Comment> comments, String lastModified, List<Picture> pictures) {
+                List<Comment> comments, Date lastModified, List<Picture> pictures, int backgroundId) {
         this.id = id;
         this.title = title;
         this.content = content;
         this.comments = (comments != null) ? comments : new ArrayList<Comment>();
         this.pictures = (pictures != null) ? pictures : new ArrayList<Picture>();
-        try{
-            this.lastModified = DateGetter.getDate(lastModified);
-        }
-        catch (ParseException e) {
-            e.printStackTrace();
-            this.lastModified = new Date();
-        }
+        this.lastModified = lastModified;
+        this.backgroundId = backgroundId;
     }
+
+    protected News(Parcel in) {
+        this();
+        id = in.readInt();
+        title = in.readString();
+        content = in.readString();
+        backgroundId = in.readInt();
+        lastModified = new Date(in.readLong());
+    }
+
+    public static final Creator<News> CREATOR = new Creator<News>() {
+        @Override
+        public News createFromParcel(Parcel in) {
+            return new News(in);
+        }
+
+        @Override
+        public News[] newArray(int size) {
+            return new News[size];
+        }
+    };
 
     public int getId() {
         return id;
@@ -111,4 +133,33 @@ public class News implements Serializable {
         this.audioRecordings = audioRecordings;
     }
 
+    public int getBackgroundId() {
+        return backgroundId;
+    }
+
+    public void setBackgroundId(int backgroundId) {
+        this.backgroundId = backgroundId;
+    }
+
+    public Picture getBackgroundPic() {
+        return backgroundPic;
+    }
+
+    public void setBackgroundPic(Picture backgroundPic) {
+        this.backgroundPic = backgroundPic;
+    }
+
+    @Override
+    public int describeContents() {
+        return 0;
+    }
+
+    @Override
+    public void writeToParcel(Parcel dest, int flags) {
+        dest.writeInt(id);
+        dest.writeString(title);
+        dest.writeString(content);
+        dest.writeInt(backgroundId);
+        dest.writeLong(lastModified.getTime());
+    }
 }

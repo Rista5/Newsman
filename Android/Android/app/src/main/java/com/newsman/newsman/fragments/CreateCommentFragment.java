@@ -12,7 +12,9 @@ import android.widget.EditText;
 
 import com.newsman.newsman.Auxiliary.Constant;
 import com.newsman.newsman.R;
-import com.newsman.newsman.REST.Put.PutCommentToRest;
+import com.newsman.newsman.REST.ConnectionStrategy.Put;
+import com.newsman.newsman.REST.RestConnector;
+import com.newsman.newsman.REST.WriteJson.WriteComment;
 import com.newsman.newsman.ServerEntities.Comment;
 
 public class CreateCommentFragment extends Fragment {
@@ -37,9 +39,8 @@ public class CreateCommentFragment extends Fragment {
         postButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                //TODO get user and send new comment to rest
                 Comment comment = createComment();
-                new PutCommentToRest(comment).put();
+                new RestConnector(new Put(new WriteComment(comment)), Constant.PICTURE_ROUTE);
             }
         });
         return rootView;

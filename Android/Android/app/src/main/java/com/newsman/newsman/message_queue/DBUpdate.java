@@ -3,17 +3,17 @@ package com.newsman.newsman.message_queue;
 import android.content.Context;
 
 import org.json.JSONException;
-import org.json.JSONObject;
 
 public abstract class DBUpdate {
 
     Context mContext;
-    String mOperation;
+    protected MessageInfo messageInfo;
 
-    DBUpdate(String operation, JSONObject json, Context context) {
+
+    DBUpdate(MessageInfo info, Context context) {
         mContext = context;
-        mOperation = operation;
+        messageInfo = info;
     }
 
-    public abstract void update() throws JSONException;
+    public abstract void update();
 }

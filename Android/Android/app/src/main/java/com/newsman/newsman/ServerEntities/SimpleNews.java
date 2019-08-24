@@ -4,7 +4,9 @@ import android.content.Context;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 
+import com.newsman.newsman.Auxiliary.Constant;
 import com.newsman.newsman.Auxiliary.PictureConverter;
+import com.newsman.newsman.Auxiliary.PictureLoader;
 import com.newsman.newsman.R;
 
 import java.util.Date;
@@ -15,14 +17,16 @@ public class SimpleNews {
     private String content;
     private Date lastModified;
     private Bitmap backgroundPicture;
+    private int backgroundId;
 
-    public SimpleNews(int id, String title, String content,
-                      Date lastModified, Bitmap background){
+    public SimpleNews(int id, String title, String content, Date lastModified, Bitmap background,
+                      int backgroundId){
         this.id = id;
         this.title = title;
         this.content = content;
         this.lastModified = lastModified;
         this.backgroundPicture = background;
+        this.backgroundId = backgroundId;
     }
 
 
@@ -31,23 +35,23 @@ public class SimpleNews {
         news.setTitle(simpleNews.getTitle());
         news.setContent(simpleNews.getContent());
         news.setLastModified(simpleNews.getLastModified());
+        news.setBackgroundId(simpleNews.getBackgroundId());
     }
 
     public static SimpleNews getSimpleNews(News news, Context context) {
         Bitmap background;
-        if(news.getPictures().size()>0){
-            background = PictureConverter
-                    .getBitmap(news.getPictures().get(0).getPictureData());
+        if(news.getBackgroundId() != Constant.INVALID_PICTURE_ID){
+            background = PictureLoader.loadPictureData(context, news.getBackgroundId());
         } else {
-            background = BitmapFactory
-                    .decodeResource(context.getResources(), R.drawable.mountain);
+            background = BitmapFactory.decodeResource(context.getResources(), R.drawable.mountain);
         }
         return new SimpleNews(
                 news.getId(),
                 news.getTitle(),
                 news.getContent(),
                 news.getLastModified(),
-                background
+                background,
+                news.getBackgroundId()
         );
     }
 
@@ -90,4 +94,13 @@ public class SimpleNews {
     public void setBackgroundPicture(Bitmap backgroundPicture) {
         this.backgroundPicture = backgroundPicture;
     }
+
+    public int getBackgroundId() {
+        return backgroundId;
+    }
+
+    public void setBackgroundId(int backgroundId) {
+        this.backgroundId = backgroundId;
+    }
+
 }

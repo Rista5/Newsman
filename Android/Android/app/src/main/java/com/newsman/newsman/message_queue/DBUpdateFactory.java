@@ -6,18 +6,20 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 class DBUpdateFactory {
-    static DBUpdate createInstance(String type, String operation, JSONObject jsonObject,
+    static DBUpdate createInstance(String type, MessageInfo info,
                                    Context context) throws JSONException {
         switch (type) {
             case "UserDTO":
-                return new UpdateUser(operation, jsonObject, context);
+                return new UpdateUser(info, context);
             case "NewsDTO":
-                return new UpdateNews(operation, jsonObject, context);
+                return new UpdateNews(info, context);
             case "CommentDTO":
-                return new UpdateComment(operation, jsonObject, context);
+                return new UpdateComment(info, context);
             case "PictureDTO":
-                return new UpdatePicture(operation, jsonObject, context);
+                return new UpdatePicture(info, context);
+            case "SimpleNewsDTO":
+                return new UpdateSimpleNews(info, context);
         }
-        return new NullUpdate(operation, jsonObject, context);
+        return new NullUpdate(info, context);
     }
 }

@@ -1,88 +1,115 @@
 package com.newsman.newsman.activities;
 
-import android.databinding.DataBindingUtil;
+import android.content.Intent;
+import android.graphics.Bitmap;
+import android.support.annotation.Nullable;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
-import android.support.v7.widget.RecyclerView;
 import android.view.View;
 import android.widget.Button;
-import android.widget.EditText;
-import android.widget.ImageView;
 import android.widget.Toast;
 
+import com.newsman.newsman.Auxiliary.Constant;
 import com.newsman.newsman.R;
-import com.newsman.newsman.ServerEntities.Audio;
-import com.newsman.newsman.ServerEntities.Comment;
+import com.newsman.newsman.REST.ConnectionStrategy.Put;
+import com.newsman.newsman.REST.RestConnector;
+import com.newsman.newsman.REST.WriteJson.WriteNews;
 import com.newsman.newsman.ServerEntities.News;
 import com.newsman.newsman.ServerEntities.Picture;
-import com.newsman.newsman.databinding.ActivityCreateNewsBinding;
+import com.newsman.newsman.ServerEntities.SimpleNews;
+import com.newsman.newsman.fragments.CreateNewsFragment;
+import com.newsman.newsman.fragments.PicturesFragment;
 
 import java.util.ArrayList;
+import java.util.Date;
+import java.util.List;
+
+import javax.xml.datatype.Duration;
 
 public class CreateNewsActivity extends AppCompatActivity {
 
-    private EditText editTextNewsTitle, editTextContent;
-    private Button buttonChoseBackgroud, buttonAddImage;
-    private ImageView imageViewBackground;
-    private RecyclerView rvImages;
+    private CreateNewsFragment createNewsFragment;
+    private PicturesFragment picturesFragment;
     private Button buttonPostNews, buttonCancel;
 
-    private ActivityCreateNewsBinding mBinding;
+    private Bitmap backgroundPic;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_create_news);
 
+        setFragments();
         setUpViews();
     }
 
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
+        if(requestCode == Constant.REQUEST_LOAD_IMAGE ||
+                requestCode == Constant.REQUEST_IMAGE_CAPTURE) {
+            createNewsFragment.onActivityResult(requestCode, resultCode, data);
+            return;
+        } else if (requestCode == Constant.PICTURE_REQUEST_CODE) {
+            picturesFragment.onActivityResult(requestCode, resultCode, data);
+            return;
+        }
+        super.onActivityResult(requestCode, resultCode, data);
+    }
+
     private void setUpViews() {
-        editTextNewsTitle = findViewById(R.id.create_new_news_title);
-        editTextContent = findViewById(R.id.create_new_news_content);
-        buttonChoseBackgroud = findViewById(R.id.create_new_news_chose_background_image_button);
-        buttonAddImage = findViewById(R.id.create_new_news_add_image_button);
-        imageViewBackground = findViewById(R.id.create_new_news_background);
-        rvImages = findViewById(R.id.rv_create_news_pictures);
-
-        mBinding = DataBindingUtil.setContentView(this, R.layout.activity_create_news);
-
-        buttonPostNews = findViewById(R.id.create_new_news_post_news);
+        buttonPostNews = findViewById(R.id.create_news_post_news);
         buttonPostNews.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                if(!checkValidNews()) {
+                News news = createNews();
+                if(!checkValidNews(news)) {
                     displayToast();
                 } else {
-
+                    new RestConnector(new Put(new WriteNews(news, backgroundPic)), Constant.createNewsRoute())
+                            .execute();
+                    finish();
                 }
             }
         });
-        buttonCancel = findViewById(R.id.create_new_news_cancel);
+        buttonCancel = findViewById(R.id.create_news_cancel);
+        buttonCancel.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                finish();
+            }
+        });
     }
 
-    private boolean checkValidNews() {
-        if(editTextNewsTitle.getText().toString().length() > 0 &&
-            editTextContent.getText().toString().length() > 0) {
-            return true;
-        } else {
+    private void setFragments() {
+        SimpleNews news = new SimpleNews(-1, "", "", new Date(), null,-1);
+        createNewsFragment = CreateNewsFragment.newInstance(news);
+        picturesFragment = PicturesFragment.newInstance(-1, new ArrayList<Picture>(), false);
+        getSupportFragmentManager().beginTransaction()
+                .add(R.id.create_news_news_frame, createNewsFragment)
+                .add(R.id.create_news_pictures_frame, picturesFragment)
+                .commit();
+    }
+
+    private boolean checkValidNews(News news) {
+        if(news.getTitle().equals("") || news.getContent().equals(""))
             return false;
-        }
+        else
+            return true;
     }
 
     private void displayToast() {
-        Toast toast = new Toast(this);
-        toast.setText(R.string.create_news_toast_message);
+        Toast toast = Toast.makeText(this, R.string.create_news_toast_message, Toast.LENGTH_SHORT);
+        toast.show();
     }
 
     private News createNews() {
         News news = new News();
-        news.setTitle(editTextNewsTitle.getText().toString());
-        news.setContent(editTextContent.getText().toString());
-        news.setComments(new ArrayList<Comment>());
-        news.setId(-1);
-        news.setAudioRecordings(new ArrayList<Audio>());
-        news.setPictures(new ArrayList<Picture>());
+        SimpleNews simpleNews = createNewsFragment.getNews();
+        SimpleNews.populateNews(news, simpleNews);
+        backgroundPic = simpleNews.getBackgroundPicture();
+        List<Picture> pictures = picturesFragment.getPictureList();
+        news.setPictures(pictures);
         return news;
     }
 }
