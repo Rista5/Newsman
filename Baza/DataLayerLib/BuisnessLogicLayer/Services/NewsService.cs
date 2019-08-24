@@ -34,17 +34,41 @@ namespace BuisnessLogicLayer.Services
         
         public bool CreateNews(NewsDTO news, int userId)
         {
-            return newsData.CreateNews(news, userId);
+            bool result = false;
+            NewsDTO dataResult = newsData.CreateNews(news, userId);
+            if(dataResult!= null)
+            {
+                MessageQueueManager manager = MessageQueueManager.Instance;
+                manager.PublishMessage(dataResult.Id, dataResult.Id, dataResult, MessageOperation.Insert);
+                result = true;
+            }
+            return result;
         }
         
         public bool UpdateNews(NewsDTO news, int userId)
         {
-            return newsData.UpdateNews(news, userId);
+            bool result = false;
+            NewsDTO dataResult = newsData.UpdateNews(news, userId);
+            if (dataResult != null)
+            {
+                MessageQueueManager manager = MessageQueueManager.Instance;
+                manager.PublishMessage(dataResult.Id, dataResult.Id, dataResult, MessageOperation.Update);
+                result = true;
+            }
+            return result;
         }
         
         public bool UpdateNews(SimpleNewsDTO simpleDTO, int userId)
         {
-            return newsData.UpdateNews(simpleDTO, userId);
+            bool result = false;
+            NewsDTO dataResult = newsData.UpdateNews(simpleDTO, userId);
+            if (dataResult != null)
+            {
+                MessageQueueManager manager = MessageQueueManager.Instance;
+                manager.PublishMessage(dataResult.Id, dataResult.Id, dataResult, MessageOperation.Update);
+                result = true;
+            }
+            return result;
         }
         
         public bool DeleteNews(int userId)

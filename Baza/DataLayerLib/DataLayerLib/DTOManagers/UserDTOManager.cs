@@ -154,10 +154,10 @@ namespace DataLayerLib.DTOManagers
             return result;
         }
 
-        public bool UpdateUser(int userId, string oldPassword,
+        public UserDTO UpdateUser(int userId, string oldPassword,
             string newUsername, string newPassword)
         {
-            bool result = false;
+            UserDTO result = null;
             ISession session = null;
             try
             {
@@ -188,10 +188,10 @@ namespace DataLayerLib.DTOManagers
                 session.Flush();
                 session.Close();
 
-                MessageQueueManager menager = MessageQueueManager.Instance;
-                menager.PublishMessage(1, user.Id, new UserDTO(user), MessageOperation.Update);
+                //MessageQueueManager menager = MessageQueueManager.Instance;
+                //menager.PublishMessage(1, user.Id, new UserDTO(user), MessageOperation.Update);
 
-                result = true;
+                result = new UserDTO(user);
             }
             catch (Exception ex)
             {

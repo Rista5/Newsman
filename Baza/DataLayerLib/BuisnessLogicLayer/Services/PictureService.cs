@@ -34,7 +34,15 @@ namespace BuisnessLogicLayer.Services
         
         public bool CreatePicture(PictureDTO pic)
         {
-            return pictureData.CreatePicture(pic);
+            bool resault = false;
+            PictureDTO dataResult = pictureData.CreatePicture(pic);
+            if (dataResult != null)
+            {
+                MessageQueueManager menager = MessageQueueManager.Instance;
+                menager.PublishMessage(dataResult.BelongsToNewsId, dataResult.Id, dataResult, MessageOperation.Insert);
+                resault = true;
+            }
+            return resault;
         }
         
         public bool DeletePicture(int id)
@@ -44,7 +52,15 @@ namespace BuisnessLogicLayer.Services
         
         public bool UpdatePicture(PictureDTO pic)
         {
-            return pictureData.UpdatePicture(pic);
+            bool resault = false;
+            PictureDTO dataResult = pictureData.UpdatePicture(pic);
+            if (dataResult != null)
+            {
+                MessageQueueManager menager = MessageQueueManager.Instance;
+                menager.PublishMessage(dataResult.BelongsToNewsId, dataResult.Id, dataResult, MessageOperation.Update);
+                resault = true;
+            }
+            return resault;
         }
     }
 }

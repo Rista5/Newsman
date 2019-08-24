@@ -20,13 +20,13 @@ namespace BuisnessLogicLayer.DAOInterfaces
 
         NewsDTO CreateNews(string title, string content, int userId);
 
-        bool CreateNews(NewsDTO news, int userId);
+        NewsDTO CreateNews(NewsDTO news, int userId);
 
         bool UpdateNews(int userId, int newsId, string title, string content);
 
-        bool UpdateNews(SimpleNewsDTO simpleDTO, int userId);
+        NewsDTO UpdateNews(SimpleNewsDTO simpleDTO, int userId);
 
-        bool UpdateNews(NewsDTO newsDTO, int userId);
+        NewsDTO UpdateNews(NewsDTO newsDTO, int userId);
 
         bool DeleteNews(int newsId);
 

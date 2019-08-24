@@ -162,8 +162,8 @@ namespace DataLayerLib.DTOManagers
 
                 session.Flush();
 
-                MessageQueueManager manager = MessageQueueManager.Instance;
-                manager.PublishMessage(news.Id, news.Id, new NewsDTO(news), MessageOperation.Insert);
+                //MessageQueueManager manager = MessageQueueManager.Instance;
+                //manager.PublishMessage(news.Id, news.Id, new NewsDTO(news), MessageOperation.Insert);
 
                 result = new NewsDTO(news);
 
@@ -179,9 +179,9 @@ namespace DataLayerLib.DTOManagers
             return result;
         }
 
-        public bool CreateNews(NewsDTO news, int userId)
+        public NewsDTO CreateNews(NewsDTO news, int userId)
         {
-            bool result = false;
+            NewsDTO result = null;
             ISession session = null;
             try
             {
@@ -202,12 +202,12 @@ namespace DataLayerLib.DTOManagers
 
                 transaction.Commit();
 
-                MessageQueueManager manager = MessageQueueManager.Instance;
-                manager.PublishMessage(newNews.Id, newNews.Id, new NewsDTO(newNews), MessageOperation.Insert);
+                //MessageQueueManager manager = MessageQueueManager.Instance;
+                //manager.PublishMessage(newNews.Id, newNews.Id, new NewsDTO(newNews), MessageOperation.Insert);
+
+                result = new NewsDTO(newNews);
 
                 session.Close();
-
-                result = true;
             }
             catch (Exception ex)
             {
@@ -257,9 +257,9 @@ namespace DataLayerLib.DTOManagers
             return result;
         }
 
-        public bool UpdateNews(SimpleNewsDTO simpleDTO, int userId)
+        public NewsDTO UpdateNews(SimpleNewsDTO simpleDTO, int userId)
         {
-            bool result = false;
+            NewsDTO result = null;
             ISession session = null;
             try
             {
@@ -292,12 +292,12 @@ namespace DataLayerLib.DTOManagers
                 session.Save(modification);
                 session.Flush();
 
-                MessageQueueManager manager = MessageQueueManager.Instance;
-                manager.PublishMessage(news.Id, news.Id, new NewsDTO(news), MessageOperation.Update);
+                //MessageQueueManager manager = MessageQueueManager.Instance;
+                //manager.PublishMessage(news.Id, news.Id, new NewsDTO(news), MessageOperation.Update);
+
+                result = new NewsDTO(news);
 
                 session.Close();
-
-                result = true;
             }
             catch (Exception ex)
             {
@@ -308,9 +308,9 @@ namespace DataLayerLib.DTOManagers
             return result;
         }
 
-        public bool UpdateNews(NewsDTO newsDTO, int userId)
+        public NewsDTO UpdateNews(NewsDTO newsDTO, int userId)
         {
-            bool result = false;
+            NewsDTO result = null;
             ISession session = null;
             try
             {
@@ -331,14 +331,12 @@ namespace DataLayerLib.DTOManagers
 
                 transaction.Commit();
 
+                //MessageQueueManager manager = MessageQueueManager.Instance;
+                //manager.PublishMessage(news.Id, news.Id, new NewsDTO(news), MessageOperation.Update);
 
-                MessageQueueManager manager = MessageQueueManager.Instance;
-                manager.PublishMessage(news.Id, news.Id, new NewsDTO(news), MessageOperation.Update);
+                result = new NewsDTO(news);
 
                 session.Close();
-
-                result = true;
-
             }
             catch (Exception ex)
             {

@@ -11,7 +11,7 @@ using ObjectModel.DTOs;
 namespace API.Controllers
 {
 
-    public class CommentController : ApiController
+    public class CommentController : BaseController/*ApiController*/
     {
         public CommentService service;
 
@@ -19,7 +19,7 @@ namespace API.Controllers
         [ActionName("DefaultAction")]
         public IEnumerable<CommentDTO> Get()
         {
-            service = new CommentService(new CommentDTOManager());
+            service = Service.CommentService;
             IEnumerable<CommentDTO> returnValue = service.GetAllComments();
             return returnValue;
         }

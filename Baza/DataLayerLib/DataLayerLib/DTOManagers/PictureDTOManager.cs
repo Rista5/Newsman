@@ -90,10 +90,10 @@ namespace DataLayerLib.DTOManagers
             return result;
         }
 
-        public bool CreatePicture(int newsId, string name,
+        public PictureDTO CreatePicture(int newsId, string name,
             string description, byte[] pictureData = null)
         {
-            bool result = false;
+            PictureDTO result = null;
             ISession session = null;
             try
             {
@@ -114,14 +114,14 @@ namespace DataLayerLib.DTOManagers
                 }
 
                 PictureDTO dto = new PictureDTO(picture);
-                //dto.PictureData = pictureData;
                 dto.SetPictureBytes(pictureData);
-                MessageQueueManager menager = MessageQueueManager.Instance;
-                menager.PublishMessage(picture.BelongsTo.Id, picture.Id, dto, MessageOperation.Insert);
+
+                //MessageQueueManager menager = MessageQueueManager.Instance;
+                //menager.PublishMessage(picture.BelongsTo.Id, picture.Id, dto, MessageOperation.Insert);
 
                 session.Close();
 
-                result = true;
+                result = dto;
             }
             catch (Exception ex)
             {
@@ -133,9 +133,9 @@ namespace DataLayerLib.DTOManagers
             return result;
         }
 
-        public bool CreatePicture(PictureDTO picturedto)
+        public PictureDTO CreatePicture(PictureDTO picturedto)
         {
-            bool result = false;
+            PictureDTO result = null;
             ISession session = null;
             try
             {
@@ -160,11 +160,11 @@ namespace DataLayerLib.DTOManagers
                     PictureDTO message = new PictureDTO(picture);
                     message.PictureData = picturedto.PictureData;
                     menager.PublishMessage(picture.BelongsTo.Id, picture.Id, picturedto, MessageOperation.Insert);
+
+                    result = picturedto;
                 }
 
                 session.Close();
-
-                result = true;
             }
             catch (Exception ex)
             {
@@ -213,10 +213,10 @@ namespace DataLayerLib.DTOManagers
             return result;
         }
 
-        public bool UpdatePicture(PictureDTO pic)
+        public PictureDTO UpdatePicture(PictureDTO pic)
         {
             ISession session = null;
-            bool result = false;
+            PictureDTO result = null;
             try
             {
                 session = DataLayer.GetSession();
@@ -236,12 +236,12 @@ namespace DataLayerLib.DTOManagers
                     loader.SaveMedia(picture.Id,pic.BelongsToNewsId, pic.Name, pic.GetPictureBytes());
                 }
 
-                MessageQueueManager manager = MessageQueueManager.Instance;
-                manager.PublishMessage(picture.BelongsTo.Id, picture.Id, pic, MessageOperation.Update);
+                //MessageQueueManager manager = MessageQueueManager.Instance;
+                //manager.PublishMessage(picture.BelongsTo.Id, picture.Id, pic, MessageOperation.Update);
 
                 session.Close();
 
-                result = true;
+                result = pic;
             }
             catch (Exception ex)
             {

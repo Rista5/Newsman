@@ -15,13 +15,13 @@ namespace BuisnessLogicLayer.DAOInterfaces
 
         CommentDTO GetComment(int commentId);
 
-        bool CreateComment(int userId, int newsId, string content);
+        CommentDTO CreateComment(int userId, int newsId, string content);
 
-        bool CreateComment(CommentDTO commentDTO);
+        CommentDTO CreateComment(CommentDTO commentDTO);
 
-        bool UpdateComment(int commntId, string content);
+        CommentDTO UpdateComment(int commntId, string content);
 
-        bool UpdateComment(CommentDTO commentDTO);
+        CommentDTO UpdateComment(CommentDTO commentDTO);
 
         bool DeleteComment(int commentId);
     }

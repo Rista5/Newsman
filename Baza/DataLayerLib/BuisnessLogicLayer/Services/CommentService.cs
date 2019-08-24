@@ -37,12 +37,28 @@ namespace BuisnessLogicLayer.Services
         
         public bool UpdateComment(int id, string content)
         {
-            return commentDataAccess.UpdateComment(id, content);
+            bool result = false;
+            CommentDTO dataResult = commentDataAccess.UpdateComment(id, content);
+            if (dataResult != null)
+            {
+                MessageQueueManager menager = MessageQueueManager.Instance;
+                menager.PublishMessage(dataResult.BelongsToNewsId, dataResult.Id, dataResult, MessageOperation.Update);
+                result = true;
+            }
+            return result;
         }
         
         public bool CreateComment(CommentSimpleDTO value)
         {
-            return commentDataAccess.CreateComment(value.CreatedBy, value.BelongsToNewsId, value.Content);
+            bool result = false;
+            CommentDTO dataResult = commentDataAccess.CreateComment(value.CreatedBy, value.BelongsToNewsId, value.Content);
+            if(dataResult != null)
+            {
+                MessageQueueManager menager = MessageQueueManager.Instance;
+                menager.PublishMessage(dataResult.BelongsToNewsId, dataResult.Id, dataResult, MessageOperation.Insert);
+                result = true;
+            }
+            return result;
         }
         
         public bool DeleteComment(int id)

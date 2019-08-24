@@ -210,7 +210,7 @@ namespace DataLayerLib
             CreateCommentForm form = new CreateCommentForm(users, news);
             if(form.ShowDialog() == DialogResult.OK)
             {
-                if (new DTOManagers.CommentDTOManager().CreateComment(form.User_Id, form.News_Id, form.Content))
+                if (new DTOManagers.CommentDTOManager().CreateComment(form.User_Id, form.News_Id, form.Content) != null)
                     MessageBox.Show("Uspesno dodat komentar");
                 else
                     MessageBox.Show("Greska");
@@ -224,7 +224,7 @@ namespace DataLayerLib
             if(form.ShowDialog()==DialogResult.OK)
             {
                 if (new DTOManagers.PictureDTOManager().CreatePicture(form.News_ID, form.PictureName,
-                    form.Description, form.PictureData))
+                    form.Description, form.PictureData) != null)
                     MessageBox.Show("Uspesno dodata slika");
                 else
                     MessageBox.Show("Greska");
@@ -239,7 +239,7 @@ namespace DataLayerLib
             if(form.ShowDialog() == DialogResult.OK)
             {
                 
-                if (new DTOManagers.UserDTOManager().UpdateUser(user.Id, form.Password, form.Username, form.NewPassword))
+                if (new DTOManagers.UserDTOManager().UpdateUser(user.Id, form.Password, form.Username, form.NewPassword) != null)
                     MessageBox.Show("Uspesno azuriran user");
                 else
                     MessageBox.Show("Greska");
@@ -252,7 +252,7 @@ namespace DataLayerLib
             CreateNewsForm form = new CreateNewsForm(users);
             if(form.ShowDialog() == DialogResult.OK)
             {
-                if(new DTOManagers.NewsDTOManager().CreateNews(form.Title,form.Content,form.User_ID))
+                if(new DTOManagers.NewsDTOManager().CreateNews(form.Title,form.Content,form.User_ID) != null)
                     MessageBox.Show("Uspesno kreirana vest");
                 else
                     MessageBox.Show("Greska");
@@ -332,7 +332,7 @@ namespace DataLayerLib
             if(form.ShowDialog() == DialogResult.OK)
             {
                 dto.Content = form.Content;
-                if (new DTOManagers.CommentDTOManager().UpdateComment(dto))
+                if (new DTOManagers.CommentDTOManager().UpdateComment(dto)!=null)
                     MessageBox.Show("Azuriran komentar");
                 else
                     MessageBox.Show("Greska");

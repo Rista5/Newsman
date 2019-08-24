@@ -81,9 +81,9 @@ namespace DataLayerLib.DTOManagers
             return result;
         }
 
-        public bool CreateComment(int userId, int newsId, string content)
+        public CommentDTO CreateComment(int userId, int newsId, string content)
         {
-            bool result = false;
+            CommentDTO result = null;
             ISession session = null;
             try
             {
@@ -99,11 +99,12 @@ namespace DataLayerLib.DTOManagers
                 session.Save(comment);
                 session.Flush();
 
-                MessageQueueManager menager = MessageQueueManager.Instance;
-                menager.PublishMessage(comment.BelongsTo.Id, comment.Id, new CommentDTO(comment), MessageOperation.Insert);
+                //MessageQueueManager menager = MessageQueueManager.Instance;
+                //menager.PublishMessage(comment.BelongsTo.Id, comment.Id, new CommentDTO(comment), MessageOperation.Insert);
+
+                result = new CommentDTO(comment);
 
                 session.Close();
-                result = true;
             }
             catch (Exception ex)
             {
@@ -114,9 +115,9 @@ namespace DataLayerLib.DTOManagers
             return result;
         }
 
-        public bool CreateComment(CommentDTO commentDTO)
+        public CommentDTO CreateComment(CommentDTO commentDTO)
         {
-            bool result = false;
+            CommentDTO result = null;
             ISession session = null;
             try
             {
@@ -135,12 +136,12 @@ namespace DataLayerLib.DTOManagers
                 session.Save(comment);
                 session.Flush();
 
-                MessageQueueManager menager = MessageQueueManager.Instance;
-                menager.PublishMessage(comment.BelongsTo.Id, comment.Id, new CommentDTO(comment), MessageOperation.Insert);
+                //MessageQueueManager menager = MessageQueueManager.Instance;
+                //menager.PublishMessage(comment.BelongsTo.Id, comment.Id, new CommentDTO(comment), MessageOperation.Insert);
+
+                result = new CommentDTO(comment);
 
                 session.Close();
-
-                result = true;
             }
             catch (Exception ex)
             {
@@ -151,10 +152,10 @@ namespace DataLayerLib.DTOManagers
             return result;
         }
 
-        public bool UpdateComment(int commntId, string content)
+        public CommentDTO UpdateComment(int commntId, string content)
         {
             ISession session = null;
-            bool result = false;
+            CommentDTO result = null;
             try
             {
                 session = DataLayer.GetSession();
@@ -163,11 +164,12 @@ namespace DataLayerLib.DTOManagers
                 session.SaveOrUpdate(comment);
                 session.Flush();
 
-                MessageQueueManager menager = MessageQueueManager.Instance;
-                menager.PublishMessage(comment.BelongsTo.Id, comment.Id, new CommentDTO(comment), MessageOperation.Update);
+                //MessageQueueManager menager = MessageQueueManager.Instance;
+                //menager.PublishMessage(comment.BelongsTo.Id, comment.Id, new CommentDTO(comment), MessageOperation.Update);
+
+                result = new CommentDTO(comment);
 
                 session.Close();
-                result = true;
             }
             catch (Exception ex)
             {
@@ -177,10 +179,10 @@ namespace DataLayerLib.DTOManagers
             return result;
         }
 
-        public bool UpdateComment(CommentDTO commentDTO)
+        public CommentDTO UpdateComment(CommentDTO commentDTO)
         {
             ISession session = null;
-            bool result = false;
+            CommentDTO result = null;
             try
             {
                 session = DataLayer.GetSession();
@@ -191,11 +193,12 @@ namespace DataLayerLib.DTOManagers
                 session.SaveOrUpdate(comment);
                 session.Flush();
 
-                MessageQueueManager menager = MessageQueueManager.Instance;
-                menager.PublishMessage(comment.BelongsTo.Id, comment.Id, new CommentDTO(comment), MessageOperation.Update);
+                //MessageQueueManager menager = MessageQueueManager.Instance;
+                //menager.PublishMessage(comment.BelongsTo.Id, comment.Id, new CommentDTO(comment), MessageOperation.Update);
+
+                result = new CommentDTO(comment);
 
                 session.Close();
-                result = true;
             }
             catch (Exception ex)
             {

@@ -10,13 +10,13 @@ using BuisnessLogicLayer.Services;
 
 namespace API.Controllers
 {
-    public class NewsController : ApiController
+    public class NewsController : BaseController/*ApiController*/
     {
         private NewsService service;
         //GET /api/News/
         public IEnumerable<NewsDTO> Get()
         {
-            service = new NewsService(new NewsDTOManager());
+            service = Service.NewsService;
             return service.GetAllNews();
         }
 

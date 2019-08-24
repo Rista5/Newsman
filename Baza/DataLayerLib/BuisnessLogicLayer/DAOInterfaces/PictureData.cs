@@ -15,13 +15,13 @@ namespace BuisnessLogicLayer.DAOInterfaces
 
         PictureDTO GetPicture(int pictureId);
 
-        bool CreatePicture(int newsId, string name, string description, byte[] pictureData = null);
+        PictureDTO CreatePicture(int newsId, string name, string description, byte[] pictureData = null);
 
-        bool CreatePicture(PictureDTO picturedto);
+        PictureDTO CreatePicture(PictureDTO picturedto);
 
         bool UpdatePicture(int pictureId, string name, string description, byte[] pictureData);
 
-        bool UpdatePicture(PictureDTO pic);
+        PictureDTO UpdatePicture(PictureDTO pic);
 
         bool DeletePicture(int pictureId);
     }
