@@ -1,5 +1,6 @@
-﻿using DataLayerLib.DTOManagers;
-using DataLayerLib.DTOs;
+﻿using BuisnessLogicLayer.Services;
+using DataLayerLib.DTOManagers;
+using ObjectModel.DTOs;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -12,40 +13,54 @@ namespace API.Controllers
     //Testirati!!!!
     public class AudioController : ApiController
     {
+        private AudioService service;
+
         [HttpGet]
         [ActionName("DefaultAction")]
         public IEnumerable<AudioDTO> GetAllAudios()
         {
-            return AudioDTOManager.GetAllAudio();
+            service = new AudioService(new AudioDTOManager());
+            return service.GetAllAudioDTOs();
         }
 
         [HttpGet]
         [Route("api/Audio/FromNews/{id}")]
         public IEnumerable<AudioDTO> GetAudioByNews(int newsID)
         {
-            return AudioDTOManager.GetAudiosForNews(newsID);
+            service = new AudioService(new AudioDTOManager());
+            return service.GetAudioForNews(newsID);
         }
 
         [HttpGet]
         [ActionName("DefaultAction")]
         public AudioDTO GetAudioById(int id)
         {
-            return AudioDTOManager.GetAudio(id);
+            service = new AudioService(new AudioDTOManager());
+            return service.GetAudioByID(id);
         }
 
-        public bool PostAudio(AudioDTO audio)
+        [HttpPut]
+        [Route("api/Audio")]
+        public bool PutAudio(AudioDTO audio)
         {
-            return AudioDTOManager.CreateAudio(audio);
+            service = new AudioService(new AudioDTOManager());
+            return service.CreateAudio(audio);
         }
 
+        [HttpDelete]
+        [Route("api/Audio")]
         public bool DeleteAudio(int id)
         {
-            return AudioDTOManager.DeleteAudio(id);
+            service = new AudioService(new AudioDTOManager());
+            return service.DeleteAudio(id);
         }
 
+        [HttpPost]
+        [Route("api/Audio")]
         public bool UpdateAudio(AudioDTO audio)
         {
-            return AudioDTOManager.UpdateAudio(audio);
+            service = new AudioService(new AudioDTOManager());
+            return service.UpdateAudio(audio);
         }
     }
 }

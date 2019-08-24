@@ -7,7 +7,7 @@ using System.Threading.Tasks;
 
 namespace DataLayerLib.Mappers
 {
-    class UserMapper:ClassMap<DataLayerLib.Entities.User>
+    class UserMapper:ClassMap<ObjectModel.Entities.User>
     {
         public UserMapper()
         {

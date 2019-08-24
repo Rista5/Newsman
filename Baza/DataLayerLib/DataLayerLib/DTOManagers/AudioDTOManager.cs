@@ -3,15 +3,16 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
-using DataLayerLib.DTOs;
+using ObjectModel.DTOs;
 using NHibernate;
-using DataLayerLib.Entities;
+using ObjectModel.Entities;
+using BuisnessLogicLayer.DAOInterfaces;
 
 namespace DataLayerLib.DTOManagers
 {
-    public class AudioDTOManager
+    public class AudioDTOManager : AudioData
     {
-        public static List<AudioDTO> GetAllAudio()
+        public List<AudioDTO> GetAllAudio()
         {
             List<AudioDTO> audios = new List<AudioDTO>();
             ISession session = null;
@@ -36,7 +37,7 @@ namespace DataLayerLib.DTOManagers
             return audios;
         }
 
-        public static List<AudioDTO> GetAudiosForNews(int newsId)
+        public List<AudioDTO> GetAudiosForNews(int newsId)
         {
             List<AudioDTO> audios = new List<AudioDTO>();
             ISession session = null;
@@ -46,8 +47,7 @@ namespace DataLayerLib.DTOManagers
                 IEnumerable<Audio> retData = from a in session.Query<Audio>()
                                              where a.BelongsTo.Id == newsId
                                              select a;
-                //IList<Audio> retData = session.QueryOver<Audio>()
-                //    .Where(x => x.BelongsTo.Id == newsId).List();
+
                 foreach (Audio a in retData)
                 {
                     AudioDTO audioDto = new AudioDTO(a);
@@ -65,7 +65,7 @@ namespace DataLayerLib.DTOManagers
             return audios;
         }
 
-        public static AudioDTO GetAudio(int audioId)
+        public AudioDTO GetAudio(int audioId)
         {
             ISession session = null;
             AudioDTO result = null;
@@ -85,7 +85,7 @@ namespace DataLayerLib.DTOManagers
             return result;
         }
 
-        public static bool CreateAudio(int newsId, string name,
+        public bool CreateAudio(int newsId, string name,
             string description, byte[] audioData = null)
         {
             bool result = false;
@@ -121,7 +121,7 @@ namespace DataLayerLib.DTOManagers
             return result;
         }
 
-        public static bool CreateAudio(AudioDTO audioDTO)
+        public bool CreateAudio(AudioDTO audioDTO)
         {
             bool result = false;
             ISession session = null;
@@ -155,7 +155,7 @@ namespace DataLayerLib.DTOManagers
             return result;
         }
 
-        public static bool UpdateAudio(int audioId, string name,
+        public bool UpdateAudio(int audioId, string name,
             string description)
         {
             ISession session = null;
@@ -181,7 +181,7 @@ namespace DataLayerLib.DTOManagers
             return result;
         }
 
-        public static bool UpdateAudio(AudioDTO audioDTO)
+        public bool UpdateAudio(AudioDTO audioDTO)
         {
             ISession session = null;
             bool result = false;
@@ -214,7 +214,7 @@ namespace DataLayerLib.DTOManagers
             return result;
         }
 
-        public static bool DeleteAudio(int audioId)
+        public bool DeleteAudio(int audioId)
         {
             ISession session = null;
             bool result = false;
@@ -240,6 +240,5 @@ namespace DataLayerLib.DTOManagers
 
             return result;
         }
-
     }
 }

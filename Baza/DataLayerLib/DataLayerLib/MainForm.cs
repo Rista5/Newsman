@@ -1,5 +1,5 @@
-﻿using DataLayerLib.DTOs;
-using DataLayerLib.Entities;
+﻿using ObjectModel.DTOs;
+using ObjectModel.Entities;
 using NHibernate;
 using System;
 using System.Collections.Generic;
@@ -10,6 +10,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Forms;
+using DataLayerLib.DTOManagers;
 
 namespace DataLayerLib
 {
@@ -114,35 +115,36 @@ namespace DataLayerLib
 
         private void btnGetAllNews_Click(object sender, EventArgs e)
         {
-            List<NewsDTO> newsDTO = DTOManagers.NewsDTOManager.GetAllNews();
+            List<NewsDTO> newsDTO = new DTOManagers.NewsDTOManager().GetAllNews();
             foreach (NewsDTO dto in newsDTO)
                 MessageBox.Show(dto.ToString());
         }
 
         private void btnGetAllUsers_Click(object sender, EventArgs e)
         {
-            List<UserDTO> userDTOs = DTOManagers.UserDTOManager.GetAllUsers();
+            List<UserDTO> userDTOs = new DTOManagers.UserDTOManager().GetAllUsers();
             foreach (UserDTO dto in userDTOs)
                 MessageBox.Show(dto.ToString());
         }
 
         private void btnGetAllComments_Click(object sender, EventArgs e)
         {
-            List<CommentDTO> commentDTOs = DTOManagers.CommentDTOManager.GetAllComments();
+            List<CommentDTO> commentDTOs = new DTOManagers.CommentDTOManager().GetAllComments();
             foreach (CommentDTO comment in commentDTOs)
                 MessageBox.Show(comment.ToString());
         }
 
         private void btnGetAllPicctures_Click(object sender, EventArgs e)
         {
-            List<PictureDTO> dtos = DTOManagers.PictureDTOManager.GetAllPictures();
+            List<PictureDTO> dtos = new DTOManagers.PictureDTOManager().GetAllPictures();
             foreach (PictureDTO dto in dtos)
                 MessageBox.Show(dto.ToString());
         }
 
         private void btnGetAllAudio_Click(object sender, EventArgs e)
         {
-            List<AudioDTO> dtos = DTOManagers.AudioDTOManager.GetAllAudio();
+
+            List<AudioDTO> dtos = new DTOManagers.AudioDTOManager().GetAllAudio();
             foreach (AudioDTO dto in dtos)
                 MessageBox.Show(dto.ToString());
         }
@@ -150,7 +152,7 @@ namespace DataLayerLib
         private void btnUsersWhoModifiedNews_Click(object sender, EventArgs e)
         {
             int id = int.Parse(txtUsersWhoModifiedNews.Text);
-            List<UserDTO> dtos = DTOManagers.UserDTOManager.GetUsersWhoModifiedThisNews(id);
+            List<UserDTO> dtos = new DTOManagers.UserDTOManager().GetUsersWhoModifiedThisNews(id);
             foreach (UserDTO dto in dtos)
                 MessageBox.Show(dto.ToString());
         }
@@ -158,7 +160,7 @@ namespace DataLayerLib
         private void btnNewsModifiedByUser_Click(object sender, EventArgs e)
         {
             int id = int.Parse(txtNewsModifiedByUser.Text);
-            List<NewsDTO> dtos = DTOManagers.NewsDTOManager.GetNewsModifiedByUser(id);
+            List<NewsDTO> dtos = new DTOManagers.NewsDTOManager().GetNewsModifiedByUser(id);
             foreach (NewsDTO dto in dtos)
                 MessageBox.Show(dto.ToString());
         }
@@ -166,7 +168,7 @@ namespace DataLayerLib
         private void btnGetCommentsForNews_Click(object sender, EventArgs e)
         {
             int id = int.Parse(txtGetCommentsForNews.Text);
-            List<CommentDTO> dtos = DTOManagers.CommentDTOManager.GetCommentsForNews(id);
+            List<CommentDTO> dtos = new DTOManagers.CommentDTOManager().GetCommentsForNews(id);
             foreach (CommentDTO dto in dtos)
                 MessageBox.Show(dto.ToString());
         }
@@ -174,7 +176,7 @@ namespace DataLayerLib
         private void btnGetPicturesForNews_Click(object sender, EventArgs e)
         {
             int id = int.Parse(txtGetPicturesForNews.Text);
-            List<PictureDTO> dtos = DTOManagers.PictureDTOManager.GetPicturesForNews(id);
+            List<PictureDTO> dtos = new DTOManagers.PictureDTOManager().GetPicturesForNews(id);
             foreach (PictureDTO dto in dtos)
                 MessageBox.Show(dto.ToString());
         }
@@ -182,7 +184,7 @@ namespace DataLayerLib
         private void btnGetAudiosForNews_Click(object sender, EventArgs e)
         {
             int id = int.Parse(txtGetAudiosForNews.Text);
-            List<AudioDTO> dtos = DTOManagers.AudioDTOManager.GetAudiosForNews(id);
+            List<AudioDTO> dtos = new DTOManagers.AudioDTOManager().GetAudiosForNews(id);
             foreach (AudioDTO dto in dtos)
                 MessageBox.Show(dto.ToString());
         }
@@ -192,7 +194,7 @@ namespace DataLayerLib
             CreateUserForm form = new CreateUserForm();
             if(form.ShowDialog() == DialogResult.OK)
             {
-                if (DTOManagers.UserDTOManager.CreateUser(form.Username, form.Password))
+                if (new DTOManagers.UserDTOManager().CreateUser(form.Username, form.Password))
                 {
                     MessageBox.Show("Kreiran user: " + form.Username);
                 }
@@ -203,12 +205,12 @@ namespace DataLayerLib
 
         private void btnCreateComment_Click(object sender, EventArgs e)
         {
-            List<UserDTO> users = DTOManagers.UserDTOManager.GetAllUsers();
-            List<NewsDTO> news = DTOManagers.NewsDTOManager.GetAllNews();
+            List<UserDTO> users = new DTOManagers.UserDTOManager().GetAllUsers();
+            List<NewsDTO> news = new DTOManagers.NewsDTOManager().GetAllNews();
             CreateCommentForm form = new CreateCommentForm(users, news);
             if(form.ShowDialog() == DialogResult.OK)
             {
-                if (DTOManagers.CommentDTOManager.CreateComment(form.User_Id, form.News_Id, form.Content))
+                if (new DTOManagers.CommentDTOManager().CreateComment(form.User_Id, form.News_Id, form.Content))
                     MessageBox.Show("Uspesno dodat komentar");
                 else
                     MessageBox.Show("Greska");
@@ -217,11 +219,11 @@ namespace DataLayerLib
 
         private void btnCreatePicture_Click(object sender, EventArgs e)
         {
-            List<NewsDTO> news = DTOManagers.NewsDTOManager.GetAllNews();
+            List<NewsDTO> news = new DTOManagers.NewsDTOManager().GetAllNews();
             CreatePictureForm form = new CreatePictureForm(news);
             if(form.ShowDialog()==DialogResult.OK)
             {
-                if (DTOManagers.PictureDTOManager.CreatePicture(form.News_ID, form.PictureName,
+                if (new DTOManagers.PictureDTOManager().CreatePicture(form.News_ID, form.PictureName,
                     form.Description, form.PictureData))
                     MessageBox.Show("Uspesno dodata slika");
                 else
@@ -232,12 +234,12 @@ namespace DataLayerLib
         private void btnUpdateUser_Click(object sender, EventArgs e)
         {
             int id = int.Parse(txtUpdateUser.Text);
-            UserDTO user = DTOManagers.UserDTOManager.GetUser(id);
+            UserDTO user = new DTOManagers.UserDTOManager().GetUser(id);
             CreateUserForm form = new CreateUserForm(true, user.Username);
             if(form.ShowDialog() == DialogResult.OK)
             {
                 
-                if (DTOManagers.UserDTOManager.UpdateUser(user.Id, form.Password, form.Username, form.NewPassword))
+                if (new DTOManagers.UserDTOManager().UpdateUser(user.Id, form.Password, form.Username, form.NewPassword))
                     MessageBox.Show("Uspesno azuriran user");
                 else
                     MessageBox.Show("Greska");
@@ -246,11 +248,11 @@ namespace DataLayerLib
 
         private void btnCreateNews_Click(object sender, EventArgs e)
         {
-            List<UserDTO> users = DTOManagers.UserDTOManager.GetAllUsers();
+            List<UserDTO> users = new DTOManagers.UserDTOManager().GetAllUsers();
             CreateNewsForm form = new CreateNewsForm(users);
             if(form.ShowDialog() == DialogResult.OK)
             {
-                if(DTOManagers.NewsDTOManager.CreateNews(form.Title,form.Content,form.User_ID))
+                if(new DTOManagers.NewsDTOManager().CreateNews(form.Title,form.Content,form.User_ID))
                     MessageBox.Show("Uspesno kreirana vest");
                 else
                     MessageBox.Show("Greska");
@@ -260,12 +262,12 @@ namespace DataLayerLib
         private void btnUpdateNews_Click(object sender, EventArgs e)
         {
             int idNews = int.Parse(txtUpdateNews.Text);
-            NewsDTO news = DTOManagers.NewsDTOManager.GetNews(idNews);
-            List<UserDTO> users = DTOManagers.UserDTOManager.GetAllUsers();
+            NewsDTO news = new DTOManagers.NewsDTOManager().GetNews(idNews);
+            List<UserDTO> users = new DTOManagers.UserDTOManager().GetAllUsers();
             CreateNewsForm form = new CreateNewsForm(users, news.Title, news.Content);
             if(form.ShowDialog() == DialogResult.OK)
             {
-                if(DTOManagers.NewsDTOManager.UpdateNews(form.User_ID,news.Id,form.Title, form.Content))
+                if(new DTOManagers.NewsDTOManager().UpdateNews(form.User_ID,news.Id,form.Title, form.Content))
                     MessageBox.Show("Uspesno azurirana vest");
                 else
                     MessageBox.Show("Greska");
@@ -275,11 +277,11 @@ namespace DataLayerLib
         private void btnUpdatePicture_Click(object sender, EventArgs e)
         {
             int pictureId = int.Parse(txtUpdatePicture.Text);
-            PictureDTO picture = DTOManagers.PictureDTOManager.GetPicture(pictureId);
+            PictureDTO picture = new DTOManagers.PictureDTOManager().GetPicture(pictureId);
             CreatePictureForm form = new CreatePictureForm(picture.Name, picture.Description, picture.GetPictureBytes());
             if(form.ShowDialog() == DialogResult.OK)
             {
-                if (DTOManagers.PictureDTOManager.UpdatePicture(picture.Id, form.PictureName, form.Description, form.PictureData))
+                if (new DTOManagers.PictureDTOManager().UpdatePicture(picture.Id, form.PictureName, form.Description, form.PictureData))
                     MessageBox.Show("Uspesno azurirana slika");
                 else
                     MessageBox.Show("Greska");
@@ -289,7 +291,7 @@ namespace DataLayerLib
         private void btnDeleteNews_Click(object sender, EventArgs e)
         {
             int newsId = int.Parse(txtUpdateNews.Text);
-            if (DTOManagers.NewsDTOManager.DeleteNews(newsId))
+            if (new DTOManagers.NewsDTOManager().DeleteNews(newsId))
                 MessageBox.Show("Vest je obrisana");
             else
                 MessageBox.Show("Greska");
@@ -298,7 +300,7 @@ namespace DataLayerLib
         private void btnDeleteUser_Click(object sender, EventArgs e)
         {
             int userId = int.Parse(txtUpdateUser.Text);
-            if (DTOManagers.UserDTOManager.DeleteUser(userId))
+            if (new DTOManagers.UserDTOManager().DeleteUser(userId))
                 MessageBox.Show("User je obrisan");
             else
                 MessageBox.Show("Greska");
@@ -307,7 +309,7 @@ namespace DataLayerLib
         private void btnDeleteComment_Click(object sender, EventArgs e)
         {
             int commentId = int.Parse(txtUpdateComment.Text);
-            if (DTOManagers.CommentDTOManager.DeleteComment(commentId))
+            if (new DTOManagers.CommentDTOManager().DeleteComment(commentId))
                 MessageBox.Show("Komentar je obrisan");
             else
                 MessageBox.Show("Greska");
@@ -316,7 +318,7 @@ namespace DataLayerLib
         private void btnDeletePicture_Click(object sender, EventArgs e)
         {
             int pictureId = int.Parse(txtUpdatePicture.Text);
-            if (DTOManagers.PictureDTOManager.DeletePicture(pictureId))
+            if (new DTOManagers.PictureDTOManager().DeletePicture(pictureId))
                 MessageBox.Show("Slika je obrisana");
             else
                 MessageBox.Show("Greska");
@@ -325,12 +327,12 @@ namespace DataLayerLib
         private void btnUpdateComment_Click(object sender, EventArgs e)
         {
             int commentId = int.Parse(txtUpdateComment.Text);
-            CommentDTO dto = DTOManagers.CommentDTOManager.GetComment(commentId);
+            CommentDTO dto = new DTOManagers.CommentDTOManager().GetComment(commentId);
             CreateCommentForm form = new CreateCommentForm(dto);
             if(form.ShowDialog() == DialogResult.OK)
             {
                 dto.Content = form.Content;
-                if (DTOManagers.CommentDTOManager.UpdateComment(dto))
+                if (new DTOManagers.CommentDTOManager().UpdateComment(dto))
                     MessageBox.Show("Azuriran komentar");
                 else
                     MessageBox.Show("Greska");

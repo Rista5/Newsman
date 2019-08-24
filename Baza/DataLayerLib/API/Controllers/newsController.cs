@@ -4,59 +4,62 @@ using System.Linq;
 using System.Net;
 using System.Net.Http;
 using System.Web.Http;
-using DataLayerLib.DTOs;
+using ObjectModel.DTOs;
 using DataLayerLib.DTOManagers;
+using BuisnessLogicLayer.Services;
 
 namespace API.Controllers
 {
     public class NewsController : ApiController
     {
+        private NewsService service;
         //GET /api/News/
         public IEnumerable<NewsDTO> Get()
         {
-            return NewsDTOManager.GetAllNews();
+            service = new NewsService(new NewsDTOManager());
+            return service.GetAllNews();
         }
 
         [HttpGet]
         [Route("api/NewsModifiedByUser/{id}")]
         public IEnumerable<NewsDTO> Get(int id)
         {
-            return NewsDTOManager.GetNewsModifiedByUser(id);
+            return service.GetNewsModifiedByUser(id);
         }
 
         [HttpGet]
         [Route("api/News/{id}")]
         public NewsDTO GetNewsById(int id)
         {
-            return NewsDTOManager.GetNews(id);
+            return service.GetNewsById(id);
         }
 
         [HttpPut]
         [Route("api/CreateNews/{userId}")]
         public bool CreateNews([FromBody]NewsDTO news, int userId)
         {
-            return NewsDTOManager.CreateNews(news, userId);
+            return service.CreateNews(news, userId);
         }
 
         [HttpPost]
         [Route("api/UpdateNews/{userId}")]
         public bool UpdateNews([FromBody] NewsDTO news, int userId)
         {
-            return NewsDTOManager.UpdateNews(news, userId);
+            return service.UpdateNews(news, userId);
         }
 
         [HttpPost]
         [Route("api/News/{userId}")]
         public bool UpdateNews([FromBody] SimpleNewsDTO simpleDTO, int userId)
         {
-            return NewsDTOManager.UpdateNews(simpleDTO, userId);
+            return service.UpdateNews(simpleDTO, userId);
         }
 
         [HttpDelete]
         [Route("api/DeleteNews/{userId}")]
         public bool DeleteNews(int userId)
         {
-            return NewsDTOManager.DeleteNews(userId);
+            return service.DeleteNews(userId);
         }
     }
 }

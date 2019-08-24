@@ -7,7 +7,7 @@ using System.Threading.Tasks;
 
 namespace DataLayerLib.Mappers
 {
-    class AudioMapper:ClassMap<DataLayerLib.Entities.Audio>
+    class AudioMapper:ClassMap<ObjectModel.Entities.Audio>
     {
         public AudioMapper()
         {

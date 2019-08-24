@@ -7,7 +7,7 @@ using System.Threading.Tasks;
 
 namespace DataLayerLib.Mappers
 {
-    class NewsModifiedMapper:ClassMap<DataLayerLib.Entities.NewsModified>
+    class NewsModifiedMapper:ClassMap<ObjectModel.Entities.NewsModified>
     {
         public NewsModifiedMapper()
         {

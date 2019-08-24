@@ -7,7 +7,7 @@ using System.Threading.Tasks;
 
 namespace DataLayerLib.Mappers
 {
-    class CommentMapper:ClassMap<DataLayerLib.Entities.Comment>
+    class CommentMapper:ClassMap<ObjectModel.Entities.Comment>
     {
         public CommentMapper()
         {

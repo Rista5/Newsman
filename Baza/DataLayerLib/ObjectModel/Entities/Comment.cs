@@ -4,7 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace DataLayerLib.Entities
+namespace ObjectModel.Entities
 {
     public class Comment
     {

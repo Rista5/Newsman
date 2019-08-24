@@ -7,7 +7,7 @@ using FluentNHibernate.Mapping;
 
 namespace DataLayerLib.Mappers
 {
-    class PictureMapper:ClassMap<DataLayerLib.Entities.Picture>
+    class PictureMapper:ClassMap<ObjectModel.Entities.Picture>
     {
         public PictureMapper()
         {

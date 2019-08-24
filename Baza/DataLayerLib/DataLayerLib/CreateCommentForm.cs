@@ -1,4 +1,4 @@
-﻿using DataLayerLib.DTOs;
+﻿using ObjectModel.DTOs;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel;

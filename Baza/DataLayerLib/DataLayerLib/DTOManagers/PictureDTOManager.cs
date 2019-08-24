@@ -3,18 +3,19 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
-using DataLayerLib.DTOs;
+using ObjectModel.DTOs;
 using NHibernate;
-using DataLayerLib.Entities;
+using ObjectModel.Entities;
 using DataLayerLib.MultimediaLoader;
+using BuisnessLogicLayer.DAOInterfaces;
 
 namespace DataLayerLib.DTOManagers
 {
-    public class PictureDTOManager
+    public class PictureDTOManager : PictureData
     {
         private static IMultimediaLoader _loader = null;
 
-        public static List<PictureDTO> GetAllPictures()
+        public List<PictureDTO> GetAllPictures()
         {
             List<PictureDTO> pictures = new List<PictureDTO>();
             ISession session = null;
@@ -40,7 +41,7 @@ namespace DataLayerLib.DTOManagers
             return pictures;
         }
 
-        public static List<PictureDTO> GetPicturesForNews(int newsId)
+        public List<PictureDTO> GetPicturesForNews(int newsId)
         {
             List<PictureDTO> pictures = new List<PictureDTO>();
             ISession session = null;
@@ -67,7 +68,7 @@ namespace DataLayerLib.DTOManagers
             return pictures;
         }
 
-        public static PictureDTO GetPicture(int pictureId)
+        public PictureDTO GetPicture(int pictureId)
         {
             ISession session = null;
             PictureDTO result = null;
@@ -89,7 +90,7 @@ namespace DataLayerLib.DTOManagers
             return result;
         }
 
-        public static bool CreatePicture(int newsId, string name,
+        public bool CreatePicture(int newsId, string name,
             string description, byte[] pictureData = null)
         {
             bool result = false;
@@ -132,7 +133,7 @@ namespace DataLayerLib.DTOManagers
             return result;
         }
 
-        public static bool CreatePicture(PictureDTO picturedto)
+        public bool CreatePicture(PictureDTO picturedto)
         {
             bool result = false;
             ISession session = null;
@@ -175,7 +176,7 @@ namespace DataLayerLib.DTOManagers
             return result;
         }
 
-        public static bool UpdatePicture(int pictureId, string name,
+        public bool UpdatePicture(int pictureId, string name,
             string description, byte[] pictureData)
         {
             ISession session = null;
@@ -212,7 +213,7 @@ namespace DataLayerLib.DTOManagers
             return result;
         }
 
-        public static bool UpdatePicture(PictureDTO pic)
+        public bool UpdatePicture(PictureDTO pic)
         {
             ISession session = null;
             bool result = false;
@@ -250,7 +251,7 @@ namespace DataLayerLib.DTOManagers
             return result;
         }
 
-        public static bool DeletePicture(int pictureId)
+        public bool DeletePicture(int pictureId)
         {
             ISession session = null;
             bool result = false;
@@ -277,7 +278,7 @@ namespace DataLayerLib.DTOManagers
             return result;
         }
 
-        static IMultimediaLoader Loader
+        IMultimediaLoader Loader
         {
             get
             {

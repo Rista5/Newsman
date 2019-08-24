@@ -3,9 +3,9 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
-using DataLayerLib.Entities;
+using ObjectModel.Entities;
 using NHibernate;
-using DataLayerLib.DTOs;
+using ObjectModel.DTOs;
 
 namespace DataLayerLib
 {

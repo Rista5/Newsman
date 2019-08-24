@@ -3,15 +3,16 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
-using DataLayerLib.DTOs;
+using ObjectModel.DTOs;
 using NHibernate;
-using DataLayerLib.Entities;
+using ObjectModel.Entities;
+using BuisnessLogicLayer.DAOInterfaces;
 
 namespace DataLayerLib.DTOManagers
 {
-    public class CommentDTOManager
+    public class CommentDTOManager : CommentData
     {
-        public static List<CommentDTO> GetAllComments()
+        public List<CommentDTO> GetAllComments()
         {
             List<CommentDTO> comments = new List<CommentDTO>();
             ISession session = null;
@@ -35,7 +36,7 @@ namespace DataLayerLib.DTOManagers
             return comments;
         }
 
-        public static List<CommentDTO> GetCommentsForNews(int newsId)
+        public List<CommentDTO> GetCommentsForNews(int newsId)
         {
             List<CommentDTO> comments = new List<CommentDTO>();
             ISession session = null;
@@ -60,7 +61,7 @@ namespace DataLayerLib.DTOManagers
             return comments;
         }
 
-        public static CommentDTO GetComment(int commentId)
+        public CommentDTO GetComment(int commentId)
         {
             ISession session = null;
             CommentDTO result = null;
@@ -80,7 +81,7 @@ namespace DataLayerLib.DTOManagers
             return result;
         }
 
-        public static bool CreateComment(int userId, int newsId, string content)
+        public bool CreateComment(int userId, int newsId, string content)
         {
             bool result = false;
             ISession session = null;
@@ -113,7 +114,7 @@ namespace DataLayerLib.DTOManagers
             return result;
         }
 
-        public static bool CreateComment(CommentDTO commentDTO)
+        public bool CreateComment(CommentDTO commentDTO)
         {
             bool result = false;
             ISession session = null;
@@ -150,7 +151,7 @@ namespace DataLayerLib.DTOManagers
             return result;
         }
 
-        public static bool UpdateComment(int commntId, string content)
+        public bool UpdateComment(int commntId, string content)
         {
             ISession session = null;
             bool result = false;
@@ -176,7 +177,7 @@ namespace DataLayerLib.DTOManagers
             return result;
         }
 
-        public static bool UpdateComment(CommentDTO commentDTO)
+        public bool UpdateComment(CommentDTO commentDTO)
         {
             ISession session = null;
             bool result = false;
@@ -204,7 +205,7 @@ namespace DataLayerLib.DTOManagers
             return result;
         }
 
-        public static bool DeleteComment(int commentId)
+        public bool DeleteComment(int commentId)
         {
             ISession session = null;
             bool result = false;

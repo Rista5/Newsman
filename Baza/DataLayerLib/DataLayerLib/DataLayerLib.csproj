@@ -124,22 +124,7 @@
     <Compile Include="DTOManagers\CommentDTOManager.cs" />
     <Compile Include="DTOManagers\NewsDTOManager.cs" />
     <Compile Include="DTOManagers\PictureDTOManager.cs" />
-    <Compile Include="DTOManagers\SimpleNewsDTOManager.cs" />
     <Compile Include="DTOManagers\UserDTOManager.cs" />
-    <Compile Include="DTOs\AudioDTO.cs" />
-    <Compile Include="DTOs\CommentDTO.cs" />
-    <Compile Include="DTOs\CommentSimpleDTO.cs" />
-    <Compile Include="DTOs\NewsDTO.cs" />
-    <Compile Include="DTOs\PictureDTO.cs" />
-    <Compile Include="DTOs\SimpleNewsDTO.cs" />
-    <Compile Include="DTOs\UserDTO.cs" />
-    <Compile Include="DTOs\UserPasswordsDTO.cs" />
-    <Compile Include="Entities\Audio.cs" />
-    <Compile Include="Entities\Comment.cs" />
-    <Compile Include="Entities\News.cs" />
-    <Compile Include="Entities\NewsModified.cs" />
-    <Compile Include="Entities\Picture.cs" />
-    <Compile Include="Entities\User.cs" />
     <Compile Include="MainForm.cs">
       <SubType>Form</SubType>
     </Compile>
@@ -198,6 +183,15 @@
   <ItemGroup>
     <None Include="App.config" />
   </ItemGroup>
-  <ItemGroup />
+  <ItemGroup>
+    <ProjectReference Include="..\BuisnessLogicLayer\BuisnessLogicLayer.csproj">
+      <Project>{67f54acf-be42-4ae3-8eb9-b1064918a5ec}</Project>
+      <Name>BuisnessLogicLayer</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\ObjectModel\ObjectModel.csproj">
+      <Project>{f193116c-eb12-4387-b90e-bfe9eb2ffaf6}</Project>
+      <Name>ObjectModel</Name>
+    </ProjectReference>
+  </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>

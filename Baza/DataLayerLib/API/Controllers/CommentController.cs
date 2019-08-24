@@ -4,21 +4,23 @@ using System.Linq;
 using System.Net;
 using System.Net.Http;
 using System.Web.Http;
+using BuisnessLogicLayer.Services;
 using DataLayerLib.DTOManagers;
-using DataLayerLib.DTOs;
+using ObjectModel.DTOs;
 
 namespace API.Controllers
 {
 
     public class CommentController : ApiController
     {
-        public CommentDTOManager Manager = new CommentDTOManager();
+        public CommentService service;
 
         [HttpGet]
         [ActionName("DefaultAction")]
         public IEnumerable<CommentDTO> Get()
         {
-            IEnumerable<CommentDTO> returnValue = CommentDTOManager.GetAllComments();
+            service = new CommentService(new CommentDTOManager());
+            IEnumerable<CommentDTO> returnValue = service.GetAllComments();
             return returnValue;
         }
 
@@ -26,40 +28,37 @@ namespace API.Controllers
         [ActionName("DefaultAction")]
         public CommentDTO Get(int id)
         {
-            return CommentDTOManager.GetComment(id);
+            service = new CommentService(new CommentDTOManager());
+            return service.GetCommentById(id);
         }
 
         [Route("api/Comment/FromNews/{id}")]
         //[ActionName("FromNews")]
         public IEnumerable<CommentDTO> GetCommentsFromNews(int id)
         {
-            return CommentDTOManager.GetCommentsForNews(id);
-        }
-
-        [Route("api/Comment/PostObject")]
-        public CommentSimpleDTO GetPutObject()
-        {
-            return new CommentSimpleDTO { BelongsToNewsId = -1, CreatedBy = -1, Content = "This is CommentSimpleDTO." +
-                "It is used for creating new comments." };
-
+            service = new CommentService(new CommentDTOManager());
+            return service.GetCommentsFromNews(id);
         }
 
         // POST api/values
         public bool Post(int id, string content)
         {
-            return CommentDTOManager.UpdateComment(id, content);
+            service = new CommentService(new CommentDTOManager());
+            return service.UpdateComment(id, content);
         }
 
         // PUT api/values
         public bool Put([FromBody]CommentSimpleDTO value)
         {
-            return CommentDTOManager.CreateComment(value.CreatedBy, value.BelongsToNewsId, value.Content);
+            service = new CommentService(new CommentDTOManager());
+            return service.CreateComment(value);
         }
 
         // DELETE api/values/5
         public bool Delete(int id)
         {
-            return CommentDTOManager.DeleteComment(id);
+            service = new CommentService(new CommentDTOManager());
+            return service.DeleteComment(id);
         }
     }
 }

@@ -3,16 +3,17 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
-using DataLayerLib.DTOs;
+using ObjectModel.DTOs;
 using NHibernate;
-using DataLayerLib.Entities;
+using ObjectModel.Entities;
 using DataLayerLib.Codes;
+using BuisnessLogicLayer.DAOInterfaces;
 
 namespace DataLayerLib.DTOManagers
 {
-    public class UserDTOManager
+    public class UserDTOManager : UserData
     {
-        public static List<UserDTO> GetAllUsers()
+        public List<UserDTO> GetAllUsers()
         {
             List<UserDTO> users = new List<UserDTO>();
             ISession session = null;
@@ -36,7 +37,7 @@ namespace DataLayerLib.DTOManagers
             return users;
         }
 
-        public static List<UserDTO> GetUsersWhoModifiedThisNews(int newsId)
+        public List<UserDTO> GetUsersWhoModifiedThisNews(int newsId)
         {
             List<UserDTO> users = new List<UserDTO>();
             ISession session = null;
@@ -62,7 +63,7 @@ namespace DataLayerLib.DTOManagers
             return users;
         }
 
-        public static User GetFullUser(int userId)
+        public User GetFullUser(int userId)
         {
             ISession session = null;
             User result = null;
@@ -83,7 +84,7 @@ namespace DataLayerLib.DTOManagers
 
         }
 
-        public static UserDTO GetUser(int userId)
+        public UserDTO GetUser(int userId)
         {
             ISession session = null;
             UserDTO result = null;
@@ -104,9 +105,8 @@ namespace DataLayerLib.DTOManagers
             return result;
         }
 
-        public static bool CreateUser(string username, string password)
+        public bool CreateUser(string username, string password)
         {
-            //ICode result = new UserNotCreated();
             bool result = false;
             ISession session = null;
             try
@@ -154,7 +154,7 @@ namespace DataLayerLib.DTOManagers
             return result;
         }
 
-        public static bool UpdateUser(int userId, string oldPassword,
+        public bool UpdateUser(int userId, string oldPassword,
             string newUsername, string newPassword)
         {
             bool result = false;
@@ -203,7 +203,7 @@ namespace DataLayerLib.DTOManagers
             return result;
         }
 
-        public static bool UpdateUserName(int userId, string password, string newUsername)
+        public bool UpdateUserName(int userId, string password, string newUsername)
         {
             bool result = false;
             ISession session = null;
@@ -231,7 +231,7 @@ namespace DataLayerLib.DTOManagers
             return result;
         }
 
-        public static bool UpdateUserPassword(int userId, UserPasswordsDTO passwords)
+        public bool UpdateUserPassword(int userId, UserPasswordsDTO passwords)
         {
             bool result = false;
             ISession session = null;
@@ -256,7 +256,7 @@ namespace DataLayerLib.DTOManagers
             return result;
         }
 
-        public static bool DeleteUser(int userId)
+        public bool DeleteUser(int userId)
         {
             ISession session = null;
             bool result = false;
@@ -279,7 +279,7 @@ namespace DataLayerLib.DTOManagers
             return result;
         }
 
-        private static bool ValidateUsername(ISession session,int id, string username)
+        private bool ValidateUsername(ISession session,int id, string username)
         {
             IEnumerable<User> qresult = from u in session.Query<User>()
                                         where u.Username == username

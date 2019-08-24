@@ -3,14 +3,15 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
-using DataLayerLib.DTOs;
+using ObjectModel.DTOs;
 using NHibernate;
-using DataLayerLib.Entities;
+using ObjectModel.Entities;
 using DataLayerLib.MultimediaLoader;
+using BuisnessLogicLayer.DAOInterfaces;
 
 namespace DataLayerLib.DTOManagers
 {
-    public class NewsDTOManager
+    public class NewsDTOManager : NewsData
     {
         private static IMultimediaLoader _loader;
         static IMultimediaLoader Loader
@@ -23,7 +24,7 @@ namespace DataLayerLib.DTOManagers
             }
         }
 
-        public static List<NewsDTO> GetAllNews()
+        public List<NewsDTO> GetAllNews()
         {
             List<NewsDTO> news = new List<NewsDTO>();
             ISession session = null;
@@ -33,17 +34,23 @@ namespace DataLayerLib.DTOManagers
 
                 IEnumerable<News> retData = from n in session.Query<News>()
                                             select n;
+
                 foreach (News n in retData)
                     news.Add(new NewsDTO(n));
-                //TODO change this
+                
+
                 foreach(NewsDTO n in news)
                 {
-                    n.BackgroundPicture.SetPictureBytes(Loader.GetMedia(n.BackgroundPicture.Id,
+                    if (n.BackgroundPicture != null)
+                    {
+                        n.BackgroundPicture.SetPictureBytes(Loader.GetMedia(n.BackgroundPicture.Id,
                                                                         n.BackgroundPicture.BelongsToNewsId,
                                                                         n.BackgroundPicture.Name));
+                    }
                     foreach (PictureDTO p in n.Pictures)
                         p.SetPictureBytes(Loader.GetMedia(p.Id, p.BelongsToNewsId, p.Name));
                 }
+
                 session.Close();
             }
             catch (Exception ex)
@@ -52,10 +59,11 @@ namespace DataLayerLib.DTOManagers
                 if (session != null)
                     session.Close();
             }
+
             return news;
         }
 
-        public static List<NewsDTO> GetNewsModifiedByUser(int userId)
+        public List<NewsDTO> GetNewsModifiedByUser(int userId)
         {
             List<NewsDTO> news = new List<NewsDTO>();
             ISession session = null;
@@ -82,7 +90,7 @@ namespace DataLayerLib.DTOManagers
             return news;
         }
 
-        public static NewsDTO GetNews(int newsId)
+        public NewsDTO GetNews(int newsId)
         {
             ISession session = null;
             NewsDTO result = null;
@@ -102,7 +110,7 @@ namespace DataLayerLib.DTOManagers
             return result;
         }
 
-        public static News GetFullNews(int newsId)
+        public News GetFullNews(int newsId)
         {
             ISession session = null;
             News result = null;
@@ -121,10 +129,10 @@ namespace DataLayerLib.DTOManagers
             return result;
         }
 
-        public static bool CreateNews(string title, string content,
+        public NewsDTO CreateNews(string title, string content,
             int userId)
         {
-            bool result = false;
+            NewsDTO result = null;
             ISession session = null;
             try
             {
@@ -154,13 +162,12 @@ namespace DataLayerLib.DTOManagers
 
                 session.Flush();
 
-
                 MessageQueueManager manager = MessageQueueManager.Instance;
                 manager.PublishMessage(news.Id, news.Id, new NewsDTO(news), MessageOperation.Insert);
 
-                session.Close();
+                result = new NewsDTO(news);
 
-                result = true;
+                session.Close();
 
             }
             catch (Exception ex)
@@ -172,7 +179,7 @@ namespace DataLayerLib.DTOManagers
             return result;
         }
 
-        public static bool CreateNews(NewsDTO news, int userId)
+        public bool CreateNews(NewsDTO news, int userId)
         {
             bool result = false;
             ISession session = null;
@@ -211,7 +218,7 @@ namespace DataLayerLib.DTOManagers
             return result;
         }
 
-        public static bool UpdateNews(int userId, int newsId,
+        public bool UpdateNews(int userId, int newsId,
             string title, string content)
         {
             bool result = false;
@@ -250,7 +257,7 @@ namespace DataLayerLib.DTOManagers
             return result;
         }
 
-        public static bool UpdateNews(SimpleNewsDTO simpleDTO, int userId)
+        public bool UpdateNews(SimpleNewsDTO simpleDTO, int userId)
         {
             bool result = false;
             ISession session = null;
@@ -301,7 +308,7 @@ namespace DataLayerLib.DTOManagers
             return result;
         }
 
-        public static bool UpdateNews(NewsDTO newsDTO, int userId)
+        public bool UpdateNews(NewsDTO newsDTO, int userId)
         {
             bool result = false;
             ISession session = null;
@@ -342,7 +349,7 @@ namespace DataLayerLib.DTOManagers
             return result;
         }
 
-        public static bool DeleteNews(int newsId)
+        public bool DeleteNews(int newsId)
         {
             ISession session = null;
             bool result = false;
@@ -369,7 +376,7 @@ namespace DataLayerLib.DTOManagers
             return result;
         }
 
-        public static bool DeleteNewsModifiaction(int modificationId)
+        public bool DeleteNewsModifiaction(int modificationId)
         {
             ISession session = null;
             bool result = false;
@@ -392,7 +399,7 @@ namespace DataLayerLib.DTOManagers
             return result;
         }
 
-        public static News ExpandDTO(NewsDTO newsDTO)
+        public News ExpandDTO(NewsDTO newsDTO)
         {
             News news = new News();
             news.LastModified = newsDTO.LasModified;

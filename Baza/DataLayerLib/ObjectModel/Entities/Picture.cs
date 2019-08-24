@@ -4,15 +4,15 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace DataLayerLib.Entities
+namespace ObjectModel.Entities
 {
-    public class Audio
+    public class Picture
     {
         public virtual int Id { get; protected set; }
-        public virtual string Description { get; set; }
         public virtual string Name { get; set; }
+        public virtual string Description { get; set; }
         public virtual News BelongsTo { get; set; }
-
-        public Audio() { }
+        //public byte[] Data { get; set; }
+        public Picture() { }
     }
 }

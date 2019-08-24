@@ -260,9 +260,17 @@
     <Content Include="Scripts\jquery-3.3.1.min.map" />
   </ItemGroup>
   <ItemGroup>
+    <ProjectReference Include="..\BuisnessLogicLayer\BuisnessLogicLayer.csproj">
+      <Project>{67f54acf-be42-4ae3-8eb9-b1064918a5ec}</Project>
+      <Name>BuisnessLogicLayer</Name>
+    </ProjectReference>
     <ProjectReference Include="..\DataLayerLib\DataLayerLib.csproj">
       <Project>{48c9b517-b406-41a1-bfd7-e143c3c85167}</Project>
       <Name>DataLayerLib</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\ObjectModel\ObjectModel.csproj">
+      <Project>{f193116c-eb12-4387-b90e-bfe9eb2ffaf6}</Project>
+      <Name>ObjectModel</Name>
     </ProjectReference>
   </ItemGroup>
   <PropertyGroup>

@@ -1,6 +1,7 @@
-﻿using DataLayerLib.DTOManagers;
-using DataLayerLib.DTOs;
-using DataLayerLib.Entities;
+﻿using BuisnessLogicLayer.Services;
+using DataLayerLib.DTOManagers;
+using ObjectModel.DTOs;
+using ObjectModel.Entities;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -12,35 +13,41 @@ namespace API.Controllers
 {
     public class UserController : ApiController
     {
-        private UserDTOManager Manager = new UserDTOManager();
-
+        private UserService service;
         public IEnumerable<UserDTO> GetAllUsers()
         {
-            return UserDTOManager.GetAllUsers();
+            service = new UserService(new UserDTOManager());
+            return service.GetAllUsers();
         }
 
         public UserDTO GetUserbyID(int id)
         {
-            return UserDTOManager.GetUser(id);
+
+            service = new UserService(new UserDTOManager());
+            return service.GetUserById(id);
         }
 
         public bool Put(int id, [FromBody] string password, string newName)
-        {
-            return UserDTOManager.UpdateUserName(id, password, newName);
+        { 
+            service = new UserService(new UserDTOManager());
+            return service.UpdateUserUsername(id, password, newName);
         }
 
         public bool Put(int id, [FromBody] UserPasswordsDTO passwords)
         {
-            return UserDTOManager.UpdateUserPassword(id, passwords);
+            service = new UserService(new UserDTOManager());
+            return service.UpdateUserPassword(id, passwords);
         }
         public bool DeleteUser(int id)
         {
-            return UserDTOManager.DeleteUser(id);
+            service = new UserService(new UserDTOManager());
+            return service.DeleteUser(id);
         }
 
         public bool Put([FromBody] UserWithPassword user)
         {
-            return UserDTOManager.CreateUser(user.Username, user.Password);
+            service = new UserService(new UserDTOManager());
+            return service.CreateUser(user.Username, user.Password);
         }
     }
 
