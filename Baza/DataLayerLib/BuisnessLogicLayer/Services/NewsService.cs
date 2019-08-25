@@ -45,23 +45,10 @@ namespace BuisnessLogicLayer.Services
             return result;
         }
         
-        public bool UpdateNews(NewsDTO news, int userId)
-        {
-            bool result = false;
-            NewsDTO dataResult = newsData.UpdateNews(news, userId);
-            if (dataResult != null)
-            {
-                MessageQueueManager manager = MessageQueueManager.Instance;
-                manager.PublishMessage(dataResult.Id, dataResult.Id, dataResult, MessageOperation.Update);
-                result = true;
-            }
-            return result;
-        }
-        
         public bool UpdateNews(SimpleNewsDTO simpleDTO, int userId)
         {
             bool result = false;
-            NewsDTO dataResult = newsData.UpdateNews(simpleDTO, userId);
+            SimpleNewsDTO dataResult = newsData.UpdateNews(simpleDTO, userId);
             if (dataResult != null)
             {
                 MessageQueueManager manager = MessageQueueManager.Instance;

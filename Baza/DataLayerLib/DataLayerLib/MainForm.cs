@@ -267,10 +267,7 @@ namespace DataLayerLib
             CreateNewsForm form = new CreateNewsForm(users, news.Title, news.Content);
             if(form.ShowDialog() == DialogResult.OK)
             {
-                if(new DTOManagers.NewsDTOManager().UpdateNews(form.User_ID,news.Id,form.Title, form.Content))
-                    MessageBox.Show("Uspesno azurirana vest");
-                else
-                    MessageBox.Show("Greska");
+                MessageBox.Show("We have discontinued this option");
             }
         }
 

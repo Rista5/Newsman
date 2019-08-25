@@ -45,14 +45,6 @@ namespace API.Controllers
         }
 
         [HttpPost]
-        [Route("api/NewsUpdate/{userId}")]
-        public bool UpdateNews([FromBody] NewsDTO news, int userId)
-        {
-            service = Service.NewsService;
-            return service.UpdateNews(news, userId);
-        }
-
-        [HttpPost]
         [Route("api/News/{userId}")]
         public bool UpdateNews([FromBody] SimpleNewsDTO simpleDTO, int userId)
         {
