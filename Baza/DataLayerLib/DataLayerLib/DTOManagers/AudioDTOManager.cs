@@ -107,7 +107,7 @@ namespace DataLayerLib.DTOManagers
                 if (audioData != null)
                 {
                     MultimediaLoader.IMultimediaLoader loader = new MultimediaLoader.FileSystemLoader();
-                    loader.SaveMedia(audio.Id,audio.BelongsTo.Id, audio.Name, audioData);
+                    loader.SaveMedia(audio.Id,audio.BelongsTo.Id, audioData);
                 }
 
                 result = true;
@@ -141,7 +141,7 @@ namespace DataLayerLib.DTOManagers
                 if (audioDTO.AudioData != null)
                 {
                     MultimediaLoader.IMultimediaLoader loader = new MultimediaLoader.FileSystemLoader();
-                    loader.SaveMedia(audio.Id, audioDTO.BelongsToNewsId, audio.Name, audioDTO.GetAudioBytes());
+                    loader.SaveMedia(audio.Id, audioDTO.BelongsToNewsId, audioDTO.GetAudioBytes());
                 }
 
                 result = true;
@@ -200,7 +200,7 @@ namespace DataLayerLib.DTOManagers
                 if(audioDTO.AudioData!=null)
                 {
                     MultimediaLoader.IMultimediaLoader loader = new MultimediaLoader.FileSystemLoader();
-                    loader.SaveMedia(audio.Id,audioDTO.BelongsToNewsId, audio.Name, audioDTO.GetAudioBytes());
+                    loader.SaveMedia(audio.Id,audioDTO.BelongsToNewsId, audioDTO.GetAudioBytes());
                 }
                 result = true;
             }
@@ -224,7 +224,7 @@ namespace DataLayerLib.DTOManagers
                 Audio audio = session.Load<Audio>(audioId);
 
                 MultimediaLoader.IMultimediaLoader loader = new MultimediaLoader.FileSystemLoader();
-                loader.DeleteMedia(audio.Id, audio.BelongsTo.Id, audio.Name);
+                loader.DeleteMedia(audio.Id, audio.BelongsTo.Id);
 
                 session.Delete(audio);
                 session.Flush();

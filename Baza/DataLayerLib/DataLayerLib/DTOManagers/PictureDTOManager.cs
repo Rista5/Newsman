@@ -27,7 +27,7 @@ namespace DataLayerLib.DTOManagers
                 foreach (Picture p in retData)
                 {
                     PictureDTO picDto = new PictureDTO(p);
-                    picDto.SetPictureBytes(Loader.GetMedia(p.Id, p.BelongsTo.Id, p.Name));
+                    picDto.SetPictureBytes(Loader.GetMedia(p.Id, p.BelongsTo.Id));
                     pictures.Add(picDto);
                 }
                 session.Close();
@@ -78,7 +78,7 @@ namespace DataLayerLib.DTOManagers
                 Picture picture = session.Load<Picture>(pictureId);
                 result = new PictureDTO(picture);
                 MultimediaLoader.IMultimediaLoader loader = new MultimediaLoader.FileSystemLoader();
-                result.SetPictureBytes(loader.GetMedia(picture.Id,picture.BelongsTo.Id , picture.Name));
+                result.SetPictureBytes(loader.GetMedia(picture.Id,picture.BelongsTo.Id));
                 session.Close();
             }
             catch (Exception ex)
@@ -110,7 +110,7 @@ namespace DataLayerLib.DTOManagers
                 if (pictureData != null)
                 {
                     MultimediaLoader.IMultimediaLoader loader = new MultimediaLoader.FileSystemLoader();
-                    loader.SaveMedia(picture.Id,picture.BelongsTo.Id, picture.Name, pictureData);
+                    loader.SaveMedia(picture.Id,picture.BelongsTo.Id, pictureData);
                 }
 
                 PictureDTO dto = new PictureDTO(picture);
@@ -154,7 +154,7 @@ namespace DataLayerLib.DTOManagers
                 if (picturedto.PictureData != null)
                 {
                     MultimediaLoader.IMultimediaLoader loader = new MultimediaLoader.FileSystemLoader();
-                    loader.SaveMedia(picture.Id, picturedto.BelongsToNewsId, picture.Name, picturedto.GetPictureBytes());
+                    loader.SaveMedia(picture.Id, picturedto.BelongsToNewsId, picturedto.GetPictureBytes());
 
                     MessageQueueManager menager = MessageQueueManager.Instance;
                     PictureDTO message = new PictureDTO(picture);
@@ -193,7 +193,7 @@ namespace DataLayerLib.DTOManagers
                 if (pictureData != null)
                 {
                     MultimediaLoader.IMultimediaLoader loader = new MultimediaLoader.FileSystemLoader();
-                    loader.SaveMedia(picture.Id, picture.BelongsTo.Id, picture.Name, pictureData);
+                    loader.SaveMedia(picture.Id, picture.BelongsTo.Id, pictureData);
                 }
 
                 PictureDTO dto = new PictureDTO(picture);
@@ -233,7 +233,7 @@ namespace DataLayerLib.DTOManagers
                 if (pic.PictureData != null)
                 {
                     MultimediaLoader.IMultimediaLoader loader = new MultimediaLoader.FileSystemLoader();
-                    loader.SaveMedia(picture.Id,pic.BelongsToNewsId, pic.Name, pic.GetPictureBytes());
+                    loader.SaveMedia(picture.Id,pic.BelongsToNewsId, pic.GetPictureBytes());
                 }
 
                 //MessageQueueManager manager = MessageQueueManager.Instance;
@@ -260,9 +260,10 @@ namespace DataLayerLib.DTOManagers
                 session = DataLayer.GetSession();
                 Picture picture = session.Load<Picture>(pictureId);
 
-                MultimediaLoader.IMultimediaLoader loader = new MultimediaLoader.FileSystemLoader();
-                loader.DeleteMedia(picture.Id,picture.BelongsTo.Id, picture.Name);
+                IMultimediaLoader loader = new FileSystemLoader();
+                loader.DeleteMedia(picture.Id,picture.BelongsTo.Id);
 
+                PictureDTO dto = new PictureDTO(picture);
                 session.Delete(picture);
                 session.Flush();
                 session.Close();

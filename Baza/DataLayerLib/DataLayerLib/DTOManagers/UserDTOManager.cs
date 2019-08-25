@@ -264,7 +264,13 @@ namespace DataLayerLib.DTOManagers
             {
                 session = DataLayer.GetSession();
                 User user = session.Load<User>(userId);
+
+                //UserDTO userDTO = new UserDTO(user);
                 session.Delete(user);
+                
+                //MessageQueueManager manager = MessageQueueManager.Instance;
+                //manager.PublishMessage(userDTO.BelongsToNewsId, commentDTO.Id, commentDTO, MessageOperation.Delete);
+
                 session.Flush();
                 session.Close();
                 result = true;

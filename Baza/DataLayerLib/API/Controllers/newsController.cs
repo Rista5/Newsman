@@ -37,7 +37,7 @@ namespace API.Controllers
         }
 
         [HttpPut]
-        [Route("api/CreateNews/{userId}")]
+        [Route("api/News/{userId}")]
         public bool CreateNews([FromBody]NewsDTO news, int userId)
         {
             service = Service.NewsService;
@@ -45,7 +45,7 @@ namespace API.Controllers
         }
 
         [HttpPost]
-        [Route("api/UpdateNews/{userId}")]
+        [Route("api/NewsUpdate/{userId}")]
         public bool UpdateNews([FromBody] NewsDTO news, int userId)
         {
             service = Service.NewsService;
@@ -61,11 +61,12 @@ namespace API.Controllers
         }
 
         [HttpDelete]
-        [Route("api/DeleteNews/{userId}")]
-        public bool DeleteNews(int userId)
+        [Route("api/News/{newsId}")]
+        public bool DeleteNews(int newsId)
         {
             service = Service.NewsService;
             return service.DeleteNews(userId);
+            return NewsDTOManager.DeleteNews(newsId);
         }
     }
 }
