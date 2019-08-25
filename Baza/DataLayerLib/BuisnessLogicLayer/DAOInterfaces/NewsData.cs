@@ -22,11 +22,7 @@ namespace BuisnessLogicLayer.DAOInterfaces
 
         NewsDTO CreateNews(NewsDTO news, int userId);
 
-        bool UpdateNews(int userId, int newsId, string title, string content);
-
-        NewsDTO UpdateNews(SimpleNewsDTO simpleDTO, int userId);
-
-        NewsDTO UpdateNews(NewsDTO newsDTO, int userId);
+        SimpleNewsDTO UpdateNews(SimpleNewsDTO simpleDTO, int userId);
 
         bool DeleteNews(int newsId);
 

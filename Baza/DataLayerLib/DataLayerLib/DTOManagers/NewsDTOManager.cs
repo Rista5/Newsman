@@ -190,16 +190,8 @@ namespace DataLayerLib.DTOManagers
                 modified.ModificationDate = DateTime.Today;
                 modified.News = newNews;
 
-                //if (news.BackgroundPicture != null)
-                //{
-                //    //TODO ovde ne moze da se snimi slika jer jos nisu perzistirani podaci u bazi!!!
-                //    Picture backgroundPic = ExpandBackgroundPicture(news.BackgroundPicture);
-                //    newNews.BackgroundPicture = backgroundPic;
-                //}
-
                 ITransaction transaction = session.BeginTransaction();
-                
-                //session.SaveOrUpdate(newNews.BackgroundPicture);
+
                 session.SaveOrUpdate(newNews);
                 session.Save(modified);
                 session.Flush();
@@ -226,8 +218,6 @@ namespace DataLayerLib.DTOManagers
                     dto.PictureData = news.Pictures[i].PictureData;
 
                 }
-
-
                 session.Close();
             }
             catch (Exception ex)
@@ -239,48 +229,9 @@ namespace DataLayerLib.DTOManagers
             return result;
         }
 
-        public bool UpdateNews(int userId, int newsId,
-            string title, string content)
+        public SimpleNewsDTO UpdateNews(SimpleNewsDTO simpleDTO, int userId)
         {
-            bool result = false;
-            ISession session = null;
-            try
-            {
-                session = DataLayer.GetSession();
-                User user = session.Load<User>(userId);
-                News news = session.Load<News>(newsId);
-                news.Title = title;
-                news.Content = content;
-                news.LastModified = DateTime.Today;
-
-                NewsModified modification = new NewsModified();
-                modification.ModificationDate = DateTime.Today;
-                modification.News = news;
-                modification.User = user;
-
-                session.SaveOrUpdate(news);
-                session.Save(modification);
-                session.Flush();
-
-                MessageQueueManager manager = MessageQueueManager.Instance;
-                manager.PublishMessage(news.Id, news.Id, new NewsDTO(news), MessageOperation.Update);
-
-                session.Close();
-
-                result = true;
-            }
-            catch (Exception ex)
-            {
-                Console.WriteLine(ex.Message);
-                if (session != null)
-                    session.Close();
-            }
-            return result;
-        }
-
-        public NewsDTO UpdateNews(SimpleNewsDTO simpleDTO, int userId)
-        {
-            NewsDTO result = null;
+            SimpleNewsDTO result = null;
             ISession session = null;
             try
             {
@@ -307,90 +258,14 @@ namespace DataLayerLib.DTOManagers
                 session.Save(modification);
                 session.Flush();
 
-                result = new NewsDTO(news);
-                MessageQueueManager manager = MessageQueueManager.Instance;
+                result = new SimpleNewsDTO(news);
                 SimpleNewsDTO message = new SimpleNewsDTO(news);
                 if (simpleDTO.BackgroundPicture != null)
                 {
                     Loader.SaveMedia(news.BackgroundPicture.Id, news.Id, simpleDTO.BackgroundPicture.GetPictureBytes());
                     //message.BackgroundPicture = new PictureDTO(news.BackgroundPicture);
-                    message.BackgroundPicture.PictureData = simpleDTO.BackgroundPicture.PictureData;
-                }
-                manager.PublishMessage(news.Id, news.Id, message, MessageOperation.Update);
-                
-
-                session.Close();
-            }
-            catch (Exception ex)
-            {
-                Console.WriteLine(ex.Message);
-                if (session != null)
-                    session.Close();
-            }
-            return result;
-        }
-
-        public NewsDTO UpdateNews(NewsDTO newsDTO, int userId)
-        {
-            NewsDTO result = null;
-            ISession session = null;
-            try
-            {
-                session = DataLayer.GetSession();
-                News news = ExpandDTO(newsDTO);
-                news.LastModified = DateTime.Today;
-                User user = session.Load<User>(userId);
-                if (newsDTO.BackgroundPicture != null)
-                {
-                    Picture backgroundPic = ExpandBackgroundPicture(newsDTO.BackgroundPicture);
-                    news.BackgroundPicture = backgroundPic;
-                }
-                else
-                    news.BackgroundPicture = null;
-                NewsModified modified = new NewsModified();
-                modified.News = news;
-                modified.User = user;
-                modified.ModificationDate = DateTime.Today;
-                modified.News = news;
-
-                if (newsDTO.BackgroundPicture != null)
-                {
-                    Picture backgroundPic = ExpandBackgroundPicture(newsDTO.BackgroundPicture);
-                    news.BackgroundPicture = backgroundPic;
-
-                    Loader.SaveMedia(backgroundPic.Id, news.Id, newsDTO.BackgroundPicture.GetPictureBytes());
-                }
-                else
-                    news.BackgroundPicture = null;
-
-                ITransaction transaction = session.BeginTransaction();
-                session.Save(news);
-                session.Save(modified);
-                session.Flush();
-
-                transaction.Commit();
-
-                result = new NewsDTO(news);
-
-                MessageQueueManager manager = MessageQueueManager.Instance;
-                NewsDTO message = new NewsDTO(news);
-                if (newsDTO.BackgroundPicture != null)
-                {
-                    Loader.SaveMedia(news.BackgroundPicture.Id, news.Id,
-                        newsDTO.BackgroundPicture.GetPictureBytes());
-                    message.BackgroundPicture = new PictureDTO(news.BackgroundPicture);
-                    message.BackgroundPicture.PictureData = newsDTO.BackgroundPicture.PictureData;
-                }
-                //ovo uopste ne izgleda dobro, ne znam kako bi bolje mogle da se ucitavaju slike
-                for (int i = 0; i < news.Pictures.Count; i++)
-                {
-                    Picture p = news.Pictures[i];
-                    Loader.SaveMedia(p.Id, news.Id, newsDTO.Pictures[i].GetPictureBytes());
-                    PictureDTO dto = new PictureDTO(p);
-                    dto.PictureData = newsDTO.Pictures[i].PictureData;
-                    message.Pictures.Add(dto);
-                }
-                manager.PublishMessage(news.Id, news.Id, new NewsDTO(news), MessageOperation.Update);
+                    result.BackgroundPicture.PictureData = simpleDTO.BackgroundPicture.PictureData;
+                }             
 
                 session.Close();
             }
