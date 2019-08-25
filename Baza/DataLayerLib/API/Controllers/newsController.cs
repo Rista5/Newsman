@@ -24,6 +24,7 @@ namespace API.Controllers
         [Route("api/NewsModifiedByUser/{id}")]
         public IEnumerable<NewsDTO> Get(int id)
         {
+            service = Service.NewsService;
             return service.GetNewsModifiedByUser(id);
         }
 
@@ -31,6 +32,7 @@ namespace API.Controllers
         [Route("api/News/{id}")]
         public NewsDTO GetNewsById(int id)
         {
+            service = Service.NewsService;
             return service.GetNewsById(id);
         }
 
@@ -38,6 +40,7 @@ namespace API.Controllers
         [Route("api/CreateNews/{userId}")]
         public bool CreateNews([FromBody]NewsDTO news, int userId)
         {
+            service = Service.NewsService;
             return service.CreateNews(news, userId);
         }
 
@@ -45,6 +48,7 @@ namespace API.Controllers
         [Route("api/UpdateNews/{userId}")]
         public bool UpdateNews([FromBody] NewsDTO news, int userId)
         {
+            service = Service.NewsService;
             return service.UpdateNews(news, userId);
         }
 
@@ -52,6 +56,7 @@ namespace API.Controllers
         [Route("api/News/{userId}")]
         public bool UpdateNews([FromBody] SimpleNewsDTO simpleDTO, int userId)
         {
+            service = Service.NewsService;
             return service.UpdateNews(simpleDTO, userId);
         }
 
@@ -59,6 +64,7 @@ namespace API.Controllers
         [Route("api/DeleteNews/{userId}")]
         public bool DeleteNews(int userId)
         {
+            service = Service.NewsService;
             return service.DeleteNews(userId);
         }
     }

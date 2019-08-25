@@ -195,15 +195,28 @@ namespace DataLayerLib.DTOManagers
                 modified.ModificationDate = DateTime.Today;
                 modified.News = newNews;
 
+                if (news.BackgroundPicture != null)
+                {
+                    Picture backgroundPic = ExpandBackgroundPicture(news.BackgroundPicture);
+                    newNews.BackgroundPicture = backgroundPic;
+                }
+
                 ITransaction transaction = session.BeginTransaction();
-                session.Save(newNews);
+                session.SaveOrUpdate(newNews);
                 session.Save(modified);
                 session.Flush();
-
                 transaction.Commit();
 
-                //MessageQueueManager manager = MessageQueueManager.Instance;
-                //manager.PublishMessage(newNews.Id, newNews.Id, new NewsDTO(newNews), MessageOperation.Insert);
+                if(news.BackgroundPicture != null)
+                {
+                    Loader.SaveMedia(newNews.BackgroundPicture.Id, newNews.Id, newNews.BackgroundPicture.Name, news.BackgroundPicture.GetPictureBytes());
+                }
+
+                for (int i = 0; i < newNews.Pictures.Count; i++)
+                {
+                    Picture p = newNews.Pictures[i];
+                    Loader.SaveMedia(p.Id, newNews.Id,newNews.Pictures[i].Name, news.Pictures[i].GetPictureBytes());
+                }
 
                 result = new NewsDTO(newNews);
 
@@ -292,9 +305,6 @@ namespace DataLayerLib.DTOManagers
                 session.Save(modification);
                 session.Flush();
 
-                //MessageQueueManager manager = MessageQueueManager.Instance;
-                //manager.PublishMessage(news.Id, news.Id, new NewsDTO(news), MessageOperation.Update);
-
                 result = new NewsDTO(news);
 
                 session.Close();
@@ -324,15 +334,22 @@ namespace DataLayerLib.DTOManagers
                 modified.ModificationDate = DateTime.Today;
                 modified.News = news;
 
+                if (newsDTO.BackgroundPicture != null)
+                {
+                    Picture backgroundPic = ExpandBackgroundPicture(newsDTO.BackgroundPicture);
+                    news.BackgroundPicture = backgroundPic;
+
+                    Loader.SaveMedia(backgroundPic.Id, news.Id, backgroundPic.Name, newsDTO.BackgroundPicture.GetPictureBytes());
+                }
+                else
+                    news.BackgroundPicture = null;
+
                 ITransaction transaction = session.BeginTransaction();
                 session.Save(news);
                 session.Save(modified);
                 session.Flush();
 
                 transaction.Commit();
-
-                //MessageQueueManager manager = MessageQueueManager.Instance;
-                //manager.PublishMessage(news.Id, news.Id, new NewsDTO(news), MessageOperation.Update);
 
                 result = new NewsDTO(news);
 
@@ -427,6 +444,15 @@ namespace DataLayerLib.DTOManagers
                 //ne razmatra se
             }
             return news;
+        }
+
+        private Picture ExpandBackgroundPicture(PictureDTO backgroundPicture)
+        {
+            Picture picture = new Picture();
+            picture.BelongsTo = null;
+            picture.Description = backgroundPicture.Description;
+            picture.Name = backgroundPicture.Name;
+            return picture;
         }
     }
 }
