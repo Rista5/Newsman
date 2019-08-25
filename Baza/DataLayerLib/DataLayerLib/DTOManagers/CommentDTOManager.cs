@@ -212,7 +212,13 @@ namespace DataLayerLib.DTOManagers
             {
                 session = DataLayer.GetSession();
                 Comment comment = session.Load<Comment>(commentId);
+
+                CommentDTO commentDTO = new CommentDTO(comment);
                 session.Delete(comment);
+
+                MessageQueueManager manager = MessageQueueManager.Instance;
+                manager.PublishMessage(commentDTO.BelongsToNewsId, commentDTO.Id, commentDTO, MessageOperation.Delete);
+
                 session.Flush();
                 session.Close();
                 result = true;

@@ -14,6 +14,11 @@ namespace DataLayerLib.MultimediaLoader
         public static string LocationFolder { get; private set; }
         public IPathGenerator pathgen { get; set; }
 
+        private static string Name(int pictureId)
+        {
+            return pictureId + ".jpg";
+        }
+
         public FileSystemLoader()
         {
             //LocationFolder = @"C:\Users\Uros\Downloads\IV godina\VII semestar\Arhitektura i projektovanje softvera\Projekat\Newsman\Baza\Slike\";
@@ -25,8 +30,9 @@ namespace DataLayerLib.MultimediaLoader
             LocationFolder = path;
         }
 
-        public byte[] GetMedia(int id,int newsId, string name)
+        public byte[] GetMedia(int id,int newsId)
         {
+            string name = Name(id);
             string path = pathgen.GeneratePath(id, newsId, name);
             path += name;
 
@@ -54,11 +60,11 @@ namespace DataLayerLib.MultimediaLoader
             return pictureData;
         }
 
-        public bool SaveMedia(int id,int newsId, string name, byte[] data)
+        public bool SaveMedia(int id,int newsId, byte[] data)
         {
             //string pictureName = name + id.ToString();
             //string path = LocationFolder + pictureName + ".jpg";
-
+            string name = Name(id);
             string path = pathgen.GeneratePath(id, newsId, name);
             
             try
@@ -82,13 +88,13 @@ namespace DataLayerLib.MultimediaLoader
             return true;
         }
 
-        public bool DeleteMedia(int id, int newsId, string name)
+        public bool DeleteMedia(int id, int newsId)
         {
             //string pictureName = name + id.ToString();
             //string path = LocationFolder + pictureName + ".jpg";
-
+            string name = Name(id);
             string path = pathgen.GeneratePath(id, newsId, name);
-            path+= name;
+            path+= id + ".jpg";
             try
             {
                 if (File.Exists(path))

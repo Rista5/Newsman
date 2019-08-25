@@ -38,11 +38,11 @@ namespace DataLayerLib.DTOManagers
                 //TODO change this
                 foreach(NewsDTO n in news)
                 {
-                    n.BackgroundPicture.SetPictureBytes(Loader.GetMedia(n.BackgroundPicture.Id,
-                                                                        n.BackgroundPicture.BelongsToNewsId,
-                                                                        n.BackgroundPicture.Name));
+                    if(n.BackgroundPicture != null)
+                        n.BackgroundPicture.SetPictureBytes(Loader.GetMedia(n.BackgroundPicture.Id,
+                                                                        n.BackgroundPicture.BelongsToNewsId));
                     foreach (PictureDTO p in n.Pictures)
-                        p.SetPictureBytes(Loader.GetMedia(p.Id, p.BelongsToNewsId, p.Name));
+                        p.SetPictureBytes(Loader.GetMedia(p.Id, p.BelongsToNewsId));
                 }
                 session.Close();
             }
@@ -139,8 +139,6 @@ namespace DataLayerLib.DTOManagers
                 news.LastModified = DateTime.Today;
                 news.Title = title;
                 news.Content = content;
-                //news.Pictures = new List<Picture>();
-                //news.AudioRecordings = new List<Audio>();
                 news.Modifications = new List<NewsModified>();
                 news.Modifications.Add(modifiaction);
 
@@ -187,15 +185,43 @@ namespace DataLayerLib.DTOManagers
                 modified.ModificationDate = DateTime.Today;
                 modified.News = newNews;
 
+                //if (news.BackgroundPicture != null)
+                //{
+                //    //TODO ovde ne moze da se snimi slika jer jos nisu perzistirani podaci u bazi!!!
+                //    Picture backgroundPic = ExpandBackgroundPicture(news.BackgroundPicture);
+                //    newNews.BackgroundPicture = backgroundPic;
+                //}
+
                 ITransaction transaction = session.BeginTransaction();
-                session.Save(newNews);
+                
+                //session.SaveOrUpdate(newNews.BackgroundPicture);
+                session.SaveOrUpdate(newNews);
                 session.Save(modified);
                 session.Flush();
 
                 transaction.Commit();
 
                 MessageQueueManager manager = MessageQueueManager.Instance;
-                manager.PublishMessage(newNews.Id, newNews.Id, new NewsDTO(newNews), MessageOperation.Insert);
+                NewsDTO message = new NewsDTO(newNews);
+                if(news.BackgroundPicture != null)
+                {
+                    Loader.SaveMedia(newNews.BackgroundPicture.Id, newNews.Id, news.BackgroundPicture.GetPictureBytes());
+                    message.BackgroundPicture = new PictureDTO(newNews.BackgroundPicture);
+                    message.BackgroundPicture.PictureData = news.BackgroundPicture.PictureData;
+                }
+
+                //TODO ovo uopste ne izgleda dobro, ne znam kako bi bolje mogle da se ucitavaju slike
+
+                for (int i = 0; i < newNews.Pictures.Count; i++)
+                {
+                    Picture p = newNews.Pictures[i];
+                    Loader.SaveMedia(p.Id, newNews.Id, news.Pictures[i].GetPictureBytes());
+                    //PictureDTO dto = new PictureDTO(p);
+                    PictureDTO dto = message.Pictures[i];
+                    dto.PictureData = news.Pictures[i].PictureData;
+                    //message.Pictures.Add(dto);
+                }
+                manager.PublishMessage(newNews.Id, newNews.Id, message, MessageOperation.Insert);
 
                 session.Close();
 
@@ -261,17 +287,11 @@ namespace DataLayerLib.DTOManagers
                 news.Title = simpleDTO.Title;
                 news.Content = simpleDTO.Content;
 
-                if (simpleDTO.BackgroundPicture != null)
+                if (simpleDTO.BackgroundPicture != null && news.BackgroundPicture == null)
                 {
-                    Picture backgroundPic = new Picture();
-                    backgroundPic.Description = simpleDTO.BackgroundPicture.Description;
-                    backgroundPic.BelongsTo = news;
-                    backgroundPic.Name = simpleDTO.BackgroundPicture.Name;
-                    news.BackgroundPicture = backgroundPic;
-
-                    Loader.SaveMedia(backgroundPic.Id, news.Id, backgroundPic.Name, simpleDTO.BackgroundPicture.GetPictureBytes());
+                    news.BackgroundPicture = ExpandBackgroundPicture(simpleDTO.BackgroundPicture);
                 }
-                else
+                else if (simpleDTO.BackgroundPicture == null)
                     news.BackgroundPicture = null;
                 news.LastModified = DateTime.Today;
 
@@ -285,7 +305,14 @@ namespace DataLayerLib.DTOManagers
                 session.Flush();
 
                 MessageQueueManager manager = MessageQueueManager.Instance;
-                manager.PublishMessage(news.Id, news.Id, new NewsDTO(news), MessageOperation.Update);
+                SimpleNewsDTO message = new SimpleNewsDTO(news);
+                if (simpleDTO.BackgroundPicture != null)
+                {
+                    Loader.SaveMedia(news.BackgroundPicture.Id, news.Id, simpleDTO.BackgroundPicture.GetPictureBytes());
+                    //message.BackgroundPicture = new PictureDTO(news.BackgroundPicture);
+                    message.BackgroundPicture.PictureData = simpleDTO.BackgroundPicture.PictureData;
+                }
+                manager.PublishMessage(news.Id, news.Id, message, MessageOperation.Update);
 
                 session.Close();
 
@@ -310,6 +337,13 @@ namespace DataLayerLib.DTOManagers
                 News news = ExpandDTO(newsDTO);
                 news.LastModified = DateTime.Today;
                 User user = session.Load<User>(userId);
+                if (newsDTO.BackgroundPicture != null)
+                {
+                    Picture backgroundPic = ExpandBackgroundPicture(newsDTO.BackgroundPicture);
+                    news.BackgroundPicture = backgroundPic;
+                }
+                else
+                    news.BackgroundPicture = null;
                 NewsModified modified = new NewsModified();
                 modified.News = news;
                 modified.User = user;
@@ -325,6 +359,23 @@ namespace DataLayerLib.DTOManagers
 
 
                 MessageQueueManager manager = MessageQueueManager.Instance;
+                NewsDTO message = new NewsDTO(news);
+                if (newsDTO.BackgroundPicture != null)
+                {
+                    Loader.SaveMedia(news.BackgroundPicture.Id, news.Id,
+                        newsDTO.BackgroundPicture.GetPictureBytes());
+                    message.BackgroundPicture = new PictureDTO(news.BackgroundPicture);
+                    message.BackgroundPicture.PictureData = newsDTO.BackgroundPicture.PictureData;
+                }
+                //ovo uopste ne izgleda dobro, ne znam kako bi bolje mogle da se ucitavaju slike
+                for (int i = 0; i < news.Pictures.Count; i++)
+                {
+                    Picture p = news.Pictures[i];
+                    Loader.SaveMedia(p.Id, news.Id, newsDTO.Pictures[i].GetPictureBytes());
+                    PictureDTO dto = new PictureDTO(p);
+                    dto.PictureData = newsDTO.Pictures[i].PictureData;
+                    message.Pictures.Add(dto);
+                }
                 manager.PublishMessage(news.Id, news.Id, new NewsDTO(news), MessageOperation.Update);
 
                 session.Close();
@@ -349,13 +400,21 @@ namespace DataLayerLib.DTOManagers
             {
                 session = DataLayer.GetSession();
                 News news = session.Load<News>(newsId);
+                NewsDTO newsDTO = new NewsDTO(news);
+
+                foreach (Picture p in news.Pictures)
+                {
+                    Loader.DeleteMedia(p.Id, news.Id);
+                }
+                if (news.BackgroundPicture != null)
+                    Loader.DeleteMedia(news.BackgroundPicture.Id, news.Id);
                 session.Delete(news);
+
+                MessageQueueManager manager = MessageQueueManager.Instance;
+                manager.PublishMessage(news.Id, news.Id, newsDTO, MessageOperation.Delete);
+
                 session.Flush();
                 session.Close();
-
-                //MessageQueueManager manager = MessageQueueManager.Instance;
-                //manager.DeleteExchange(newsId.ToString());
-
                 result = true;
             }
             catch (Exception ex)
@@ -397,12 +456,11 @@ namespace DataLayerLib.DTOManagers
             news.LastModified = newsDTO.LasModified;
             news.Content = newsDTO.Content;
             news.Title = newsDTO.Title;
+            if(newsDTO.BackgroundPicture.PictureData != null)
+                news.BackgroundPicture = ExpandBackgroundPicture(newsDTO.BackgroundPicture);
             foreach(PictureDTO picture in newsDTO.Pictures)
             {
-                Picture pic = new Picture();
-                pic.Description = picture.Description;
-                pic.BelongsTo = news;
-                pic.Name = picture.Name;
+                news.Pictures.Add(ExpandPicture(picture, news));
             }
             foreach(AudioDTO audio in newsDTO.AudioRecordings)
             {
@@ -410,6 +468,7 @@ namespace DataLayerLib.DTOManagers
                 aud.BelongsTo = news;
                 aud.Description = audio.Description;
                 aud.Name = audio.Name;
+                news.AudioRecordings.Add(aud);
             }
             foreach(CommentDTO comm in newsDTO.Comments)
             {
@@ -417,10 +476,21 @@ namespace DataLayerLib.DTOManagers
                 comment.BelongsTo = news;
                 comment.Content = comm.Content;
                 comment.PostDate = comm.PostDate;
-                //we are missing a User
-                //ne razmatra se
+                news.Comments.Add(comment);
             }
             return news;
+        }
+
+        public static Picture ExpandPicture(PictureDTO picture, News news)
+        {
+            Picture pic = new Picture(picture.Id, picture.Name, picture.Description, news);
+            return pic;
+        }
+
+        public static Picture ExpandBackgroundPicture(PictureDTO picture)
+        {
+            Picture pic = new Picture(picture.Id, picture.Name, picture.Description, null);
+            return pic;
         }
     }
 }

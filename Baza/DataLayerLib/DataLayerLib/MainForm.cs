@@ -106,7 +106,7 @@ namespace DataLayerLib
             session.Close();
 
             MultimediaLoader.IMultimediaLoader loader = new MultimediaLoader.FileSystemLoader();
-            byte[] pictureData = loader.GetMedia(picture.Id,picture.BelongsTo.Id, picture.Name);
+            byte[] pictureData = loader.GetMedia(picture.Id,picture.BelongsTo.Id);
             System.IO.MemoryStream ms = new System.IO.MemoryStream(pictureData);
             Image image = Image.FromStream(ms);
 

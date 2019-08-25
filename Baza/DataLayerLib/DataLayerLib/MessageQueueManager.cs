@@ -63,10 +63,13 @@ namespace DataLayerLib
                     body: data);
         }
 
+        //TODO razmisli da li ovo moze nekako bolje
         public void PublishMessage(int newsId, int objId,  object obj, MessageOperation operation)
         {
             string routingKey = GenerateRoutingKey(newsId, objId, obj, operation);
-            byte[] data = SerializeObject(obj);
+            byte[] data = null;
+            if(operation!=MessageOperation.Delete)
+                data = SerializeObject(obj);
             PublishMessage(routingKey, data);
         }
 

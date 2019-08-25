@@ -8,8 +8,8 @@ namespace DataLayerLib.MultimediaLoader
 {
     interface IMultimediaLoader
     {
-        byte[] GetMedia(int id,int newsId, string name);
-        bool SaveMedia(int id,int newsId, string name, byte[] data);
-        bool DeleteMedia(int id,int newsId, string name);
+        byte[] GetMedia(int id,int newsId);
+        bool SaveMedia(int id,int newsId, byte[] data);
+        bool DeleteMedia(int id,int newsId);
     }
 }

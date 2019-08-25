@@ -338,7 +338,7 @@ namespace DataLayerLib
                 Picture picture = session.Load<Picture>(pictureId);
                 result = new PictureDTO(picture);
                 MultimediaLoader.IMultimediaLoader loader = new MultimediaLoader.FileSystemLoader();
-                result.SetPictureBytes(loader.GetMedia(picture.Id, picture.BelongsTo.Id, picture.Name));
+                result.SetPictureBytes(loader.GetMedia(picture.Id, picture.BelongsTo.Id));
                 session.Close();
             }
             catch (Exception ex)
@@ -490,7 +490,7 @@ namespace DataLayerLib
                 if(pictureData != null)
                 {
                     MultimediaLoader.IMultimediaLoader loader = new MultimediaLoader.FileSystemLoader();
-                    loader.SaveMedia(picture.Id,picture.BelongsTo.Id, picture.Name, pictureData);
+                    loader.SaveMedia(picture.Id,picture.BelongsTo.Id, pictureData);
                 }
 
                 result = true;
@@ -527,7 +527,7 @@ namespace DataLayerLib
                 if (audioData != null)
                 {
                     MultimediaLoader.IMultimediaLoader loader = new MultimediaLoader.FileSystemLoader();
-                    loader.SaveMedia(audio.Id, audio.BelongsTo.Id, audio.Name, audioData);
+                    loader.SaveMedia(audio.Id, audio.BelongsTo.Id, audioData);
                 }
 
                 result = true;
@@ -672,7 +672,7 @@ namespace DataLayerLib
                 if(pictureData!=null)
                 {
                     MultimediaLoader.IMultimediaLoader loader = new MultimediaLoader.FileSystemLoader();
-                    loader.SaveMedia(picture.Id,picture.BelongsTo.Id, picture.Name, pictureData);
+                    loader.SaveMedia(picture.Id,picture.BelongsTo.Id, pictureData);
                 }
                 result = true;
             }
@@ -789,7 +789,7 @@ namespace DataLayerLib
                 Picture picture = session.Load<Picture>(pictureId);
 
                 MultimediaLoader.IMultimediaLoader loader = new MultimediaLoader.FileSystemLoader();
-                loader.DeleteMedia(picture.Id,picture.BelongsTo.Id,picture.Name);
+                loader.DeleteMedia(picture.Id,picture.BelongsTo.Id);
 
                 session.Delete(picture);
                 session.Flush();
