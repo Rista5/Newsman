@@ -1,5 +1,6 @@
 ﻿using BuisnessLogicLayer.DAOInterfaces;
 using ObjectModel.DTOs;
+using ObjectModel.Entities;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -11,6 +12,8 @@ namespace BuisnessLogicLayer.Services
     public class NewsService
     {
         private NewsData newsData;
+        private IMultimediaLoader loader;
+
         private NewsService() { }
         public NewsService(NewsData newsData)
         {
@@ -19,7 +22,23 @@ namespace BuisnessLogicLayer.Services
 
         public IEnumerable<NewsDTO> GetAllNews()
         {
-            return newsData.GetAllNews();
+            IEnumerable<News> retData = newsData.GetAllNews();
+
+
+            IList<NewsDTO> news = new List<NewsDTO>();
+            foreach (News n in retData)
+                news.Add(new NewsDTO(n));
+
+
+            foreach (NewsDTO n in news)
+            {
+                if (n.BackgroundPicture != null)
+                    n.BackgroundPicture.SetPictureBytes(loader.GetMedia(n.BackgroundPicture.Id,
+                                                                    n.BackgroundPicture.BelongsToNewsId));
+                foreach (PictureDTO p in n.Pictures)
+                    p.SetPictureBytes(loader.GetMedia(p.Id, p.BelongsToNewsId));
+            }
+            return news;
         }
         
         public IEnumerable<NewsDTO> GetNewsModifiedByUser(int id)

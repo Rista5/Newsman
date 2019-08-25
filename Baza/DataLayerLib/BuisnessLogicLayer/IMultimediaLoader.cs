@@ -4,7 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace DataLayerLib.MultimediaLoader
+namespace BuisnessLogicLayer
 {
     public interface IMultimediaLoader
     {

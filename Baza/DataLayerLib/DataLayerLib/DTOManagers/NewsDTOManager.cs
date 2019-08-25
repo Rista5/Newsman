@@ -24,29 +24,18 @@ namespace DataLayerLib.DTOManagers
             }
         }
 
-        public List<NewsDTO> GetAllNews()
+        public List<News> GetAllNews()
         {
-            List<NewsDTO> news = new List<NewsDTO>();
+            List<News> news = new List<News>();
             ISession session = null;
             try
             {
                 session = DataLayer.GetSession();
 
-                IEnumerable<News> retData = from n in session.Query<News>()
-                                            select n;
+                IEnumerable<News> retVal = from n in session.Query<News>().ToList()
+                       select n;
 
-                foreach (News n in retData)
-                    news.Add(new NewsDTO(n));
-                
-
-                foreach(NewsDTO n in news)
-                {
-                    if(n.BackgroundPicture != null)
-                        n.BackgroundPicture.SetPictureBytes(Loader.GetMedia(n.BackgroundPicture.Id,
-                                                                        n.BackgroundPicture.BelongsToNewsId));
-                    foreach (PictureDTO p in n.Pictures)
-                        p.SetPictureBytes(Loader.GetMedia(p.Id, p.BelongsToNewsId));
-                }
+                news = retVal.ToList();
 
                 session.Close();
             }
@@ -56,7 +45,6 @@ namespace DataLayerLib.DTOManagers
                 if (session != null)
                     session.Close();
             }
-
             return news;
         }
 
@@ -195,8 +183,6 @@ namespace DataLayerLib.DTOManagers
                 session.SaveOrUpdate(newNews);
                 session.Save(modified);
                 session.Flush();
-                transaction.Commit();
-
                 transaction.Commit();
 
                 result = new NewsDTO(newNews);

@@ -115,9 +115,12 @@ namespace DataLayerLib
 
         private void btnGetAllNews_Click(object sender, EventArgs e)
         {
-            List<NewsDTO> newsDTO = new DTOManagers.NewsDTOManager().GetAllNews();
-            foreach (NewsDTO dto in newsDTO)
+            List<News> news = new DTOManagers.NewsDTOManager().GetAllNews();
+            foreach (News n in news)
+            {
+                NewsDTO dto = new NewsDTO(n);
                 MessageBox.Show(dto.ToString());
+            }
         }
 
         private void btnGetAllUsers_Click(object sender, EventArgs e)
@@ -206,7 +209,10 @@ namespace DataLayerLib
         private void btnCreateComment_Click(object sender, EventArgs e)
         {
             List<UserDTO> users = new DTOManagers.UserDTOManager().GetAllUsers();
-            List<NewsDTO> news = new DTOManagers.NewsDTOManager().GetAllNews();
+            List<News> news1 = new DTOManagers.NewsDTOManager().GetAllNews();
+            List<NewsDTO> news = new List<NewsDTO>();
+            foreach (News n in news1)
+                news.Add(new NewsDTO(n));
             CreateCommentForm form = new CreateCommentForm(users, news);
             if(form.ShowDialog() == DialogResult.OK)
             {
@@ -219,7 +225,10 @@ namespace DataLayerLib
 
         private void btnCreatePicture_Click(object sender, EventArgs e)
         {
-            List<NewsDTO> news = new DTOManagers.NewsDTOManager().GetAllNews();
+            List<News> news1 = new DTOManagers.NewsDTOManager().GetAllNews();
+            List<NewsDTO> news = new List<NewsDTO>();
+            foreach (News n in news1)
+                news.Add(new NewsDTO(n));
             CreatePictureForm form = new CreatePictureForm(news);
             if(form.ShowDialog()==DialogResult.OK)
             {
