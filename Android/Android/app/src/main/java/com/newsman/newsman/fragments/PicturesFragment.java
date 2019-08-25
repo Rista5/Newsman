@@ -5,6 +5,8 @@ import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
+import android.support.v4.app.LoaderManager;
+import android.support.v4.content.Loader;
 import android.support.v7.widget.DefaultItemAnimator;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
@@ -14,6 +16,7 @@ import android.view.ViewGroup;
 import android.widget.ImageView;
 
 import com.newsman.newsman.Auxiliary.Constant;
+import com.newsman.newsman.Auxiliary.PictureTransportLoader;
 import com.newsman.newsman.R;
 import com.newsman.newsman.ServerEntities.Picture;
 import com.newsman.newsman.activities.CreatePictureActivity;
@@ -21,7 +24,7 @@ import com.newsman.newsman.adapters.PicturesListAdapter;
 
 import java.util.List;
 
-public class PicturesFragment extends Fragment {
+public class PicturesFragment extends Fragment implements LoaderManager.LoaderCallbacks<Picture>{
 
     private List<Picture> pictureList;
     private PicturesListAdapter adapter;
@@ -86,10 +89,51 @@ public class PicturesFragment extends Fragment {
         if(data == null)
             return;
         Bundle extras = data.getExtras();
-        if(extras != null && extras.get(Constant.PICTURE_BUNDLE_KEY) != null &&
-                extras.get(Constant.PICTURE_BUNDLE_KEY) instanceof Picture) {
-            Picture picture = (Picture) extras.get(Constant.PICTURE_BUNDLE_KEY);
-            adapter.addPicture(picture);
+        if(extras != null) {
+//            && extras.get(Constant.PICTURE_BUNDLE_KEY) != null &&
+//                    extras.get(Constant.PICTURE_BUNDLE_KEY) instanceof Picture
+//            Picture picture = (Picture) extras.getParcelable(Constant.PICTURE_BUNDLE_KEY);
+//            adapter.addPicture(picture);
+            LoaderManager loaderManager = LoaderManager.getInstance(this);
+            Loader<Picture> loader = loaderManager.getLoader(Constant.PICTURE_TRANSPORT_LOADER);
+            Bundle bundle = data.getExtras();
+            if(loader == null) {
+                loader = loaderManager.initLoader(Constant.PICTURE_TRANSPORT_LOADER, bundle, this);
+            } else {
+                loader = loaderManager.restartLoader(Constant.PICTURE_TRANSPORT_LOADER, bundle, this);
+            }
+            loader.startLoading();
+
         }
+    }
+
+
+    @NonNull
+    @Override
+    public Loader<Picture> onCreateLoader(int i, @Nullable Bundle bundle) {
+        int id = Constant.INVALID_PICTURE_ID;
+        String name = "";
+        String desc = "";
+        int belongToNews = Constant.INVALID_NEWS_ID;
+        String fileName = "";
+        if(bundle != null) {
+            id = bundle.getInt("Id");
+            name = bundle.getString("Name");
+            desc = bundle.getString("Description");
+            belongToNews = bundle.getInt("BelongsToNewsId");
+            fileName = bundle.getString("FileName");
+        }
+        Picture p = new Picture(id, name, desc, belongToNews, null);
+        return new PictureTransportLoader(getContext(), p, fileName);
+    }
+
+    @Override
+    public void onLoadFinished(@NonNull Loader<Picture> loader, Picture picture) {
+        adapter.addPicture(picture);
+    }
+
+    @Override
+    public void onLoaderReset(@NonNull Loader<Picture> loader) {
+
     }
 }

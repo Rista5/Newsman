@@ -2,7 +2,6 @@ package com.newsman.newsman.REST.WriteJson;
 
 import android.util.JsonWriter;
 
-import com.newsman.newsman.ServerEntities.JsonSerializer;
 import com.newsman.newsman.ServerEntities.SimpleNews;
 
 import java.io.IOException;

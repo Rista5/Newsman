@@ -4,6 +4,11 @@ import android.arch.persistence.room.ColumnInfo;
 import android.arch.persistence.room.Entity;
 import android.arch.persistence.room.Ignore;
 import android.arch.persistence.room.PrimaryKey;
+import android.graphics.Bitmap;
+import android.os.Parcel;
+import android.os.Parcelable;
+
+import com.newsman.newsman.Auxiliary.PictureConverter;
 
 import java.io.Serializable;
 
@@ -11,7 +16,7 @@ import java.io.Serializable;
  * Created by Me on 1/10/2019.
  */
 @Entity(tableName = "picture")
-public class Picture implements Serializable {
+public class Picture implements Parcelable {
 
     @PrimaryKey(autoGenerate = false)
     private int id;
@@ -20,20 +25,63 @@ public class Picture implements Serializable {
     private int belongsToNewsId;
 
     @Ignore
-    private byte[] pictureData;
+    private Bitmap pictureData;
 
     public Picture() {
-        pictureData = new byte[1];
     }
 
     @Ignore
-    public Picture(int id, String name, String description, int belongsToNewsId, byte[] pictureData) {
+    public Picture(int id, String name, String description, int belongsToNewsId, Bitmap pictureData) {
         this.id = id;
         this.name = name;
         this.description = description;
         this.belongsToNewsId = belongsToNewsId;
         this.pictureData = pictureData;
     }
+
+    protected Picture(Parcel in) {
+        id = in.readInt();
+        name = in.readString();
+        description = in.readString();
+        belongsToNewsId = in.readInt();
+        byte[] arr = new byte[in.readInt()];
+        in.readByteArray(arr);
+        Bitmap bmp = null;
+        try{
+            bmp = PictureConverter.getBitmap(arr);
+        }catch (NullPointerException e ){
+            e.printStackTrace();
+        }
+        pictureData = bmp;
+    }
+
+    @Override
+    public int describeContents() {
+        return 0;
+    }
+
+    @Override
+    public void writeToParcel(Parcel dest, int flags) {
+        dest.writeInt(id);
+        dest.writeString(name);
+        dest.writeString(description);
+        dest.writeInt(belongsToNewsId);
+        byte[] arr = PictureConverter.getBitmapBytes(pictureData);
+        dest.writeInt(arr.length);
+        dest.writeByteArray(arr);
+    }
+
+    public static final Creator<Picture> CREATOR = new Creator<Picture>() {
+        @Override
+        public Picture createFromParcel(Parcel in) {
+            return new Picture(in);
+        }
+
+        @Override
+        public Picture[] newArray(int size) {
+            return new Picture[size];
+        }
+    };
 
     @Override
     public boolean equals(Object obj) {
@@ -76,11 +124,13 @@ public class Picture implements Serializable {
         this.belongsToNewsId = belongsToNewsId;
     }
 
-    public byte[] getPictureData() {
+    public Bitmap getPictureData() {
         return this.pictureData;
     }
 
-    public void setPictureData(byte[] pictureData) {
+    public void setPictureData(Bitmap pictureData) {
         this.pictureData = pictureData;
     }
+
+
 }

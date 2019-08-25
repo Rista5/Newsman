@@ -19,20 +19,18 @@ import android.widget.ImageView;
 
 import com.newsman.newsman.AppExecutors;
 import com.newsman.newsman.Auxiliary.Constant;
-import com.newsman.newsman.Auxiliary.PictureConverter;
 import com.newsman.newsman.Auxiliary.PictureLoader;
 import com.newsman.newsman.Database.AppDatabase;
 import com.newsman.newsman.R;
 import com.newsman.newsman.REST.ConnectionStrategy.Get;
-import com.newsman.newsman.REST.ReadJson.ReadComposite;
-import com.newsman.newsman.REST.ReadJson.ReadNews;
+import com.newsman.newsman.REST.ConnectionStrategy.InStreamConn;
+import com.newsman.newsman.REST.ConnectionStrategy.OutStreamConn;
 import com.newsman.newsman.REST.ReadJson.ReadPicture;
 import com.newsman.newsman.REST.RestConnector;
 import com.newsman.newsman.ServerEntities.News;
 import com.newsman.newsman.ServerEntities.Picture;
 import com.newsman.newsman.message_queue.MQClient;
 
-import java.io.ByteArrayOutputStream;
 import java.util.Date;
 import java.util.List;
 
@@ -49,6 +47,8 @@ public class MainActivity extends AppCompatActivity {
     private Button mImageSave;
 
     static final int REQUEST_IMAGE_CAPTURE = 1;
+    private static int PICTURE_ID = 20000;
+    private String testRoute = Constant.PICTURE_ROUTE + "test";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -62,9 +62,6 @@ public class MainActivity extends AppCompatActivity {
         button.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-//                new GetNewsFromRest().Get(mContext);
-                new RestConnector(new Get(mContext, new ReadComposite(new ReadNews())),
-                        Constant.NEWS_ROUTE).execute();
                 AppExecutors.getInstance().getMQHandler().execute(new MQClient(Constant.getIpAddress(), mContext));
                 Intent intent = new Intent(mContext, NewsListActivity.class);
                 startActivity(intent);
@@ -134,7 +131,9 @@ public class MainActivity extends AppCompatActivity {
         mLoadNewsButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-//                new GetNewsFromRest(IP_ADDRESSE, KEY).Get(handler);
+                //new RestConnector(new Get(mContext, new ReadComposite(new ReadNews())),
+                //        Constant.NEWS_ROUTE).execute();
+                new RestConnector(new InStreamConn(mContext, PICTURE_ID), testRoute).execute();
             }
         });
 
@@ -181,33 +180,35 @@ public class MainActivity extends AppCompatActivity {
 
     private Picture generateTestPicture(Bitmap bmp) {
         Picture p = new Picture();
-        p.setId(-1);
+        p.setId(Constant.INVALID_PICTURE_ID);
         p.setName(Integer.toString((int)new Date().getTime())+".PNG");
         p.setDescription("Nova fotka");
         p.setBelongsToNewsId(6);
-        ByteArrayOutputStream stream = new ByteArrayOutputStream();
-        bmp.compress(Bitmap.CompressFormat.PNG, 100, stream);
-        byte[] picData = stream.toByteArray();
-        p.setPictureData(picData);
+        p.setPictureData(bmp);
         return p;
     }
 
     private void getPictureRest() {
-        new RestConnector(new Get(this, new ReadPicture()), Constant.PICTURE_ROUTE+10);
-        LiveData<Picture> livePicture = AppDatabase.getInstance(this).pictureDao().getPicture(10);
-        livePicture.observe(this, new Observer<Picture>() {
-            @Override
-            public void onChanged(@Nullable Picture picture) {
-                if(picture!=null) {
-                    Bitmap bmp = PictureConverter.getBitmap(picture.getPictureData());
-                    mImageView.setImageBitmap(bmp);
-                }
-            }
-        });
+//        new RestConnector(new Get(this, new ReadPicture()), Constant.PICTURE_ROUTE+10);
+//        LiveData<Picture> livePicture = AppDatabase.getInstance(this).pictureDao().getPicture(10);
+//        livePicture.observe(this, new Observer<Picture>() {
+//            @Override
+//            public void onChanged(@Nullable Picture picture) {
+//                if(picture!=null) {
+//                    Bitmap bmp = picture.getPictureData();
+//                    mImageView.setImageBitmap(bmp);
+//                }
+//            }
+//        });
+        Bitmap bmp = PictureLoader.loadPictureData(this, 37);
+        mImageView.setImageBitmap(bmp);
+        new RestConnector(new OutStreamConn(bmp), testRoute).execute();
     }
 
     private void testPictureSave(){
-        PictureLoader.loadPictureFromGallery(this);
+//        PictureLoader.loadPictureFromGallery(this);
+        Bitmap bmp = PictureLoader.loadPictureData(this, PICTURE_ID);
+        mImageView.setImageBitmap(bmp);
     }
 
     private void savePicture(Bitmap bmp) {

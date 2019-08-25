@@ -5,7 +5,6 @@ import android.util.JsonReader;
 
 import com.newsman.newsman.Database.AppDatabase;
 import com.newsman.newsman.ServerEntities.Comment;
-import com.newsman.newsman.ServerEntities.JsonDeserializer;
 
 import java.io.IOException;
 

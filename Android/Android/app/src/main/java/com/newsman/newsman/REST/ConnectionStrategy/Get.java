@@ -18,6 +18,7 @@ public class Get extends ConnectionConsumer {
     private Context context;
 
     public Get(Context context, ReadJson readJson) {
+        super(new JsonParam());
         this.readJson = readJson;
         this.context = context;
     }

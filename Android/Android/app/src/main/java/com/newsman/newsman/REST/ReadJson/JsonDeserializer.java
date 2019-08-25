@@ -1,11 +1,18 @@
-package com.newsman.newsman.ServerEntities;
+package com.newsman.newsman.REST.ReadJson;
 
+import android.graphics.Bitmap;
 import android.util.Base64;
 import android.util.JsonReader;
 import android.util.JsonToken;
 
+import com.newsman.newsman.Auxiliary.Constant;
 import com.newsman.newsman.Auxiliary.DateGetter;
 import com.newsman.newsman.Auxiliary.PictureConverter;
+import com.newsman.newsman.ServerEntities.Comment;
+import com.newsman.newsman.ServerEntities.News;
+import com.newsman.newsman.ServerEntities.Picture;
+import com.newsman.newsman.ServerEntities.SimpleNews;
+import com.newsman.newsman.ServerEntities.User;
 
 import java.io.IOException;
 import java.text.ParseException;
@@ -13,9 +20,9 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
-public class JsonDeserializer {
+class JsonDeserializer {
 
-    public static News readNews(JsonReader jsonReader)throws IOException {
+    static News readNews(JsonReader jsonReader)throws IOException {
         int id = 0;
         String title = "";
         String content="";
@@ -57,7 +64,7 @@ public class JsonDeserializer {
             }
         }
         jsonReader.endObject();
-        int backId = -1;
+        int backId = Constant.INVALID_PICTURE_ID;
         if(back != null) {
             pictures.add(back);
             backId = back.getId();
@@ -65,12 +72,12 @@ public class JsonDeserializer {
         return new News(id, title, content, comments, DateGetter.parseDate(lastModified), pictures, backId);
     }
 
-    public static SimpleNews readSimpleNews(JsonReader jsonReader) throws IOException {
-        int id = 0;
+    static SimpleNews readSimpleNews(JsonReader jsonReader) throws IOException {
+        int id = Constant.INVALID_NEWS_ID;
         String title = "";
         String content="";
         String lastModified = "";
-        Picture back = new Picture(-1, null,null,-1, null);
+        Picture back = new Picture(Constant.INVALID_PICTURE_ID, null,null,Constant.INVALID_NEWS_ID, null);
         while(jsonReader.hasNext()) {
             String name = jsonReader.nextName();
             switch (name) {
@@ -98,7 +105,7 @@ public class JsonDeserializer {
             }
         }
         return new SimpleNews(id, title, content, DateGetter.parseDate(lastModified),
-                PictureConverter.getBitmap(back.getPictureData()), back.getBelongsToNewsId());
+                back.getPictureData(), back.getBelongsToNewsId());
     }
 
     public static List<Comment> readCommentArray(JsonReader jsonReader)throws IOException {
@@ -111,7 +118,7 @@ public class JsonDeserializer {
         return comments;
     }
 
-    public static Comment readComment(JsonReader jsonReader)throws IOException{
+    static Comment readComment(JsonReader jsonReader)throws IOException{
         int id = 0;
         String content ="";
         User user = null;
@@ -147,7 +154,7 @@ public class JsonDeserializer {
         return comment;
     }
 
-    public static User readUser(JsonReader reader) throws IOException {
+    private static User readUser(JsonReader reader) throws IOException {
         String username = null;
         int id =0;
         reader.beginObject();
@@ -176,11 +183,11 @@ public class JsonDeserializer {
         return pictures;
     }
 
-    public static Picture readPicture(JsonReader jsonReader) throws IOException {
-        int id = -1;
+    static Picture readPicture(JsonReader jsonReader) throws IOException {
+        int id = Constant.INVALID_PICTURE_ID;
         String pictName = "";
         String description = "";
-        int belongsToNews = -1;
+        int belongsToNews = Constant.INVALID_NEWS_ID;
         byte[] pictureData = null;
         jsonReader.beginObject();
         while(jsonReader.hasNext()) {
@@ -210,22 +217,14 @@ public class JsonDeserializer {
                     jsonReader.skipValue();
                     break;
             }
-//            if(name.equals("Id")) {
-//                id = jsonReader.nextInt();
-//            } else if (name.equals("Name")) {
-//                pictName = jsonReader.nextString();
-//            } else if (name.equals("Description")) {
-//                description = jsonReader.nextString();
-//            } else if (name.equals("BelongsToNewsId")) {
-//                belongsToNews = jsonReader.nextInt();
-//            } else if (name.equals("PictureData") && !jsonReader.peek().equals(JsonToken.NULL)) {
-//                String stringData = jsonReader.nextString();
-//                pictureData = Base64.decode(stringData, Base64.DEFAULT);
-//            } else {
-//                jsonReader.skipValue();
-//            }
         }
         jsonReader.endObject();
-        return new Picture(id, pictName, description, belongsToNews, pictureData);
+        Bitmap bmp = null;
+        try{
+            bmp = PictureConverter.getBitmap(pictureData);
+        }catch (NullPointerException e ){
+            e.printStackTrace();
+        }
+        return new Picture(id, pictName, description, belongsToNews, bmp);
     }
 }

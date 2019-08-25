@@ -36,6 +36,7 @@ public class MenuItemClickListener implements PopupMenu.OnMenuItemClickListener 
                 Bundle bundle = new Bundle();
                 bundle.putInt(Constant.NEWS_BUNDLE_KEY, newsId);
                 intent.putExtras(bundle);
+                intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
                 mContext.startActivity(intent);
                 return true;
             case R.id.action_delete_news:

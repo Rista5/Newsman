@@ -1,27 +1,34 @@
-package com.newsman.newsman.ServerEntities;
+package com.newsman.newsman.REST.WriteJson;
 
 import android.graphics.Bitmap;
 import android.util.Base64;
 import android.util.JsonWriter;
 
 import com.newsman.newsman.Auxiliary.PictureConverter;
+import com.newsman.newsman.ServerEntities.Comment;
+import com.newsman.newsman.ServerEntities.News;
+import com.newsman.newsman.ServerEntities.Picture;
+import com.newsman.newsman.ServerEntities.SimpleNews;
+import com.newsman.newsman.ServerEntities.User;
+import com.newsman.newsman.ServerEntities.UserWithPassword;
 
 import java.io.IOException;
 
-public class JsonSerializer {
+class JsonSerializer {
 
-    public static void writePicture(JsonWriter jsonWriter, Picture picture) throws IOException {
+    static void writePicture(JsonWriter jsonWriter, Picture picture) throws IOException {
         jsonWriter.beginObject();
         jsonWriter.name("Id").value(picture.getId());
         jsonWriter.name("Name").value(picture.getName());
         jsonWriter.name("Description").value(picture.getDescription());
         jsonWriter.name("BelongsToNewsId").value(picture.getBelongsToNewsId());
         jsonWriter.name("PictureData")
-                .value(Base64.encodeToString(picture.getPictureData(), Base64.DEFAULT));
+                .value(Base64.encodeToString(PictureConverter
+                        .getBitmapBytes(picture.getPictureData()), Base64.DEFAULT));
         jsonWriter.endObject();
     }
 
-    public static void writeComment(JsonWriter jsonWriter, Comment comment) throws IOException {
+    static void writeComment(JsonWriter jsonWriter, Comment comment) throws IOException {
         jsonWriter.beginObject();
         jsonWriter.name("Id").value(comment.getId());
         jsonWriter.name("Content").value(comment.getContent());
@@ -31,7 +38,7 @@ public class JsonSerializer {
         jsonWriter.endObject();
     }
 
-    public static void writeNews(JsonWriter jsonWriter, News news, Bitmap background) throws IOException {
+    static void writeNews(JsonWriter jsonWriter, News news, Bitmap background) throws IOException {
         jsonWriter.beginObject();
         jsonWriter.name("Id").value(news.getId());
         jsonWriter.name("Title").value(news.getTitle());
@@ -44,7 +51,7 @@ public class JsonSerializer {
                     "",
                     "",
                     news.getId(),
-                    PictureConverter.getBitmapBytes(background)
+                    background
             );
             writePicture(jsonWriter, pic);
         } else {
@@ -68,26 +75,26 @@ public class JsonSerializer {
         jsonWriter.endObject();
     }
 
-    public static  void writeSimpleNews(JsonWriter jsonWriter, SimpleNews news) throws IOException {
+    static  void writeSimpleNews(JsonWriter jsonWriter, SimpleNews news) throws IOException {
         jsonWriter.beginObject();
         jsonWriter.name("Id").value(news.getId());
         jsonWriter.name("Title").value(news.getTitle());
         jsonWriter.name("Content").value(news.getContent());
         jsonWriter.name("BackgroundPicture");
         Picture back = new Picture(news.getBackgroundId(), "", "", news.getId(),
-                PictureConverter.getBitmapBytes(news.getBackgroundPicture()));
+                news.getBackgroundPicture());
         writePicture(jsonWriter, back);
         jsonWriter.endObject();
     }
 
-    public static void writeUser(JsonWriter jsonWriter, User user) throws IOException {
+    static void writeUser(JsonWriter jsonWriter, User user) throws IOException {
         jsonWriter.beginObject();
         jsonWriter.name("Id").value(user.getId());
         jsonWriter.name("Username").value(user.getUsername());
         jsonWriter.endObject();
     }
 
-    public static void writeUserPass(JsonWriter jsonWriter, UserWithPassword user) throws IOException {
+    static void writeUserPass(JsonWriter jsonWriter, UserWithPassword user) throws IOException {
         jsonWriter.beginObject();
         jsonWriter.name("Username").value(user.getUsername());
         jsonWriter.name("Password").value(user.getPassword());

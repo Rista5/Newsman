@@ -11,6 +11,7 @@ public class Delete extends ConnectionConsumer {
     private int id;
 
     public Delete(int id) {
+        super(new JsonParam());
         this.id = id;
     }
 

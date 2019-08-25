@@ -46,13 +46,11 @@ public class CreateNewsActivity extends AppCompatActivity {
 
     @Override
     protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
-        if(requestCode == Constant.REQUEST_LOAD_IMAGE ||
-                requestCode == Constant.REQUEST_IMAGE_CAPTURE) {
+        if(resultCode == RESULT_OK && (requestCode == Constant.REQUEST_LOAD_IMAGE
+                || requestCode == Constant.REQUEST_IMAGE_CAPTURE)) {
             createNewsFragment.onActivityResult(requestCode, resultCode, data);
-            return;
-        } else if (requestCode == Constant.PICTURE_REQUEST_CODE) {
+        } else if((resultCode == RESULT_OK && requestCode == Constant.PICTURE_REQUEST_CODE)){
             picturesFragment.onActivityResult(requestCode, resultCode, data);
-            return;
         }
         super.onActivityResult(requestCode, resultCode, data);
     }
@@ -82,9 +80,9 @@ public class CreateNewsActivity extends AppCompatActivity {
     }
 
     private void setFragments() {
-        SimpleNews news = new SimpleNews(-1, "", "", new Date(), null,-1);
+        SimpleNews news = new SimpleNews(Constant.INVALID_NEWS_ID, "", "", new Date(), null,Constant.INVALID_PICTURE_ID);
         createNewsFragment = CreateNewsFragment.newInstance(news);
-        picturesFragment = PicturesFragment.newInstance(-1, new ArrayList<Picture>(), false);
+        picturesFragment = PicturesFragment.newInstance(Constant.INVALID_NEWS_ID, new ArrayList<Picture>(), false);
         getSupportFragmentManager().beginTransaction()
                 .add(R.id.create_news_news_frame, createNewsFragment)
                 .add(R.id.create_news_pictures_frame, picturesFragment)

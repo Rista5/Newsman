@@ -61,7 +61,7 @@ public abstract class PictureDao {
         for(Picture p: pictures) {
             Bitmap bmp = PictureLoader.loadPictureData(context, p.getId());
             if(bmp != null)
-                p.setPictureData(PictureConverter.getBitmapBytes(bmp));
+                p.setPictureData(bmp);
         }
         return pictures;
     }
@@ -71,7 +71,7 @@ public abstract class PictureDao {
 
     public void insertPictureWithLoader(Context context, Picture picture) {
         insertPicture(picture);
-        Bitmap bmp = PictureConverter.getBitmap(picture.getPictureData());
+        Bitmap bmp = picture.getPictureData();
         PictureLoader.savePictureData(context, picture.getId(), bmp);
     }
 
@@ -80,7 +80,7 @@ public abstract class PictureDao {
 
     public void updatePictureWithLoader(Context context, Picture picture) {
         updatePicture(picture);
-        Bitmap bmp = PictureConverter.getBitmap(picture.getPictureData());
+        Bitmap bmp = picture.getPictureData();
         PictureLoader.savePictureData(context, picture.getId(), bmp);
     }
 

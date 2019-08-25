@@ -84,7 +84,7 @@ public class UpdateNews extends DBUpdate {
         List<Picture> pictures = new ArrayList<>();
         String lastModified = json.getString("LasModified");
         // pozadina se ponasa kao klasicna slika prilikom update-a
-        int backId = -1;
+        int backId = Constant.INVALID_PICTURE_ID;
         JSONObject pictureJson = json.getJSONObject("BackgroundPicture");
         if(pictureJson!=null && pictureJson.getInt("Id") != Constant.INVALID_PICTURE_ID) {
             backId = pictureJson.getInt("Id");

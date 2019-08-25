@@ -1,8 +1,10 @@
 package com.newsman.newsman.message_queue;
 
+import android.graphics.Bitmap;
 import android.util.Base64;
 
 import com.newsman.newsman.Auxiliary.DateGetter;
+import com.newsman.newsman.Auxiliary.PictureConverter;
 import com.newsman.newsman.ServerEntities.Comment;
 import com.newsman.newsman.ServerEntities.News;
 import com.newsman.newsman.ServerEntities.Picture;
@@ -39,7 +41,13 @@ public class JSONParser {
         String description = json.getString("Description");
         int newsId = json.getInt("BelongsToNewsId");
         byte[] data = Base64.decode(json.getString("PictureData"), Base64.DEFAULT);
-        return new Picture(pictureId, name, description, newsId, data);
+        Bitmap bmp = null;
+        try{
+            bmp = PictureConverter.getBitmap(data);
+        }catch (NullPointerException e ){
+            e.printStackTrace();
+        }
+        return new Picture(pictureId, name, description, newsId, bmp);
     }
 
     public static News parseNews(JSONObject json) throws JSONException {

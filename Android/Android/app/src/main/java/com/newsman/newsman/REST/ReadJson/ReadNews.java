@@ -10,7 +10,6 @@ import com.newsman.newsman.Database.NewsDao;
 import com.newsman.newsman.Database.PictureDao;
 import com.newsman.newsman.Database.UserDao;
 import com.newsman.newsman.ServerEntities.Comment;
-import com.newsman.newsman.ServerEntities.JsonDeserializer;
 import com.newsman.newsman.ServerEntities.News;
 import com.newsman.newsman.ServerEntities.Picture;
 

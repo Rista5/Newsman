@@ -8,7 +8,7 @@ public class Constant {
     public static final String PICTURE_BUNDLE_KEY = "image_bundle_key";
     public static final int PICTURE_REQUEST_CODE = 12;
     public static final int PICTURE_LOADER_ID = 20;
-
+    public static final int PICTURE_TRANSPORT_LOADER = 21;
 
     public static final String USER_ROUTE = "/User/";
     public static final String NEWS_ROUTE = "/News/";
@@ -27,7 +27,10 @@ public class Constant {
     public static final int PICTURE_FRAGMENT_REQ_CAPTURE = 4;
     public static final int NEWS_FRAGMENT_REQ_LOAD = 5;
     public static final int NEWS_FRAGMENT_REQ_CAPTURE = 6;
-    public static final int INVALID_PICTURE_ID = -1;
+
+    public static final int INVALID_PICTURE_ID = 0;
+    public static final int INVALID_NEWS_ID = 0;
+    public static final int INVALID_COMMENT_ID = 0;
 
     public static String getIpAddress() {
         return IP_ADDRESS;
@@ -36,6 +39,9 @@ public class Constant {
     public static void setIpAddress(String adr) {
         IP_ADDRESS = adr;
     }
+
+    public static final String PICTURE_TRASPORT = "file.png";
+
 
     //TODO remove later
     // only temorarly

@@ -4,7 +4,6 @@ import android.content.Context;
 import android.util.JsonReader;
 
 import com.newsman.newsman.Database.AppDatabase;
-import com.newsman.newsman.ServerEntities.JsonDeserializer;
 import com.newsman.newsman.ServerEntities.News;
 import com.newsman.newsman.ServerEntities.SimpleNews;
 

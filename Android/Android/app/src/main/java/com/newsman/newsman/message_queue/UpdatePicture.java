@@ -1,8 +1,10 @@
 package com.newsman.newsman.message_queue;
 
 import android.content.Context;
+import android.graphics.Bitmap;
 import android.util.Base64;
 
+import com.newsman.newsman.Auxiliary.PictureConverter;
 import com.newsman.newsman.Database.AppDatabase;
 import com.newsman.newsman.ServerEntities.Picture;
 
@@ -44,6 +46,12 @@ class UpdatePicture extends DBUpdate {
         String description = json.getString("Description");
         int newsId = json.getInt("BelongsToNewsId");
         byte[] data = Base64.decode(json.getString("PictureData"), Base64.DEFAULT);
-        return new Picture(pictureId, name, description, newsId, data);
+        Bitmap bmp = null;
+        try{
+            bmp = PictureConverter.getBitmap(data);
+        }catch (NullPointerException e ){
+            e.printStackTrace();
+        }
+        return new Picture(pictureId, name, description, newsId, bmp);
     }
 }

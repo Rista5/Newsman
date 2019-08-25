@@ -30,7 +30,7 @@ public class UpdateBackground extends UpdatePicture {
     }
 
     private void savePictureData() {
-        Bitmap bmp = PictureConverter.getBitmap(picture.getPictureData());
+        Bitmap bmp = picture.getPictureData();
         PictureLoader.savePictureData(mContext, picture.getId(), bmp);
     }
 }

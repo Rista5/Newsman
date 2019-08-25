@@ -17,6 +17,8 @@ import com.newsman.newsman.REST.RestConnector;
 import com.newsman.newsman.REST.WriteJson.WriteComment;
 import com.newsman.newsman.ServerEntities.Comment;
 
+import java.util.Date;
+
 public class CreateCommentFragment extends Fragment {
 
     private EditText contentEditText;
@@ -40,7 +42,7 @@ public class CreateCommentFragment extends Fragment {
             @Override
             public void onClick(View v) {
                 Comment comment = createComment();
-                new RestConnector(new Put(new WriteComment(comment)), Constant.PICTURE_ROUTE);
+                new RestConnector(new Put(new WriteComment(comment)), Constant.COMMENT_ROUTE).execute();
             }
         });
         return rootView;
@@ -48,10 +50,11 @@ public class CreateCommentFragment extends Fragment {
 
     private Comment createComment() {
         Comment comment = new Comment();
-        comment.setId(-1);
+        comment.setId(Constant.INVALID_COMMENT_ID);
         comment.setContent(contentEditText.getText().toString());
         comment.setBelongsToNewsId(getArguments().getInt(Constant.NEWS_BUNDLE_KEY));
         comment.setCreatedById(Constant.USER_ID);
+        comment.setPostDate(new Date());
         return comment;
     }
 }

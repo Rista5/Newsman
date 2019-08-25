@@ -15,6 +15,7 @@ public class Post extends ConnectionConsumer {
     private WriteJson writeJson;
 
     public Post(WriteJson writeJson) {
+        super(new JsonParam());
         this.writeJson = writeJson;
     }
 

@@ -61,7 +61,7 @@ public class UpdateSimpleNews extends DBUpdate {
         if(backPic != null){
             Picture picture= JSONParser.parsePicture(json.getJSONObject("BackgroundPicture"));
             backId = picture.getId();
-            background = PictureConverter.getBitmap(picture.getPictureData());
+            background = picture.getPictureData();
         }
         return new SimpleNews(id, title, content, DateGetter.parseDate(lastModified),
                 background, backId);

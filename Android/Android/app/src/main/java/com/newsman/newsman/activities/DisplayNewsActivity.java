@@ -36,7 +36,7 @@ public class DisplayNewsActivity extends AppCompatActivity {
     private ImageView background, overflow;
     private TextView title, postDate, lastUpdateBy, content;
 
-    private int newsId = -1;
+    private int newsId = Constant.INVALID_NEWS_ID;
     private Context mContext;
 
     private CommentsFragment commentsFragment;

@@ -26,7 +26,7 @@ public class RestConnector implements Runnable{
     public void run() {
         try {
             HttpURLConnection httpConnection = RestConnectionFactory.createConnection(
-                    route + connConsumer.routeExtension(), connConsumer.getType());
+                    route + connConsumer.routeExtension(), connConsumer.getType(), connConsumer.getConnectionParam());
 
             connConsumer.useConnection(httpConnection);
 

@@ -1,5 +1,6 @@
 package com.newsman.newsman.activities;
 
+import android.content.Context;
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.support.annotation.Nullable;
@@ -19,13 +20,16 @@ import com.newsman.newsman.Auxiliary.PictureLoader;
 import com.newsman.newsman.R;
 import com.newsman.newsman.ServerEntities.Picture;
 
+import java.io.FileNotFoundException;
+import java.io.FileOutputStream;
+
 public class CreatePictureActivity extends AppCompatActivity {
 
     private EditText nameEditText, descriptionEditText;
     private ImageView pictureView;
     private Button postButton, cancelButton, captureButton, pickGalleryButton;
     private Bitmap pictureBitmap;
-    private int newsId = -1;
+    private int newsId = Constant.INVALID_NEWS_ID;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -82,9 +86,16 @@ public class CreatePictureActivity extends AppCompatActivity {
                     toast.show();
                 } else {
                     Intent data = new Intent();
-                    Bundle bundle = new Bundle();
-                    bundle.putSerializable(Constant.PICTURE_BUNDLE_KEY, createNewPicture());
+
+//                    Bundle bundle = new Bundle();
+//                    bundle.putParcelable(Constant.PICTURE_BUNDLE_KEY, createNewPicture());
+//                    data.putExtras(bundle);
+
+//                    data.putExtra(Constant.PICTURE_BUNDLE_KEY, createNewPicture());
+
+                    Bundle bundle = getPictureBundle(createNewPicture());
                     data.putExtras(bundle);
+
                     setResult(RESULT_OK, data);
                     CreatePictureActivity.super.onBackPressed();
                 }
@@ -104,6 +115,23 @@ public class CreatePictureActivity extends AppCompatActivity {
         });
     }
 
+    private Bundle getPictureBundle(Picture picture) {
+        Bundle bundle = new Bundle();
+        bundle.putInt("Id", picture.getId());
+        bundle.putString("Name", picture.getName());
+        bundle.putString("Description", picture.getDescription());
+        bundle.putInt("BelongsToNewsId", picture.getBelongsToNewsId());
+        bundle.putString("FileName", Constant.PICTURE_TRASPORT);
+        FileOutputStream stream = null;
+        try {
+            stream = openFileOutput(Constant.PICTURE_TRASPORT, Context.MODE_PRIVATE);
+            picture.getPictureData().compress(Bitmap.CompressFormat.PNG, 100, stream);
+        } catch (FileNotFoundException e) {
+            e.printStackTrace();
+        }
+        return bundle;
+    }
+
     private void captcurePhoto() {
         PictureLoader.capturePhoto(this);
     }
@@ -119,11 +147,10 @@ public class CreatePictureActivity extends AppCompatActivity {
     }
 
     private Picture createNewPicture() {
-        int id = -1;
+        int id = Constant.INVALID_PICTURE_ID;
         String name = nameEditText.getText().toString();
         String description = descriptionEditText.getText().toString();
-        byte[] data = PictureConverter.getBitmapBytes(pictureBitmap);
-        return new Picture(id, name, description, newsId, data);
+        return new Picture(id, name, description, newsId, pictureBitmap);
     }
 
     private boolean testInput() {

@@ -21,7 +21,9 @@ public class PictureConverter {
         return bos.toByteArray();
     }
 
-    public static Bitmap getBitmap(byte[] data) {
+    public static Bitmap getBitmap(byte[] data) throws NullPointerException {
+        if(data == null)
+            throw new NullPointerException("Data for converting was null");
         ByteArrayInputStream bis = new ByteArrayInputStream(data);
         return BitmapFactory.decodeStream(bis);
     }

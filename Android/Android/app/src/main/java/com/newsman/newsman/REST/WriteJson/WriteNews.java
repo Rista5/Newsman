@@ -3,7 +3,6 @@ package com.newsman.newsman.REST.WriteJson;
 import android.graphics.Bitmap;
 import android.util.JsonWriter;
 
-import com.newsman.newsman.ServerEntities.JsonSerializer;
 import com.newsman.newsman.ServerEntities.News;
 
 import java.io.IOException;

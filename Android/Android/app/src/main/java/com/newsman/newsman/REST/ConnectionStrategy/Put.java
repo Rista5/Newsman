@@ -15,6 +15,7 @@ public class Put extends ConnectionConsumer {
 
     private WriteJson jsonStrategy;
     public Put(WriteJson jsonStrategy) {
+        super(new JsonParam());
         this.jsonStrategy = jsonStrategy;
     }
 

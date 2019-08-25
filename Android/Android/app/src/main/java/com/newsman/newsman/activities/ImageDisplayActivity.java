@@ -6,6 +6,7 @@ import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.Toolbar;
+import android.util.Log;
 import android.view.MenuItem;
 
 import com.newsman.newsman.Auxiliary.Constant;
@@ -33,8 +34,13 @@ public class ImageDisplayActivity extends AppCompatActivity {
         Bundle extras = getIntent().getExtras();
         if(extras!=null) {
             byte[] data = extras.getByteArray(Constant.IMAGE_DISPLAY_KEY);
-            Bitmap bmp = PictureConverter.getBitmap(data);
-            zoomableImage.setImageBitmap(bmp);
+            try {
+                Bitmap bmp = PictureConverter.getBitmap(data);
+                zoomableImage.setImageBitmap(bmp);
+            }
+            catch (NullPointerException e){
+                e.printStackTrace();
+            }
 
             if (getSupportActionBar() != null){
                 getSupportActionBar().setDisplayHomeAsUpEnabled(true);
