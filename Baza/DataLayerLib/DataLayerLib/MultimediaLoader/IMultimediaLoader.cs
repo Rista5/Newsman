@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace DataLayerLib.MultimediaLoader
 {
-    interface IMultimediaLoader
+    public interface IMultimediaLoader
     {
         byte[] GetMedia(int id,int newsId);
         bool SaveMedia(int id,int newsId, byte[] data);

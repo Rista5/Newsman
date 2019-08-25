@@ -197,8 +197,6 @@ namespace DataLayerLib.DTOManagers
                 session.Flush();
                 transaction.Commit();
 
-                transaction.Commit();
-
                 result = new NewsDTO(newNews);
                 if(news.BackgroundPicture != null)
                 {

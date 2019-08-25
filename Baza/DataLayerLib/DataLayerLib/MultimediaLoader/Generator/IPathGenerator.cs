@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace DataLayerLib.MultimediaLoader.Generator
 {
-    interface IPathGenerator
+    public interface IPathGenerator
     {
         string GeneratePath(int id, int newsId, string name);
     }

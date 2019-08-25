@@ -9,7 +9,7 @@ using System.Reflection;
 
 namespace DataLayerLib.MultimediaLoader
 {
-    class FileSystemLoader : IMultimediaLoader
+    public class FileSystemLoader : IMultimediaLoader
     {
         public static string LocationFolder { get; private set; }
         public IPathGenerator pathgen { get; set; }
