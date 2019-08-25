@@ -358,7 +358,7 @@ namespace DataLayerLib.DTOManagers
                     Picture backgroundPic = ExpandBackgroundPicture(newsDTO.BackgroundPicture);
                     news.BackgroundPicture = backgroundPic;
 
-                    Loader.SaveMedia(backgroundPic.Id, news.Id, backgroundPic.Name, newsDTO.BackgroundPicture.GetPictureBytes());
+                    Loader.SaveMedia(backgroundPic.Id, news.Id, newsDTO.BackgroundPicture.GetPictureBytes());
                 }
                 else
                     news.BackgroundPicture = null;

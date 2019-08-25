@@ -65,8 +65,7 @@ namespace API.Controllers
         public bool DeleteNews(int newsId)
         {
             service = Service.NewsService;
-            return service.DeleteNews(userId);
-            return NewsDTOManager.DeleteNews(newsId);
+            return service.DeleteNews(newsId);
         }
     }
 }
