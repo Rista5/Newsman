@@ -4,9 +4,9 @@ import android.content.Context;
 import android.graphics.Bitmap;
 import android.util.Base64;
 
-import com.newsman.newsman.Auxiliary.PictureConverter;
-import com.newsman.newsman.Database.AppDatabase;
-import com.newsman.newsman.ServerEntities.Picture;
+import com.newsman.newsman.auxiliary.PictureConverter;
+import com.newsman.newsman.database.AppDatabase;
+import com.newsman.newsman.server_entities.Picture;
 
 import org.json.JSONException;
 import org.json.JSONObject;

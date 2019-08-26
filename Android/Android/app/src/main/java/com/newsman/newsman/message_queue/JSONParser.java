@@ -3,12 +3,12 @@ package com.newsman.newsman.message_queue;
 import android.graphics.Bitmap;
 import android.util.Base64;
 
-import com.newsman.newsman.Auxiliary.DateGetter;
-import com.newsman.newsman.Auxiliary.PictureConverter;
-import com.newsman.newsman.ServerEntities.Comment;
-import com.newsman.newsman.ServerEntities.News;
-import com.newsman.newsman.ServerEntities.Picture;
-import com.newsman.newsman.ServerEntities.User;
+import com.newsman.newsman.auxiliary.DateGetter;
+import com.newsman.newsman.auxiliary.PictureConverter;
+import com.newsman.newsman.server_entities.Comment;
+import com.newsman.newsman.server_entities.News;
+import com.newsman.newsman.server_entities.Picture;
+import com.newsman.newsman.server_entities.User;
 
 import org.json.JSONArray;
 import org.json.JSONException;

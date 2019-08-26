@@ -1,21 +1,21 @@
 package com.newsman.newsman.fragments;
 
 import android.os.Bundle;
-import android.support.annotation.NonNull;
-import android.support.annotation.Nullable;
-import android.support.v4.app.Fragment;
+import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
+import androidx.fragment.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.EditText;
 
-import com.newsman.newsman.Auxiliary.Constant;
+import com.newsman.newsman.auxiliary.Constant;
 import com.newsman.newsman.R;
-import com.newsman.newsman.REST.ConnectionStrategy.Put;
-import com.newsman.newsman.REST.RestConnector;
-import com.newsman.newsman.REST.WriteJson.WriteComment;
-import com.newsman.newsman.ServerEntities.Comment;
+import com.newsman.newsman.rest_connection.ConnectionStrategy.Put;
+import com.newsman.newsman.rest_connection.RestConnector;
+import com.newsman.newsman.rest_connection.WriteJson.WriteComment;
+import com.newsman.newsman.server_entities.Comment;
 
 import java.util.Date;
 

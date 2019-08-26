@@ -1,35 +1,35 @@
 package com.newsman.newsman.activities;
 
 import android.annotation.SuppressLint;
-import android.arch.lifecycle.LiveData;
-import android.arch.lifecycle.Observer;
+import androidx.lifecycle.LiveData;
+import androidx.lifecycle.Observer;
 import android.content.Context;
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.os.Handler;
 import android.os.Message;
 import android.provider.MediaStore;
-import android.support.annotation.Nullable;
-import android.support.v7.app.AppCompatActivity;
+import androidx.annotation.Nullable;
+import androidx.appcompat.app.AppCompatActivity;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.ImageView;
 
-import com.newsman.newsman.AppExecutors;
-import com.newsman.newsman.Auxiliary.Constant;
-import com.newsman.newsman.Auxiliary.PictureLoader;
-import com.newsman.newsman.Database.AppDatabase;
+import com.newsman.newsman.thread_management.AppExecutors;
+import com.newsman.newsman.auxiliary.Constant;
+import com.newsman.newsman.auxiliary.PictureLoader;
+import com.newsman.newsman.database.AppDatabase;
 import com.newsman.newsman.R;
-import com.newsman.newsman.REST.ConnectionStrategy.Get;
-import com.newsman.newsman.REST.ConnectionStrategy.InStreamConn;
-import com.newsman.newsman.REST.ConnectionStrategy.OutStreamConn;
-import com.newsman.newsman.REST.ReadJson.ReadPicture;
-import com.newsman.newsman.REST.RestConnector;
-import com.newsman.newsman.ServerEntities.News;
-import com.newsman.newsman.ServerEntities.Picture;
-import com.newsman.newsman.message_queue.MQClient;
+import com.newsman.newsman.rest_connection.ConnectionStrategy.Get;
+import com.newsman.newsman.rest_connection.ConnectionStrategy.OutStreamConn;
+import com.newsman.newsman.rest_connection.ReadJson.ReadComposite;
+import com.newsman.newsman.rest_connection.ReadJson.ReadNews;
+import com.newsman.newsman.rest_connection.RestConnector;
+import com.newsman.newsman.server_entities.News;
+import com.newsman.newsman.server_entities.Picture;
+import com.newsman.newsman.thread_management.SubscriptionService;
 
 import java.util.Date;
 import java.util.List;
@@ -45,6 +45,7 @@ public class MainActivity extends AppCompatActivity {
     private String KEY = "key";
     private AppDatabase mDB = null;
     private Button mImageSave;
+    private Button startServiceBtn, sendServiceMsgBtn;
 
     static final int REQUEST_IMAGE_CAPTURE = 1;
     private static int PICTURE_ID = 20000;
@@ -62,7 +63,11 @@ public class MainActivity extends AppCompatActivity {
         button.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                AppExecutors.getInstance().getMQHandler().execute(new MQClient(Constant.getIpAddress(), mContext));
+//                AppExecutors.getInstance().getMQConsumer().execute(new MQClient(Constant.getIpAddress(), mContext));
+                Intent startMQClient = new Intent(mContext, SubscriptionService.class);
+                startMQClient.setAction(SubscriptionService.START);
+                startService(startMQClient);
+
                 Intent intent = new Intent(mContext, NewsListActivity.class);
                 startActivity(intent);
             }
@@ -131,9 +136,9 @@ public class MainActivity extends AppCompatActivity {
         mLoadNewsButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                //new RestConnector(new Get(mContext, new ReadComposite(new ReadNews())),
-                //        Constant.NEWS_ROUTE).execute();
-                new RestConnector(new InStreamConn(mContext, PICTURE_ID), testRoute).execute();
+                new RestConnector(new Get(mContext, new ReadComposite(new ReadNews())),
+                        Constant.NEWS_ROUTE).execute();
+//                new RestConnector(new InStreamConn(mContext, PICTURE_ID), testRoute).execute();
             }
         });
 
@@ -144,6 +149,32 @@ public class MainActivity extends AppCompatActivity {
                 logNews();
             }
         });
+        startServiceBtn = findViewById(R.id.start_service_btn);
+        sendServiceMsgBtn = findViewById(R.id.send_service_msg);
+        startServiceBtn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                startService();
+            }
+        });
+        sendServiceMsgBtn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                sendMessage();
+            }
+        });
+    }
+
+    private void startService(){
+        Intent intent = new Intent(this, SubscriptionService.class);
+        intent.setAction("Action");
+        startService(intent);
+    }
+
+    private void sendMessage() {
+        Intent intent = new Intent(this, SubscriptionService.class);
+        intent.setAction("Message");
+        startService(intent);
     }
 
     private void logNews() {

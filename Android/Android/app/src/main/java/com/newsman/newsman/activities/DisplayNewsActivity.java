@@ -1,30 +1,30 @@
 package com.newsman.newsman.activities;
 
-import android.arch.lifecycle.LifecycleOwner;
-import android.arch.lifecycle.LiveData;
-import android.arch.lifecycle.Observer;
+import androidx.lifecycle.LifecycleOwner;
+import androidx.lifecycle.LiveData;
+import androidx.lifecycle.Observer;
 import android.content.Context;
 import android.content.Intent;
-import android.support.annotation.Nullable;
-import android.support.v4.app.FragmentManager;
-import android.support.v7.app.ActionBar;
-import android.support.v7.app.AppCompatActivity;
+import androidx.annotation.Nullable;
+import androidx.fragment.app.FragmentManager;
+import androidx.appcompat.app.ActionBar;
+import androidx.appcompat.app.AppCompatActivity;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.TextView;
 
-import com.newsman.newsman.Auxiliary.PictureLoader;
-import com.newsman.newsman.Auxiliary.PopUpMenuController;
-import com.newsman.newsman.Database.AppDatabase;
-import com.newsman.newsman.Database.UserDao;
-import com.newsman.newsman.Auxiliary.Constant;
-import com.newsman.newsman.ServerEntities.Comment;
-import com.newsman.newsman.ServerEntities.CommentWithUsername;
-import com.newsman.newsman.ServerEntities.News;
-import com.newsman.newsman.ServerEntities.Picture;
+import com.newsman.newsman.auxiliary.PictureLoader;
+import com.newsman.newsman.auxiliary.PopUpMenuController;
+import com.newsman.newsman.database.AppDatabase;
+import com.newsman.newsman.database.UserDao;
+import com.newsman.newsman.auxiliary.Constant;
+import com.newsman.newsman.server_entities.Comment;
+import com.newsman.newsman.server_entities.CommentWithUsername;
+import com.newsman.newsman.server_entities.News;
+import com.newsman.newsman.server_entities.Picture;
 import com.newsman.newsman.R;
-import com.newsman.newsman.ServerEntities.User;
+import com.newsman.newsman.server_entities.User;
 import com.newsman.newsman.fragments.CommentsFragment;
 import com.newsman.newsman.fragments.PicturesFragment;
 

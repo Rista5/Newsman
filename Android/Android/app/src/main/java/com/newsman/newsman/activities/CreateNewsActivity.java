@@ -2,29 +2,27 @@ package com.newsman.newsman.activities;
 
 import android.content.Intent;
 import android.graphics.Bitmap;
-import android.support.annotation.Nullable;
-import android.support.v7.app.AppCompatActivity;
+import androidx.annotation.Nullable;
+import androidx.appcompat.app.AppCompatActivity;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.Button;
 import android.widget.Toast;
 
-import com.newsman.newsman.Auxiliary.Constant;
+import com.newsman.newsman.auxiliary.Constant;
 import com.newsman.newsman.R;
-import com.newsman.newsman.REST.ConnectionStrategy.Put;
-import com.newsman.newsman.REST.RestConnector;
-import com.newsman.newsman.REST.WriteJson.WriteNews;
-import com.newsman.newsman.ServerEntities.News;
-import com.newsman.newsman.ServerEntities.Picture;
-import com.newsman.newsman.ServerEntities.SimpleNews;
+import com.newsman.newsman.rest_connection.ConnectionStrategy.Put;
+import com.newsman.newsman.rest_connection.RestConnector;
+import com.newsman.newsman.rest_connection.WriteJson.WriteNews;
+import com.newsman.newsman.server_entities.News;
+import com.newsman.newsman.server_entities.Picture;
+import com.newsman.newsman.server_entities.SimpleNews;
 import com.newsman.newsman.fragments.CreateNewsFragment;
 import com.newsman.newsman.fragments.PicturesFragment;
 
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
-
-import javax.xml.datatype.Duration;
 
 public class CreateNewsActivity extends AppCompatActivity {
 
@@ -80,7 +78,7 @@ public class CreateNewsActivity extends AppCompatActivity {
     }
 
     private void setFragments() {
-        SimpleNews news = new SimpleNews(Constant.INVALID_NEWS_ID, "", "", new Date(), null,Constant.INVALID_PICTURE_ID);
+        SimpleNews news = new SimpleNews(Constant.INVALID_NEWS_ID, "", "", new Date(), null, Constant.INVALID_PICTURE_ID);
         createNewsFragment = CreateNewsFragment.newInstance(news);
         picturesFragment = PicturesFragment.newInstance(Constant.INVALID_NEWS_ID, new ArrayList<Picture>(), false);
         getSupportFragmentManager().beginTransaction()

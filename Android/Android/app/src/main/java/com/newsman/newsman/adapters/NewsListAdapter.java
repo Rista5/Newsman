@@ -2,21 +2,18 @@ package com.newsman.newsman.adapters;
 
 import android.content.Context;
 import android.content.Intent;
-import android.support.annotation.NonNull;
-import android.support.v7.widget.RecyclerView;
+import androidx.annotation.NonNull;
+import androidx.recyclerview.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
 
-import com.newsman.newsman.Auxiliary.Constant;
-import com.newsman.newsman.Auxiliary.PictureConverter;
-import com.newsman.newsman.Auxiliary.PictureLoader;
-import com.newsman.newsman.Auxiliary.PopUpMenuController;
-import com.newsman.newsman.ServerEntities.News;
+import com.newsman.newsman.auxiliary.Constant;
+import com.newsman.newsman.auxiliary.PopUpMenuController;
 import com.newsman.newsman.R;
-import com.newsman.newsman.ServerEntities.SimpleNews;
+import com.newsman.newsman.server_entities.SimpleNews;
 import com.newsman.newsman.activities.DisplayNewsActivity;
 
 import java.util.List;

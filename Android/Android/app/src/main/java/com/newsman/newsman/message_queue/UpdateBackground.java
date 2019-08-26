@@ -3,8 +3,7 @@ package com.newsman.newsman.message_queue;
 import android.content.Context;
 import android.graphics.Bitmap;
 
-import com.newsman.newsman.Auxiliary.PictureConverter;
-import com.newsman.newsman.Auxiliary.PictureLoader;
+import com.newsman.newsman.auxiliary.PictureLoader;
 
 import org.json.JSONException;
 

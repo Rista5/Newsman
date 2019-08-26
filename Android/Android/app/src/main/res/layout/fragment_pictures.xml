@@ -16,12 +16,12 @@
         android:src="@drawable/ic_add"
         android:layout_alignParentRight="true"/>
 
-    <android.support.v7.widget.RecyclerView
+    <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/rv_news_pictures"
         android:padding="4dp"
         android:scrollbars="horizontal"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_below="@+id/news_item_pictures_title">
-    </android.support.v7.widget.RecyclerView>
+    </androidx.recyclerview.widget.RecyclerView>
 </RelativeLayout>

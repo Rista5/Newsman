@@ -5,9 +5,9 @@ import android.content.Context;
 import org.json.JSONException;
 import org.json.JSONObject;
 
-class DBUpdateFactory {
-    static DBUpdate createInstance(String type, MessageInfo info,
-                                   Context context) throws JSONException {
+public class DBUpdateFactory {
+    public static DBUpdate createInstance(String type, MessageInfo info,
+                                          Context context) throws JSONException {
         switch (type) {
             case "UserDTO":
                 return new UpdateUser(info, context);

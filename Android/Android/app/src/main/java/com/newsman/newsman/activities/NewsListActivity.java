@@ -1,27 +1,27 @@
 package com.newsman.newsman.activities;
 
-import android.arch.lifecycle.LiveData;
-import android.arch.lifecycle.Observer;
+import androidx.lifecycle.LiveData;
+import androidx.lifecycle.Observer;
 import android.content.Intent;
-import android.support.annotation.NonNull;
-import android.support.annotation.Nullable;
-import android.support.v4.app.LoaderManager;
-import android.support.v4.content.Loader;
-import android.support.v7.app.AppCompatActivity;
+import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
+import androidx.loader.app.LoaderManager;
+import androidx.loader.content.Loader;
+import androidx.appcompat.app.AppCompatActivity;
 import android.os.Bundle;
-import android.support.v7.widget.DefaultItemAnimator;
-import android.support.v7.widget.LinearLayoutManager;
-import android.support.v7.widget.RecyclerView;
+import androidx.recyclerview.widget.DefaultItemAnimator;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
 
-import com.newsman.newsman.Auxiliary.Constant;
-import com.newsman.newsman.Auxiliary.PictureLoader;
-import com.newsman.newsman.Database.AppDatabase;
-import com.newsman.newsman.ServerEntities.News;
+import com.newsman.newsman.auxiliary.Constant;
+import com.newsman.newsman.auxiliary.PictureLoader;
+import com.newsman.newsman.database.AppDatabase;
+import com.newsman.newsman.server_entities.News;
 import com.newsman.newsman.R;
-import com.newsman.newsman.ServerEntities.SimpleNews;
+import com.newsman.newsman.server_entities.SimpleNews;
 import com.newsman.newsman.adapters.NewsListAdapter;
 
 import java.util.ArrayList;

@@ -3,9 +3,9 @@ package com.newsman.newsman.activities;
 import android.content.Context;
 import android.content.Intent;
 import android.graphics.Bitmap;
-import android.support.annotation.Nullable;
-import android.support.v7.app.ActionBar;
-import android.support.v7.app.AppCompatActivity;
+import androidx.annotation.Nullable;
+import androidx.appcompat.app.ActionBar;
+import androidx.appcompat.app.AppCompatActivity;
 import android.os.Bundle;
 import android.view.MenuItem;
 import android.view.View;
@@ -14,11 +14,10 @@ import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.Toast;
 
-import com.newsman.newsman.Auxiliary.Constant;
-import com.newsman.newsman.Auxiliary.PictureConverter;
-import com.newsman.newsman.Auxiliary.PictureLoader;
+import com.newsman.newsman.auxiliary.Constant;
+import com.newsman.newsman.auxiliary.PictureLoader;
 import com.newsman.newsman.R;
-import com.newsman.newsman.ServerEntities.Picture;
+import com.newsman.newsman.server_entities.Picture;
 
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;

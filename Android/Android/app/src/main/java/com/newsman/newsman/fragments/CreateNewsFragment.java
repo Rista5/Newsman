@@ -4,18 +4,18 @@ import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.drawable.BitmapDrawable;
 import android.os.Bundle;
-import android.support.annotation.NonNull;
-import android.support.annotation.Nullable;
-import android.support.v4.app.Fragment;
+import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
+import androidx.fragment.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.EditText;
 import android.widget.ImageView;
 
-import com.newsman.newsman.Auxiliary.PictureLoader;
+import com.newsman.newsman.auxiliary.PictureLoader;
 import com.newsman.newsman.R;
-import com.newsman.newsman.ServerEntities.SimpleNews;
+import com.newsman.newsman.server_entities.SimpleNews;
 
 public class CreateNewsFragment extends Fragment {
     private EditText title;

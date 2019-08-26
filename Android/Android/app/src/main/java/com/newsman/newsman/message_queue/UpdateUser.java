@@ -2,8 +2,8 @@ package com.newsman.newsman.message_queue;
 
 import android.content.Context;
 
-import com.newsman.newsman.Database.AppDatabase;
-import com.newsman.newsman.ServerEntities.User;
+import com.newsman.newsman.database.AppDatabase;
+import com.newsman.newsman.server_entities.User;
 
 import org.json.JSONException;
 import org.json.JSONObject;
