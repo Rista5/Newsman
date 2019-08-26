@@ -10,7 +10,7 @@ namespace BuisnessLogicLayer.DAOInterfaces
 {
     public interface NewsData
     {
-        List<News> GetAllNews();
+        List<NewsDTO> GetAllNews();
 
         List<NewsDTO> GetNewsModifiedByUser(int userId);
 

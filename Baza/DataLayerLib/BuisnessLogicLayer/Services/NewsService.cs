@@ -22,23 +22,23 @@ namespace BuisnessLogicLayer.Services
 
         public IEnumerable<NewsDTO> GetAllNews()
         {
-            IEnumerable<News> retData = newsData.GetAllNews();
+            //IEnumerable<News> retData = newsData.GetAllNews();
 
 
-            IList<NewsDTO> news = new List<NewsDTO>();
-            foreach (News n in retData)
-                news.Add(new NewsDTO(n));
+            //IList<NewsDTO> news = new List<NewsDTO>();
+            //foreach (News n in retData)
+            //    news.Add(new NewsDTO(n));
 
 
-            foreach (NewsDTO n in news)
-            {
-                if (n.BackgroundPicture != null)
-                    n.BackgroundPicture.SetPictureBytes(loader.GetMedia(n.BackgroundPicture.Id,
-                                                                    n.BackgroundPicture.BelongsToNewsId));
-                foreach (PictureDTO p in n.Pictures)
-                    p.SetPictureBytes(loader.GetMedia(p.Id, p.BelongsToNewsId));
-            }
-            return news;
+            //foreach (NewsDTO n in news)
+            //{
+            //    if (n.BackgroundPicture != null)
+            //        n.BackgroundPicture.SetPictureBytes(loader.GetMedia(n.BackgroundPicture.Id,
+            //                                                        n.BackgroundPicture.BelongsToNewsId));
+            //    foreach (PictureDTO p in n.Pictures)
+            //        p.SetPictureBytes(loader.GetMedia(p.Id, p.BelongsToNewsId));
+            //}
+            return newsData.GetAllNews();
         }
         
         public IEnumerable<NewsDTO> GetNewsModifiedByUser(int id)
