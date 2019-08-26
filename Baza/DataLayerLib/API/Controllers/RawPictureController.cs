@@ -34,6 +34,18 @@ namespace API.Controllers
             return Response;
         }
 
+        [HttpGet]
+        [Route("api/picture/raw/")]
+        public HttpResponseMessage Get([FromUri]int picId)
+        {
+            HttpResponseMessage Response = new HttpResponseMessage(HttpStatusCode.OK);
+            int newsId = Service.PictureService.GetPictureById(picId).BelongsToNewsId;
+            byte[] picture = Service.RawPictureService.GetPicture(picId, newsId);
+            Response.Content = new ByteArrayContent(picture);
+            Response.Content.Headers.ContentType = new System.Net.Http.Headers.MediaTypeHeaderValue("application/octet-stream");
+            return Response;
+        }
+
         [HttpPut]
         [Route("api/picture/raw/")]
         public async System.Threading.Tasks.Task<HttpResponseMessage> PutAsync(HttpRequestMessage msg, [FromUri]int picId,[FromUri]int newsId)
