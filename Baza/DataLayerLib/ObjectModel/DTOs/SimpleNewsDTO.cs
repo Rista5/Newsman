@@ -13,6 +13,7 @@ namespace ObjectModel.DTOs
         public string Title { get; set; }
         public string Content { get; set; }
         public DateTime LasModified { get; set; }
+        public UserDTO LastModifiedUser { get; set; }
         public PictureDTO BackgroundPicture { get; set; }
 
         public SimpleNewsDTO()

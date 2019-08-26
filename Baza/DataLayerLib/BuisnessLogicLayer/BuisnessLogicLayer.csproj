@@ -62,6 +62,7 @@
     <Compile Include="Services\CommentService.cs" />
     <Compile Include="Services\NewsService.cs" />
     <Compile Include="Services\PictureService.cs" />
+    <Compile Include="Services\RawPictureService.cs" />
     <Compile Include="Services\UserService.cs" />
   </ItemGroup>
   <ItemGroup>

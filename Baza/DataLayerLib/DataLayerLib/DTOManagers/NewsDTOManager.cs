@@ -6,24 +6,12 @@ using System.Threading.Tasks;
 using ObjectModel.DTOs;
 using NHibernate;
 using ObjectModel.Entities;
-using DataLayerLib.MultimediaLoader;
 using BuisnessLogicLayer.DAOInterfaces;
 
 namespace DataLayerLib.DTOManagers
 {
     public class NewsDTOManager : NewsData
     {
-        private static IMultimediaLoader _loader;
-        static IMultimediaLoader Loader
-        {
-            get
-            {
-                if (_loader == null)
-                    _loader = new FileSystemLoader();
-                return _loader;
-            }
-        }
-
         public List<NewsDTO> GetAllNews()
         {
             List<NewsDTO> news = new List<NewsDTO>();
@@ -32,20 +20,50 @@ namespace DataLayerLib.DTOManagers
             {
                 session = DataLayer.GetSession();
 
-                IEnumerable<News> retData = from n in session.Query<News>()
+                IEnumerable<News> retData = from n in session.QueryOver<News>().List()
                                             select n;
-
                 foreach (News n in retData)
-                    news.Add(new NewsDTO(n));
-                
-
-                foreach(NewsDTO n in news)
                 {
-                    if(n.BackgroundPicture != null)
-                        n.BackgroundPicture.SetPictureBytes(Loader.GetMedia(n.BackgroundPicture.Id,
-                                                                        n.BackgroundPicture.BelongsToNewsId));
-                    foreach (PictureDTO p in n.Pictures)
-                        p.SetPictureBytes(Loader.GetMedia(p.Id, p.BelongsToNewsId));
+                    NewsDTO dto = new NewsDTO(n);
+
+                    var newestDate = n.Modifications.Max(x => x.ModificationDate);
+                    int LastModifiedUser = n.Modifications.First(x => x.ModificationDate == newestDate).Id;
+                    dto.LastModifiedUser = new UserDTO(session.Load<User>(LastModifiedUser));
+
+                    news.Add(dto);
+                }
+
+                session.Close();
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine(ex.Message);
+                if (session != null)
+                    session.Close();
+            }
+
+            return news;
+        }
+
+        public List<SimpleNewsDTO> GetAllNewsSimple()
+        {
+            List<SimpleNewsDTO> news = new List<SimpleNewsDTO>();
+            ISession session = null;
+            try
+            {
+                session = DataLayer.GetSession();
+
+                IEnumerable<News> retData = from n in session.QueryOver<News>().List()
+                                            select n;
+                foreach (News n in retData)
+                {
+                    SimpleNewsDTO dto = new SimpleNewsDTO(n);
+
+                    var newestDate = n.Modifications.Max(x => x.ModificationDate);
+                    int LastModifiedUser = n.Modifications.First(x => x.ModificationDate == newestDate).Id;
+                    dto.LastModifiedUser = new UserDTO(session.Load<User>(LastModifiedUser));
+
+                    news.Add(dto);
                 }
 
                 session.Close();
@@ -74,7 +92,13 @@ namespace DataLayerLib.DTOManagers
                 foreach (NewsModified m in retData)
                 {
                     if (!news.Exists(x => x.Id == m.News.Id))
-                        news.Add(new NewsDTO(m.News));
+                    {
+                        NewsDTO dto = new NewsDTO(m.News);
+                        var newestDate = m.News.Modifications.Max(x => x.ModificationDate);
+                        int LastModifiedUser = m.News.Modifications.First(x => x.ModificationDate == newestDate).Id;
+                        dto.LastModifiedUser = new UserDTO(session.Load<User>(LastModifiedUser));
+                        news.Add(dto);
+                    }
                 }
                 session.Close();
             }
@@ -94,8 +118,12 @@ namespace DataLayerLib.DTOManagers
             try
             {
                 session = DataLayer.GetSession();
-                News user = session.Load<News>(newsId);
-                result = new NewsDTO(user);
+                News news = session.Load<News>(newsId);
+                result = new NewsDTO(news);
+                var newestDate = news.Modifications.Max(x => x.ModificationDate);
+                int LastModifiedUser = news.Modifications.First(x => x.ModificationDate == newestDate).Id;
+                result.LastModifiedUser = new UserDTO(session.Load<User>(LastModifiedUser));
+
                 session.Close();
             }
             catch (Exception ex)
@@ -157,9 +185,6 @@ namespace DataLayerLib.DTOManagers
 
                 session.Flush();
 
-                //MessageQueueManager manager = MessageQueueManager.Instance;
-                //manager.PublishMessage(news.Id, news.Id, new NewsDTO(news), MessageOperation.Insert);
-
                 result = new NewsDTO(news);
 
                 session.Close();
@@ -198,24 +223,7 @@ namespace DataLayerLib.DTOManagers
                 transaction.Commit();
 
                 result = new NewsDTO(newNews);
-                if(news.BackgroundPicture != null)
-                {
-                    Loader.SaveMedia(newNews.BackgroundPicture.Id, newNews.Id, news.BackgroundPicture.GetPictureBytes());
-                    result.BackgroundPicture = new PictureDTO(newNews.BackgroundPicture);
-                    result.BackgroundPicture.PictureData = news.BackgroundPicture.PictureData;
-                }
 
-                //TODO ovo uopste ne izgleda dobro, ne znam kako bi bolje mogle da se ucitavaju slike
-
-                for (int i = 0; i < newNews.Pictures.Count; i++)
-                {
-                    Picture p = newNews.Pictures[i];
-                    Loader.SaveMedia(p.Id, newNews.Id, news.Pictures[i].GetPictureBytes());
-
-                    PictureDTO dto = result.Pictures[i];
-                    dto.PictureData = news.Pictures[i].PictureData;
-
-                }
                 session.Close();
             }
             catch (Exception ex)
@@ -257,13 +265,6 @@ namespace DataLayerLib.DTOManagers
                 session.Flush();
 
                 result = new SimpleNewsDTO(news);
-                SimpleNewsDTO message = new SimpleNewsDTO(news);
-                if (simpleDTO.BackgroundPicture != null)
-                {
-                    Loader.SaveMedia(news.BackgroundPicture.Id, news.Id, simpleDTO.BackgroundPicture.GetPictureBytes());
-                    //message.BackgroundPicture = new PictureDTO(news.BackgroundPicture);
-                    result.BackgroundPicture.PictureData = simpleDTO.BackgroundPicture.PictureData;
-                }             
 
                 session.Close();
             }
@@ -276,30 +277,20 @@ namespace DataLayerLib.DTOManagers
             return result;
         }
 
-        public bool DeleteNews(int newsId)
+        public NewsDTO DeleteNews(int newsId)
         {
             ISession session = null;
-            bool result = false;
+            NewsDTO result = null;
             try
             {
                 session = DataLayer.GetSession();
                 News news = session.Load<News>(newsId);
-                NewsDTO newsDTO = new NewsDTO(news);
+                result = new NewsDTO(news);
 
-                foreach (Picture p in news.Pictures)
-                {
-                    Loader.DeleteMedia(p.Id, news.Id);
-                }
-                if (news.BackgroundPicture != null)
-                    Loader.DeleteMedia(news.BackgroundPicture.Id, news.Id);
                 session.Delete(news);
-
-                MessageQueueManager manager = MessageQueueManager.Instance;
-                manager.PublishMessage(news.Id, news.Id, newsDTO, MessageOperation.Delete);
 
                 session.Flush();
                 session.Close();
-                result = true;
             }
             catch (Exception ex)
             {

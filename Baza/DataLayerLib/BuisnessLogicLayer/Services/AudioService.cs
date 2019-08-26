@@ -11,10 +11,12 @@ namespace BuisnessLogicLayer.Services
     public class AudioService
     {
         private AudioData audioDataAccess;
+        private IMultimediaLoader loader;
 
         private AudioService() { }
-        public AudioService(AudioData dataAccessObject)
+        public AudioService(AudioData dataAccessObject, IMultimediaLoader loader)
         {
+            this.loader = loader;
             this.audioDataAccess = dataAccessObject;
         }
 
@@ -35,29 +37,44 @@ namespace BuisnessLogicLayer.Services
 
         public bool CreateAudio(AudioDTO dto)
         {
-            return audioDataAccess.CreateAudio(dto);
-        }
-
-        public bool CreateAudio(int newsId, string name, string description, string audioData = null)
-        {
-            AudioDTO dto = new AudioDTO()
+            bool result = false;
+            AudioDTO resultData = audioDataAccess.CreateAudio(dto);
+            if (resultData.AudioData != null)
             {
-                BelongsToNewsId = newsId,
-                Description = description,
-                Name = name,
-                AudioData = audioData
-            };
-            return audioDataAccess.CreateAudio(dto);
+                result = loader.SaveMedia(resultData.Id, resultData.BelongsToNewsId, resultData.GetAudioBytes());
+
+                MessageQueueManager manager = MessageQueueManager.Instance;
+                manager.PublishMessage(resultData.BelongsToNewsId, resultData.Id, resultData, MessageOperation.Insert);
+            }
+            return result;
         }
 
         public bool UpdateAudio(AudioDTO dto)
         {
-            return audioDataAccess.UpdateAudio(dto);
+            bool result = false;
+            AudioDTO resultData = audioDataAccess.UpdateAudio(dto);
+            if (resultData.AudioData != null)
+            {
+                result = loader.SaveMedia(resultData.Id, resultData.BelongsToNewsId, resultData.GetAudioBytes());
+
+                MessageQueueManager manager = MessageQueueManager.Instance;
+                manager.PublishMessage(resultData.BelongsToNewsId, resultData.Id, resultData, MessageOperation.Update);
+            }
+            return result;
         }
 
         public bool DeleteAudio(int audioId)
         {
-            return audioDataAccess.DeleteAudio(audioId);
+            bool result = false;
+            AudioDTO resultData = audioDataAccess.DeleteAudio(audioId);
+            if (resultData.AudioData != null)
+            {
+                result = loader.SaveMedia(resultData.Id, resultData.BelongsToNewsId, resultData.GetAudioBytes());
+
+                MessageQueueManager manager = MessageQueueManager.Instance;
+                manager.PublishMessage(resultData.BelongsToNewsId, resultData.Id, resultData, MessageOperation.Delete);
+            }
+            return result;
         }
     }
 }

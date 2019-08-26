@@ -28,7 +28,7 @@ namespace API.Controllers
         [ActionName("DefaultAction")]
         public CommentDTO Get(int id)
         {
-            service = new CommentService(new CommentDTOManager());
+            service = Service.CommentService;
             return service.GetCommentById(id);
         }
 
@@ -36,28 +36,28 @@ namespace API.Controllers
         //[ActionName("FromNews")]
         public IEnumerable<CommentDTO> GetCommentsFromNews(int id)
         {
-            service = new CommentService(new CommentDTOManager());
+            service = Service.CommentService;
             return service.GetCommentsFromNews(id);
         }
 
         // POST api/values
         public bool Post(int id, string content)
         {
-            service = new CommentService(new CommentDTOManager());
+            service = Service.CommentService;
             return service.UpdateComment(id, content);
         }
 
         // PUT api/values
         public bool Put([FromBody]CommentSimpleDTO value)
         {
-            service = new CommentService(new CommentDTOManager());
+            service = Service.CommentService;
             return service.CreateComment(value);
         }
 
         // DELETE api/values/5
         public bool Delete(int id)
         {
-            service = new CommentService(new CommentDTOManager());
+            service = Service.CommentService;
             return service.DeleteComment(id);
         }
     }

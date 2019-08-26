@@ -1,5 +1,6 @@
 ﻿using BuisnessLogicLayer.Services;
 using DataLayerLib.DTOManagers;
+using DataLayerLib.MultimediaLoader;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -14,14 +15,16 @@ namespace API.Models
         private NewsService newsService;
         private PictureService pictureService;
         private UserService userService;
+        private RawPictureService rawPictureService;
 
         public ServiceProvider()
         { 
-            audioService = new AudioService(new AudioDTOManager());
+            audioService = new AudioService(new AudioDTOManager(), new FileSystemLoaderWav());
             commentService = new CommentService(new CommentDTOManager());
-            newsService = new NewsService(new NewsDTOManager());
-            pictureService = new PictureService(new PictureDTOManager());
+            newsService = new NewsService(new NewsDTOManager(), new FileSystemLoader());
+            pictureService = new PictureService(new PictureDTOManager(), new FileSystemLoader());
             userService = new UserService(new UserDTOManager());
+            rawPictureService = new RawPictureService(new FileSystemLoader());
         }
 
         public UserService UserService { get => userService; }
@@ -29,5 +32,6 @@ namespace API.Models
         public NewsService NewsService { get => newsService; }
         public CommentService CommentService { get => commentService; }
         public AudioService AudioService { get => audioService; }
+        public RawPictureService RawPictureService { get => rawPictureService; }
     }
 }

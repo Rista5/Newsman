@@ -11,7 +11,7 @@ using System.Web.Http;
 namespace API.Controllers
 {
     //Testirati!!!!
-    public class AudioController : ApiController
+    public class AudioController : BaseController/*ApiController*/
     {
         private AudioService service;
 
@@ -19,7 +19,7 @@ namespace API.Controllers
         [ActionName("DefaultAction")]
         public IEnumerable<AudioDTO> GetAllAudios()
         {
-            service = new AudioService(new AudioDTOManager());
+            service = Service.AudioService;
             return service.GetAllAudioDTOs();
         }
 
@@ -27,7 +27,7 @@ namespace API.Controllers
         [Route("api/Audio/FromNews/{id}")]
         public IEnumerable<AudioDTO> GetAudioByNews(int newsID)
         {
-            service = new AudioService(new AudioDTOManager());
+            service = Service.AudioService;
             return service.GetAudioForNews(newsID);
         }
 
@@ -35,7 +35,7 @@ namespace API.Controllers
         [ActionName("DefaultAction")]
         public AudioDTO GetAudioById(int id)
         {
-            service = new AudioService(new AudioDTOManager());
+            service = Service.AudioService;
             return service.GetAudioByID(id);
         }
 
@@ -43,7 +43,7 @@ namespace API.Controllers
         [Route("api/Audio")]
         public bool PutAudio(AudioDTO audio)
         {
-            service = new AudioService(new AudioDTOManager());
+            service = Service.AudioService;
             return service.CreateAudio(audio);
         }
 
@@ -51,7 +51,7 @@ namespace API.Controllers
         [Route("api/Audio")]
         public bool DeleteAudio(int id)
         {
-            service = new AudioService(new AudioDTOManager());
+            service = Service.AudioService;
             return service.DeleteAudio(id);
         }
 
@@ -59,7 +59,7 @@ namespace API.Controllers
         [Route("api/Audio")]
         public bool UpdateAudio(AudioDTO audio)
         {
-            service = new AudioService(new AudioDTOManager());
+            service = Service.AudioService;
             return service.UpdateAudio(audio);
         }
     }
