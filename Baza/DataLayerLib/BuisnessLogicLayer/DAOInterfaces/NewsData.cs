@@ -12,6 +12,8 @@ namespace BuisnessLogicLayer.DAOInterfaces
     {
         List<NewsDTO> GetAllNews();
 
+        List<SimpleNewsDTO> GetAllNewsSimple();
+
         List<NewsDTO> GetNewsModifiedByUser(int userId);
 
         NewsDTO GetNews(int newsId);
@@ -24,7 +26,7 @@ namespace BuisnessLogicLayer.DAOInterfaces
 
         SimpleNewsDTO UpdateNews(SimpleNewsDTO simpleDTO, int userId);
 
-        bool DeleteNews(int newsId);
+        NewsDTO DeleteNews(int newsId);
 
         bool DeleteNewsModifiaction(int modificationId);
     }

@@ -13,7 +13,7 @@ namespace ObjectModel.DTOs
         public string Title { get; set; }
         public string Content { get; set; }
         public DateTime LasModified { get; set; }
-        public int LastModifiedUser { get; set; }
+        public UserDTO LastModifiedUser { get; set; }
         public PictureDTO BackgroundPicture { get; set; }
         public IList<CommentDTO> Comments { get; set; }
         public IList<PictureDTO> Pictures { get; set; }
@@ -31,8 +31,12 @@ namespace ObjectModel.DTOs
             Title = news.Title;
             Content = news.Content;
             LasModified = news.LastModified;
-            var newestDate = news.Modifications.Max(x => x.ModificationDate);
-            LastModifiedUser = news.Modifications.First(x => x.ModificationDate == newestDate).Id;
+            //var newestDate = news.Modifications.Max(x => x.ModificationDate);
+            //LastModifiedUser = news.Modifications.First(x => x.ModificationDate == newestDate).Id;
+            LastModifiedUser = new UserDTO() {
+                Id = 0,
+                Username = "John Doe"
+            };
 
             if (news.BackgroundPicture != null)
                 BackgroundPicture = new PictureDTO(news.BackgroundPicture);

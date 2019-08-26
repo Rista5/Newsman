@@ -170,6 +170,8 @@
     <Compile Include="Controllers\commentController.cs" />
     <Compile Include="Controllers\NewsController.cs" />
     <Compile Include="Controllers\PictureController.cs" />
+    <Compile Include="Controllers\RawPictureController.cs" />
+    <Compile Include="Controllers\SimpleNewsController.cs" />
     <Compile Include="Controllers\UserController.cs" />
     <Compile Include="Global.asax.cs">
       <DependentUpon>Global.asax</DependentUpon>

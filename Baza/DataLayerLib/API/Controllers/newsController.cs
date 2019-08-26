@@ -14,6 +14,8 @@ namespace API.Controllers
     {
         private NewsService service;
         //GET /api/News/
+        [HttpGet]
+        [Route("api/News/")]
         public IEnumerable<NewsDTO> Get()
         {
             service = Service.NewsService;
@@ -27,6 +29,7 @@ namespace API.Controllers
             service = Service.NewsService;
             return service.GetNewsModifiedByUser(id);
         }
+
 
         [HttpGet]
         [Route("api/News/{id}")]

@@ -15,7 +15,7 @@ namespace DataLayerLib.Mappers
 
             Id(x => x.Id, "Id_news").GeneratedBy.Increment();
 
-            References(x => x.BackgroundPicture, "Background_picture").LazyLoad().Cascade.All();
+            References(x => x.BackgroundPicture, "Background_picture").Cascade.All();
 
             Map(x => x.Title, "Title");
             Map(x => x.Content, "Content");

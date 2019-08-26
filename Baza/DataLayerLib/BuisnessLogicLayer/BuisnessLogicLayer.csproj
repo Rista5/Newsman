@@ -55,12 +55,14 @@
     <Compile Include="DAOInterfaces\NewsData.cs" />
     <Compile Include="DAOInterfaces\PictureData.cs" />
     <Compile Include="DAOInterfaces\UserData.cs" />
+    <Compile Include="IMultimediaLoader.cs" />
     <Compile Include="MessageQueueManager.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Services\AudioService.cs" />
     <Compile Include="Services\CommentService.cs" />
     <Compile Include="Services\NewsService.cs" />
     <Compile Include="Services\PictureService.cs" />
+    <Compile Include="Services\RawPictureService.cs" />
     <Compile Include="Services\UserService.cs" />
   </ItemGroup>
   <ItemGroup>
