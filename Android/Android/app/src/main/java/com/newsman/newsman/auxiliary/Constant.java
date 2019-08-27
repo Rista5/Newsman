@@ -14,6 +14,7 @@ public class Constant {
     public static final String NEWS_ROUTE = "/News/";
     public static final String COMMENT_ROUTE = "/Comment/";
     public static final String PICTURE_ROUTE = "/Picture/";
+    public static final String RAW_PICTURE_ROUTE = "/Picture/Raw/";
     public static String createNewsRoute() {
         return NEWS_ROUTE + USER_ID;
     }
@@ -41,6 +42,11 @@ public class Constant {
     // will be used to change ip addresse
     public static void setIpAddress(String adr) {
         IP_ADDRESS = adr;
+    }
+
+    public static String getRawPictureRoute(int picId, int newsId){
+        String route = Constant.RAW_PICTURE_ROUTE + "?picId="+picId+"&newsId="+newsId;
+        return route;
     }
 
     public static final String PICTURE_TRASPORT = "file.png";

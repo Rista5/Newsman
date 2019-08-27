@@ -19,6 +19,9 @@ public class ReadNews extends ReadJson {
 
     private News news;
 
+    public News getNews(){
+        return news;
+    }
     @Override
     public void readJson(JsonReader jsonReader) throws IOException {
         news = JsonDeserializer.readNews(jsonReader);

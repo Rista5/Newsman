@@ -22,9 +22,10 @@ class JsonSerializer {
         jsonWriter.name("Name").value(picture.getName());
         jsonWriter.name("Description").value(picture.getDescription());
         jsonWriter.name("BelongsToNewsId").value(picture.getBelongsToNewsId());
-        jsonWriter.name("PictureData")
-                .value(Base64.encodeToString(PictureConverter
-                        .getBitmapBytes(picture.getPictureData()), Base64.DEFAULT));
+//        jsonWriter.name("PictureData")
+//                .value(Base64.encodeToString(PictureConverter
+//                        .getBitmapBytes(picture.getPictureData()), Base64.DEFAULT));
+        jsonWriter.name("PictureData").value(picture.getId());
         jsonWriter.endObject();
     }
 
