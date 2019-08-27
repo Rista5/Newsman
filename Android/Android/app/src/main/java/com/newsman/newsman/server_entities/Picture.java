@@ -24,6 +24,8 @@ public class Picture implements Parcelable {
     @Ignore
     private Bitmap pictureData;
 
+    private int tempID;
+
     public Picture() {
     }
 
@@ -129,4 +131,11 @@ public class Picture implements Parcelable {
         this.pictureData = pictureData;
     }
 
+    public int getTempID() {
+        return tempID;
+    }
+
+    public void setTempID(int tempID) {
+        this.tempID = tempID;
+    }
 }

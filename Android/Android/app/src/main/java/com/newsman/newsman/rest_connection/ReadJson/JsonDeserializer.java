@@ -195,6 +195,7 @@ class JsonDeserializer {
         String description = "";
         int belongsToNews = Constant.INVALID_NEWS_ID;
         byte[] pictureData = null;
+        int tempId = 0;
         jsonReader.beginObject();
         while(jsonReader.hasNext()) {
             String name = jsonReader.nextName();
@@ -212,12 +213,13 @@ class JsonDeserializer {
                     belongsToNews = jsonReader.nextInt();
                     break;
                 case "PictureData":
-                    if(!jsonReader.peek().equals(JsonToken.NULL)) {
-                        String stringData = jsonReader.nextString();
-                        pictureData = Base64.decode(stringData, Base64.DEFAULT);
-                    } else {
-                        jsonReader.skipValue();
-                    }
+//                    if(!jsonReader.peek().equals(JsonToken.NULL)) {
+//                        String stringData = jsonReader.nextString();
+//                        pictureData = Base64.decode(stringData, Base64.DEFAULT);
+//                    } else {
+//                        jsonReader.skipValue();
+//                    }
+                    tempId = jsonReader.nextInt();
                     break;
                 default:
                     jsonReader.skipValue();
@@ -231,6 +233,8 @@ class JsonDeserializer {
         }catch (NullPointerException e ){
             e.printStackTrace();
         }
-        return new Picture(id, pictName, description, belongsToNews, bmp);
+        Picture retValue = new Picture(id,pictName,description,belongsToNews,bmp);
+        retValue.setTempID(tempId);
+        return retValue;
     }
 }
