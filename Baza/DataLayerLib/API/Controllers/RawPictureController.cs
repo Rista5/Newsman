@@ -57,8 +57,27 @@ namespace API.Controllers
                 return response;
             }
             byte[] pic = await msg.Content.ReadAsByteArrayAsync();
-            Service.RawPictureService.PutPicture(67, 18, pic);
+            Service.RawPictureService.PutPicture(picId, newsId, pic);
             response.StatusCode = HttpStatusCode.OK;
+            return response;
+        }
+
+        [HttpPost]
+        [Route("api/picture/raw/")]
+        public async System.Threading.Tasks.Task<HttpResponseMessage> PostAsync(HttpRequestMessage msg, [FromUri]int picId, [FromUri]int newsId)
+        {
+            HttpResponseMessage response = new HttpResponseMessage();
+            if (msg.Content.Headers.ContentType.MediaType != "application/octet-stream")
+            {
+                response.StatusCode = HttpStatusCode.UnsupportedMediaType;
+                return response;
+            }
+            byte[] pic = await msg.Content.ReadAsByteArrayAsync();
+            bool ret = Service.PictureService.UpdatePicture(picId, newsId, pic);
+            if (ret)
+                response.StatusCode = HttpStatusCode.OK;
+            else
+                response.StatusCode = HttpStatusCode.InternalServerError;
             return response;
         }
     }
