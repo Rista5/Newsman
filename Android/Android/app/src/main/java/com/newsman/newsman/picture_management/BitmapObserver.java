@@ -17,7 +17,7 @@ public class BitmapObserver implements Observer {
 
     @Override
     public void update(Observable o, Object arg) {
-        if (arg != null && arg instanceof Bitmap) {
+        if (arg instanceof Bitmap) {
             this.imageView.setImageBitmap((Bitmap) arg);
         }
     }

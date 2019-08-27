@@ -205,7 +205,7 @@ public class MainActivity extends AppCompatActivity {
 //            Bundle extras = data.getExtras();
 //            Bitmap bmp = (Bitmap) extras.get("data");
 //            Picture picture = generateTestPicture(bmp);
-//            new RestConnector(new Put(new WritePicture(picture)), Constant.PICTURE_ROUTE).execute();
+//            new RestConnector(new put(new WritePicture(picture)), Constant.PICTURE_ROUTE).execute();
 //        }
     }
 

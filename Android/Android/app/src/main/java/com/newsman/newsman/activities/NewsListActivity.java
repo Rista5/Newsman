@@ -2,6 +2,8 @@ package com.newsman.newsman.activities;
 
 import androidx.lifecycle.LiveData;
 import androidx.lifecycle.Observer;
+
+import android.content.Context;
 import android.content.Intent;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -82,8 +84,13 @@ public class NewsListActivity extends AppCompatActivity implements LoaderManager
         liveNews.observe(this, new Observer<List<News>>() {
             @Override
             public void onChanged(@Nullable List<News> news) {
-//                adapter.setNewsList(news);
-                createLoader(news);
+                if(news == null) return;
+                List<SimpleNews> simpleNews = new ArrayList<>(news.size());
+                for(News n: news) {
+                    simpleNews.add(SimpleNews.getSimpleNews(n, getApplicationContext()));
+                }
+                adapter.setNewsList(simpleNews);
+//                createLoader(news);
             }
         });
     }

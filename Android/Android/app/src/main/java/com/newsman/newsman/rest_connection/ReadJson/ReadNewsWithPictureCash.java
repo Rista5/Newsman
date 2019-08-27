@@ -10,7 +10,6 @@ import com.newsman.newsman.server_entities.Picture;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Objects;
 
 public class ReadNewsWithPictureCash extends ReadJson{
 
@@ -34,7 +33,7 @@ public class ReadNewsWithPictureCash extends ReadJson{
             oldId.add(pic.getTempID());
             newId.add(pic.getId());
         }
-        BitmapCache.getInstance().PutBitmapsCreateNews(oldId,newId,news.getId());
+        BitmapCache.getInstance().putBitmapsCreateNews(oldId,newId,news.getId());
     }
 
     @Override

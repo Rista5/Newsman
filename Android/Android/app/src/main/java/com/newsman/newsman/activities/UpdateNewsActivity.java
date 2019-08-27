@@ -11,6 +11,7 @@ import android.widget.Button;
 
 import com.newsman.newsman.auxiliary.BackArrowHelper;
 import com.newsman.newsman.fragments.comment_fragment.delete_strategy.DeleteComment;
+import com.newsman.newsman.picture_management.BitmapCache;
 import com.newsman.newsman.thread_management.AppExecutors;
 import com.newsman.newsman.auxiliary.Constant;
 import com.newsman.newsman.auxiliary.PictureLoader;
@@ -52,13 +53,7 @@ public class UpdateNewsActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_update_news);
         // TODO verovatno je najbolje da se posalje vest umesto id, ali za sad nek ide iz db
-        //TODO back arrow
 
-//
-//        ActionBar actionBar = getSupportActionBar();
-//        if (actionBar != null) {
-//            actionBar.setDisplayHomeAsUpEnabled(true);
-//        }
         BackArrowHelper.displayBackArrow(this);
 
         Bundle extras = getIntent().getExtras();
@@ -97,6 +92,7 @@ public class UpdateNewsActivity extends AppCompatActivity {
                 .newInstance(SimpleNews.getSimpleNews(news, this));
         List<Picture> pictures = AppDatabase.getInstance(this).pictureDao()
                 .getPicturesForNewsNonLive(newsId);
+        BitmapCache.getInstance().loadPicturesInCache(this, pictures);
         pictureHistoryList = new HistoryList<>(PictureLoader.loadPictureListData(this, pictures));
         picturesFragment = PicturesFragment.newInstance(newsId, pictureHistoryList, false);
         commentList= AppDatabase.getInstance(this).commentDao()
@@ -138,6 +134,7 @@ public class UpdateNewsActivity extends AppCompatActivity {
         SimpleNews simpleNews = SimpleNews.getSimpleNews(news, this);
         createNewsFragment.setNews(simpleNews);
         List<Picture> pictures = db.pictureDao().getPicturesForNewsNonLive(newsId);
+        BitmapCache.getInstance().loadPicturesInCache(this, pictures);
         pictureHistoryList = new HistoryList<>(pictures);
         picturesFragment.setPictureList(pictureHistoryList);
         commentList = db.commentDao().getCommentsForNewsNonLive(newsId);
@@ -146,7 +143,6 @@ public class UpdateNewsActivity extends AppCompatActivity {
 
     private void sendUpdateRequest() {
         List<HistoryObject<Picture>> history = pictureHistoryList.getHistory();
-        //TODO napravi update
         UpdateBuilder ub = new CompositeBuilder();
         if(createNewsFragment.getUpdateStatus()) {
             ub.createNews(getNewsData());

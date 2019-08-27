@@ -18,6 +18,7 @@ import com.newsman.newsman.auxiliary.BackArrowHelper;
 import com.newsman.newsman.auxiliary.Constant;
 import com.newsman.newsman.auxiliary.PictureLoader;
 import com.newsman.newsman.R;
+import com.newsman.newsman.picture_management.BitmapCache;
 import com.newsman.newsman.server_entities.Picture;
 
 import java.io.FileNotFoundException;
@@ -40,10 +41,6 @@ public class CreatePictureActivity extends AppCompatActivity {
             newsId = extras.getInt(Constant.NEWS_BUNDLE_KEY);
         }
 
-//        ActionBar actionBar = getSupportActionBar();
-//        if (actionBar != null) {
-//            actionBar.setDisplayHomeAsUpEnabled(true);
-//        }
         BackArrowHelper.displayBackArrow(this);
 
         setViews();
@@ -86,12 +83,6 @@ public class CreatePictureActivity extends AppCompatActivity {
                     toast.show();
                 } else {
                     Intent data = new Intent();
-
-//                    Bundle bundle = new Bundle();
-//                    bundle.putParcelable(Constant.PICTURE_BUNDLE_KEY, createNewPicture());
-//                    data.putExtras(bundle);
-
-//                    data.putExtra(Constant.PICTURE_BUNDLE_KEY, createNewPicture());
 
                     Bundle bundle = getPictureBundle(createNewPicture());
                     data.putExtras(bundle);
@@ -147,9 +138,13 @@ public class CreatePictureActivity extends AppCompatActivity {
     }
 
     private Picture createNewPicture() {
-        int id = Constant.INVALID_PICTURE_ID;
+        int id = BitmapCache.getNonValidIdentifier();
         String name = nameEditText.getText().toString();
         String description = descriptionEditText.getText().toString();
+        BitmapCache.getInstance().setBitmap(id, newsId, pictureBitmap);
+        //TODO ovde bitmap ne treba da se koristi
+
+        //        p.setTempID(id);
         return new Picture(id, name, description, newsId, pictureBitmap);
     }
 

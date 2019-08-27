@@ -5,6 +5,7 @@ import android.content.Context;
 import com.newsman.newsman.database.AppDatabase;
 import com.newsman.newsman.message_queue.MQClient;
 import com.newsman.newsman.message_queue.MessageInfo;
+import com.newsman.newsman.picture_management.BitmapCache;
 import com.newsman.newsman.server_entities.Picture;
 
 import org.json.JSONException;
@@ -31,6 +32,7 @@ class UpdatePicture extends DBUpdate {
             case MQClient.opUpdate:
                 AppDatabase.getInstance(mContext).pictureDao()
                         .updatePictureWithLoader(mContext, picture);
+//                BitmapCache.getInstance().updateBitmap(picture.getId(),picture.getBelongsToNewsId());
                 break;
             case MQClient.opDelete:
                 AppDatabase.getInstance(mContext).pictureDao()

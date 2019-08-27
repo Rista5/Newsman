@@ -103,4 +103,7 @@ public abstract class PictureDao {
         }
         deletePicturesForNews(newsId);
     }
+
+    @Query("UPDATE picture SET onDisc = :flag WHERE id = :pictureId")
+    public abstract void setPictureDiscFlag(int pictureId, int flag);
 }

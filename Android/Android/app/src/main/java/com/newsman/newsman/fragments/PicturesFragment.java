@@ -90,36 +90,43 @@ public class PicturesFragment extends Fragment implements LoaderManager.LoaderCa
             return;
         Bundle extras = data.getExtras();
         if(extras != null) {
-            LoaderManager loaderManager = LoaderManager.getInstance(this);
-            Loader<Picture> loader = loaderManager.getLoader(Constant.PICTURE_TRANSPORT_LOADER);
-            Bundle bundle = data.getExtras();
-            if(loader == null) {
-                loader = loaderManager.initLoader(Constant.PICTURE_TRANSPORT_LOADER, bundle, this);
-            } else {
-                loader = loaderManager.restartLoader(Constant.PICTURE_TRANSPORT_LOADER, bundle, this);
-            }
-            loader.startLoading();
+            Picture p = getBundlePicture(extras);
+            adapter.addPicture(p);
+//            LoaderManager loaderManager = LoaderManager.getInstance(this);
+//            Loader<Picture> loader = loaderManager.getLoader(Constant.PICTURE_TRANSPORT_LOADER);
+//            Bundle bundle = data.getExtras();
+//            if(loader == null) {
+//                loader = loaderManager.initLoader(Constant.PICTURE_TRANSPORT_LOADER, bundle, this);
+//            } else {
+//                loader = loaderManager.restartLoader(Constant.PICTURE_TRANSPORT_LOADER, bundle, this);
+//            }
+//            loader.startLoading();
 
         }
     }
 
-
-    @NonNull
-    @Override
-    public Loader<Picture> onCreateLoader(int i, @Nullable Bundle bundle) {
+    private Picture getBundlePicture(Bundle bundle) {
         int id = Constant.INVALID_PICTURE_ID;
         String name = "";
         String desc = "";
         int belongToNews = Constant.INVALID_NEWS_ID;
-        String fileName = "";
         if(bundle != null) {
             id = bundle.getInt("Id");
             name = bundle.getString("Name");
             desc = bundle.getString("Description");
             belongToNews = bundle.getInt("BelongsToNewsId");
-            fileName = bundle.getString("FileName");
         }
         Picture p = new Picture(id, name, desc, belongToNews, null);
+        p.setTempID(id);
+        return p;
+    }
+
+    @NonNull
+    @Override
+    public Loader<Picture> onCreateLoader(int i, @Nullable Bundle bundle) {
+        String fileName = "";
+        fileName = bundle.getString("FileName");
+        Picture p = getBundlePicture(bundle);
         return new PictureTransportLoader(getContext(), p, fileName);
     }
 

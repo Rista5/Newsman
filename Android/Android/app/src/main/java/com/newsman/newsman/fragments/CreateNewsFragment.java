@@ -13,9 +13,10 @@ import android.view.ViewGroup;
 import android.widget.EditText;
 import android.widget.ImageView;
 
-import com.newsman.newsman.auxiliary.Constant;
 import com.newsman.newsman.auxiliary.PictureLoader;
 import com.newsman.newsman.R;
+import com.newsman.newsman.picture_management.BitmapCache;
+import com.newsman.newsman.picture_management.BitmapObserver;
 import com.newsman.newsman.server_entities.SimpleNews;
 
 public class CreateNewsFragment extends Fragment {
@@ -49,7 +50,9 @@ public class CreateNewsFragment extends Fragment {
     private void setViewsContent(){
         title.setText(news.getTitle());
         content.setText(news.getContent());
-        backgroundImage.setImageBitmap(news.getBackgroundPicture());
+//        backgroundImage.setImageBitmap(news.getBackgroundPicture());
+        BitmapObserver observer = new BitmapObserver(backgroundImage);
+        BitmapCache.getInstance().getBitmap(getContext(), news.getBackgroundId(), news.getId()).addObserver(observer);
     }
 
     public void setNews(SimpleNews news) {
@@ -64,12 +67,13 @@ public class CreateNewsFragment extends Fragment {
         Bitmap background = null;
         if(updated) {
             background = ((BitmapDrawable)backgroundImage.getDrawable()).getBitmap();
+            BitmapCache.getInstance().setBitmap(news.getBackgroundId(), news.getId(), background);
         }
         else
             background = news.getBackgroundPicture();
 
         return new SimpleNews(news.getId(), newsTitle, newsContent,
-                news.getLastModified(), background, backId, Constant.USER_ID, Constant.getThisUser().getUsername());
+                news.getLastModified(), background, backId, news.getModifierId(), news.getModifierUsername());
     }
 
     private void setImageListeners(){

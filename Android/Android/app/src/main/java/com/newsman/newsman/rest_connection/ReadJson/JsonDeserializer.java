@@ -219,7 +219,10 @@ class JsonDeserializer {
 //                    } else {
 //                        jsonReader.skipValue();
 //                    }
-                    tempId = jsonReader.nextInt();
+                    if(!jsonReader.peek().equals(JsonToken.NULL))
+                        tempId = jsonReader.nextInt();
+                    else
+                        jsonReader.skipValue();
                     break;
                 default:
                     jsonReader.skipValue();

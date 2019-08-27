@@ -7,30 +7,31 @@ import android.content.Context;
 import android.content.Intent;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.FragmentManager;
-import androidx.appcompat.app.ActionBar;
 import androidx.appcompat.app.AppCompatActivity;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import com.newsman.newsman.auxiliary.BackArrowHelper;
 import com.newsman.newsman.auxiliary.PictureLoader;
 import com.newsman.newsman.auxiliary.PopUpMenuController;
 import com.newsman.newsman.database.AppDatabase;
 import com.newsman.newsman.database.UserDao;
 import com.newsman.newsman.auxiliary.Constant;
 import com.newsman.newsman.fragments.comment_fragment.delete_strategy.HideDelete;
+import com.newsman.newsman.picture_management.BitmapCache;
+import com.newsman.newsman.picture_management.BitmapObserver;
 import com.newsman.newsman.server_entities.Comment;
-import com.newsman.newsman.server_entities.CommentWithUsername;
 import com.newsman.newsman.server_entities.News;
 import com.newsman.newsman.server_entities.Picture;
 import com.newsman.newsman.R;
-import com.newsman.newsman.server_entities.User;
 import com.newsman.newsman.fragments.comment_fragment.CommentsFragment;
 import com.newsman.newsman.fragments.PicturesFragment;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Observable;
 
 public class DisplayNewsActivity extends AppCompatActivity {
 
@@ -55,10 +56,8 @@ public class DisplayNewsActivity extends AppCompatActivity {
 
         setUpViews();
 
-        ActionBar actionBar = getSupportActionBar();
-        if (actionBar != null) {
-            actionBar.setHomeButtonEnabled(true);
-        }
+        //TODO mozda treba da se skloni
+        BackArrowHelper.displayBackArrow(this);
 
         overflow.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -94,8 +93,12 @@ public class DisplayNewsActivity extends AppCompatActivity {
                 postDate.setText(news.getLastModified().toString());
                 content.setText(news.getContent());
                 //TODO razmisli da li moze ovo bolje
-                if(news.getBackgroundId() != Constant.INVALID_PICTURE_ID)
-                    background.setImageBitmap(PictureLoader.loadPictureData(mContext, news.getBackgroundId()));
+                if(news.getBackgroundId() != Constant.INVALID_PICTURE_ID){
+                    BitmapObserver observer = new BitmapObserver(background);
+                    Observable observable = BitmapCache.getInstance().getBitmap(getApplicationContext(), news.getBackgroundId(), news.getId());
+                    observable.addObserver(observer);
+                }
+//                    background.setImageBitmap(PictureLoader.loadPictureData(mContext, news.getBackgroundId()));
             }
         });
         LiveData<List<Comment>> liveComments =
@@ -119,6 +122,8 @@ public class DisplayNewsActivity extends AppCompatActivity {
         livePictres.observe(this, new Observer<List<Picture>>() {
             @Override
             public void onChanged(@Nullable List<Picture> pictures) {
+                if(pictures == null)return;
+                BitmapCache.getInstance().loadPicturesInCache(getApplicationContext(), pictures);
                 picturesFragment.setPictureList(PictureLoader.loadPictureListData(mContext, pictures));
             }
         });

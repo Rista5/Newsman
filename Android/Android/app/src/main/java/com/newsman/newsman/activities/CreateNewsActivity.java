@@ -11,6 +11,7 @@ import android.widget.Toast;
 
 import com.newsman.newsman.auxiliary.Constant;
 import com.newsman.newsman.R;
+import com.newsman.newsman.auxiliary.TempObjectGenerator;
 import com.newsman.newsman.rest_connection.ConnectionStrategy.Put;
 import com.newsman.newsman.rest_connection.RestConnector;
 import com.newsman.newsman.rest_connection.WriteJson.WriteNews;
@@ -69,6 +70,7 @@ public class CreateNewsActivity extends AppCompatActivity {
             }
         });
         buttonCancel = findViewById(R.id.create_news_cancel);
+        //TODO obrisati cancel button, nazad ide preko arrow
         buttonCancel.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -78,8 +80,7 @@ public class CreateNewsActivity extends AppCompatActivity {
     }
 
     private void setFragments() {
-        SimpleNews news = new SimpleNews(Constant.INVALID_NEWS_ID, "", "", new Date(),
-                null, Constant.INVALID_PICTURE_ID, Constant.USER_ID, Constant.getThisUser().getUsername());
+        SimpleNews news = TempObjectGenerator.genInvalidSimpleNews();
         createNewsFragment = CreateNewsFragment.newInstance(news);
         picturesFragment = PicturesFragment.newInstance(Constant.INVALID_NEWS_ID, new ArrayList<Picture>(), false);
         getSupportFragmentManager().beginTransaction()

@@ -3,6 +3,7 @@ package com.newsman.newsman.picture_management;
 import android.graphics.Bitmap;
 
 import java.util.Observable;
+import java.util.Observer;
 
 public class BitmapObservable extends Observable {
     private Bitmap bitmap;
@@ -24,5 +25,11 @@ public class BitmapObservable extends Observable {
 
     public int getNewsId(){
         return this.newsId;
+    }
+
+    @Override
+    public synchronized void addObserver(Observer o) {
+        super.addObserver(o);
+        o.update(this, bitmap);
     }
 }

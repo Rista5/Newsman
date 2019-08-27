@@ -7,6 +7,7 @@ import android.graphics.Bitmap;
 import android.os.Parcel;
 import android.os.Parcelable;
 
+import com.newsman.newsman.auxiliary.Constant;
 import com.newsman.newsman.auxiliary.PictureConverter;
 
 /**
@@ -20,13 +21,15 @@ public class Picture implements Parcelable {
     private String name;
     private String description;
     private int belongsToNewsId;
+    private int onDisc;
 
     @Ignore
     private Bitmap pictureData;
-
+    @Ignore
     private int tempID;
 
     public Picture() {
+        onDisc = Constant.PICRURE_NOT_ON_DISC;
     }
 
     @Ignore
@@ -36,6 +39,7 @@ public class Picture implements Parcelable {
         this.description = description;
         this.belongsToNewsId = belongsToNewsId;
         this.pictureData = pictureData;
+        onDisc = Constant.PICRURE_NOT_ON_DISC;
     }
 
     protected Picture(Parcel in) {
@@ -137,5 +141,9 @@ public class Picture implements Parcelable {
 
     public void setTempID(int tempID) {
         this.tempID = tempID;
+    }
+
+    public int getOnDisc() {
+        return onDisc;
     }
 }

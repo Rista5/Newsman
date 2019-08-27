@@ -14,6 +14,8 @@ import android.widget.TextView;
 
 import com.newsman.newsman.auxiliary.Constant;
 import com.newsman.newsman.auxiliary.PictureConverter;
+import com.newsman.newsman.picture_management.BitmapCache;
+import com.newsman.newsman.picture_management.BitmapObserver;
 import com.newsman.newsman.rest_connection.ConnectionStrategy.Delete;
 import com.newsman.newsman.rest_connection.ConnectionStrategy.Post;
 import com.newsman.newsman.rest_connection.ConnectionStrategy.Put;
@@ -24,6 +26,7 @@ import com.newsman.newsman.R;
 import com.newsman.newsman.activities.ImageDisplayActivity;
 
 import java.util.List;
+import java.util.Observable;
 
 public class PicturesListAdapter extends RecyclerView.Adapter<PicturesListAdapter.NewsImageViewHolder> {
 
@@ -50,8 +53,12 @@ public class PicturesListAdapter extends RecyclerView.Adapter<PicturesListAdapte
         Picture pictureItem = pictureList.get(position);
         newsImageViewHolder.title.setText(pictureItem.getName());
         //TODO razmisli da li moze ovo bolje
-        if(pictureItem.getPictureData() != null)
-            newsImageViewHolder.imageView.setImageBitmap(pictureItem.getPictureData());
+        BitmapObserver observer = new BitmapObserver(newsImageViewHolder.imageView);
+        Observable observable = BitmapCache.getInstance().getBitmap(context, pictureItem.getId(), pictureItem.getBelongsToNewsId());
+        observable.addObserver(observer);
+
+//        if(pictureItem.getPictureData() != null)
+//            newsImageViewHolder.imageView.setImageBitmap(pictureItem.getPictureData());
     }
 
     @Override

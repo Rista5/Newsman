@@ -14,10 +14,13 @@ import com.newsman.newsman.auxiliary.Constant;
 import com.newsman.newsman.auxiliary.DateAux;
 import com.newsman.newsman.auxiliary.PopUpMenuController;
 import com.newsman.newsman.R;
+import com.newsman.newsman.picture_management.BitmapCache;
+import com.newsman.newsman.picture_management.BitmapObserver;
 import com.newsman.newsman.server_entities.SimpleNews;
 import com.newsman.newsman.activities.DisplayNewsActivity;
 
 import java.util.List;
+import java.util.Observable;
 
 public class NewsListAdapter extends RecyclerView.Adapter<NewsListAdapter.NewsItemViewHolder> {
 
@@ -45,8 +48,12 @@ public class NewsListAdapter extends RecyclerView.Adapter<NewsListAdapter.NewsIt
         newsItemViewHolder.dateModified.setText(DateAux.formatDate(news.getLastModified()));
         newsItemViewHolder.userModifier.setText(news.getModifierUsername());
         newsItemViewHolder.content.setText(news.getContent());
-        if(news.getBackgroundId() != Constant.INVALID_PICTURE_ID)
-            newsItemViewHolder.backgroud.setImageBitmap(news.getBackgroundPicture());
+        if(news.getBackgroundId() != Constant.INVALID_PICTURE_ID) {
+            BitmapObserver observer = new BitmapObserver(newsItemViewHolder.background);
+            Observable observable = BitmapCache.getInstance().getBitmap(mContext, news.getBackgroundId(), news.getId());
+            observable.addObserver(observer);
+        }
+//            newsItemViewHolder.background.setImageBitmap(news.getBackgroundPicture());
 
         newsItemViewHolder.overflow.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -69,7 +76,7 @@ public class NewsListAdapter extends RecyclerView.Adapter<NewsListAdapter.NewsIt
 
     public class NewsItemViewHolder extends RecyclerView.ViewHolder {
         private TextView title, dateModified, userModifier, content;
-        private ImageView backgroud, overflow;
+        private ImageView background, overflow;
 
 
         NewsItemViewHolder(@NonNull View itemView, final Context context) {
@@ -78,7 +85,7 @@ public class NewsListAdapter extends RecyclerView.Adapter<NewsListAdapter.NewsIt
             dateModified = itemView.findViewById(R.id.news_item_post_date_value);
             userModifier = itemView.findViewById(R.id.news_item_post_last_user_update_value);
             content = itemView.findViewById(R.id.news_item_text_content);
-            backgroud = itemView.findViewById(R.id.news_item_img);
+            background = itemView.findViewById(R.id.news_item_img);
             overflow = itemView.findViewById(R.id.news_item_overflow_list);
 
             itemView.setOnClickListener(new View.OnClickListener() {
@@ -133,12 +140,12 @@ public class NewsListAdapter extends RecyclerView.Adapter<NewsListAdapter.NewsIt
             this.overflow = overflow;
         }
 
-        public ImageView getBackgroud() {
-            return backgroud;
+        public ImageView getBackground() {
+            return background;
         }
 
-        public void setBackgroud(ImageView backgroud) {
-            this.backgroud = backgroud;
+        public void setBackground(ImageView background) {
+            this.background = background;
         }
 
 

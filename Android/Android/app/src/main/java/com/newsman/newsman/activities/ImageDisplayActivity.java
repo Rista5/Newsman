@@ -8,6 +8,7 @@ import android.os.Bundle;
 
 import android.view.MenuItem;
 
+import com.newsman.newsman.auxiliary.BackArrowHelper;
 import com.newsman.newsman.auxiliary.Constant;
 import com.newsman.newsman.auxiliary.PictureConverter;
 import com.newsman.newsman.auxiliary.ZoomableImageView;
@@ -23,10 +24,11 @@ public class ImageDisplayActivity extends AppCompatActivity {
         setContentView(R.layout.activity_image_display);
         zoomableImage = findViewById(R.id.image_display_image_view);
 
-        ActionBar actionBar = getSupportActionBar();
-        if (actionBar != null) {
-            actionBar.setHomeButtonEnabled(true);
-        }
+//        ActionBar actionBar = getSupportActionBar();
+//        if (actionBar != null) {
+//            actionBar.setHomeButtonEnabled(true);
+//        }
+        BackArrowHelper.displayBackArrow(this);
 
         Bundle extras = getIntent().getExtras();
         if(extras!=null) {
@@ -38,21 +40,15 @@ public class ImageDisplayActivity extends AppCompatActivity {
             catch (NullPointerException e){
                 e.printStackTrace();
             }
-
-            if (getSupportActionBar() != null){
-                getSupportActionBar().setDisplayHomeAsUpEnabled(true);
-                getSupportActionBar().setDisplayShowHomeEnabled(true);
-            }
         }
     }
-
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
-        // handle arrow click here
-        if (item.getItemId() == android.R.id.home) {
-            finish(); // close this activity and return to preview activity (if there is any)
+        switch (item.getItemId()) {
+            case android.R.id.home:
+                return BackArrowHelper.backArrowClicked(this);
+            default:
+                return super.onOptionsItemSelected(item);
         }
-
-        return super.onOptionsItemSelected(item);
     }
 }
