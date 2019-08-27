@@ -33,7 +33,8 @@ class JsonSerializer {
         jsonWriter.name("Id").value(comment.getId());
         jsonWriter.name("Content").value(comment.getContent());
         jsonWriter.name("BelongsToNewsId").value(comment.getBelongsToNewsId());
-        jsonWriter.name("CreatedBy").value(comment.getCreatedById());
+        jsonWriter.name("CreatedBy");
+        writeUser(jsonWriter, comment.getCreatedById(), comment.getUsername());
         jsonWriter.name("PostDate").value(comment.getPostDate().toString());
         jsonWriter.endObject();
     }
@@ -43,7 +44,9 @@ class JsonSerializer {
         jsonWriter.name("Id").value(news.getId());
         jsonWriter.name("Title").value(news.getTitle());
         jsonWriter.name("Content").value(news.getContent());
-
+        jsonWriter.name("LasModified").value(news.getLastModified().toString());
+        jsonWriter.name("LastModifiedUser");
+        writeUser(jsonWriter, news.getModifierId(), news.getModifierUsername());
         jsonWriter.name("BackgroundPicture");
         if(background != null) {
             Picture pic = new Picture(
@@ -80,6 +83,8 @@ class JsonSerializer {
         jsonWriter.name("Id").value(news.getId());
         jsonWriter.name("Title").value(news.getTitle());
         jsonWriter.name("Content").value(news.getContent());
+        jsonWriter.name("LastModifiedUser");
+        writeUser(jsonWriter, news.getModifierId(), news.getModifierUsername());
         jsonWriter.name("BackgroundPicture");
         Picture back = new Picture(news.getBackgroundId(), "", "", news.getId(),
                 news.getBackgroundPicture());
@@ -91,6 +96,13 @@ class JsonSerializer {
         jsonWriter.beginObject();
         jsonWriter.name("Id").value(user.getId());
         jsonWriter.name("Username").value(user.getUsername());
+        jsonWriter.endObject();
+    }
+
+    static void writeUser(JsonWriter jsonWriter, int userId, String username) throws IOException {
+        jsonWriter.beginObject();
+        jsonWriter.name("Id").value(userId);
+        jsonWriter.name("Username").value(username);
         jsonWriter.endObject();
     }
 

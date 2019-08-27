@@ -1,14 +1,12 @@
-package com.newsman.newsman.message_queue;
+package com.newsman.newsman.message_queue.update_objects;
 
 import android.content.Context;
-import android.graphics.Bitmap;
 
-import com.newsman.newsman.auxiliary.Constant;
-import com.newsman.newsman.auxiliary.DateGetter;
 import com.newsman.newsman.auxiliary.PictureLoader;
 import com.newsman.newsman.database.AppDatabase;
+import com.newsman.newsman.message_queue.MQClient;
+import com.newsman.newsman.message_queue.MessageInfo;
 import com.newsman.newsman.server_entities.News;
-import com.newsman.newsman.server_entities.Picture;
 import com.newsman.newsman.server_entities.SimpleNews;
 
 import org.json.JSONException;
@@ -50,19 +48,6 @@ public class UpdateSimpleNews extends DBUpdate {
     }
 
     private SimpleNews parseSimpleNews(JSONObject json) throws JSONException {
-        int id = json.getInt("Id");
-        String title = json.getString("Title");
-        String content = json.getString("Content");
-        String lastModified = json.getString("LasModified");
-        Bitmap background = null;
-        int backId = Constant.INVALID_PICTURE_ID;
-        JSONObject backPic = json.getJSONObject("BackgroundPicture");
-        if(backPic != null){
-            Picture picture= JSONParser.parsePicture(json.getJSONObject("BackgroundPicture"));
-            backId = picture.getId();
-            background = picture.getPictureData();
-        }
-        return new SimpleNews(id, title, content, DateGetter.parseDate(lastModified),
-                background, backId);
+        return JSONParser.parseSimpleNews(json);
     }
 }

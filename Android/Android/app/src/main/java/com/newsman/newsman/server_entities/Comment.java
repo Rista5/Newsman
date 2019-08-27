@@ -6,7 +6,7 @@ import androidx.room.Ignore;
 import androidx.room.Index;
 import androidx.room.PrimaryKey;
 
-import com.newsman.newsman.auxiliary.DateGetter;
+import com.newsman.newsman.auxiliary.DateAux;
 
 import java.io.Serializable;
 import java.text.ParseException;
@@ -36,22 +36,22 @@ public class Comment implements Serializable {
     private String content;
     private int belongsToNewsId;
     private int createdById;
-    @Ignore
-    private User createdBy;
+    private String username;
     private Date postDate;
 
     //Constructor
-    public Comment(){
-    }
+    public Comment(){ }
 
     @Ignore
-    public Comment(int id, String content, int createdById, int belongsToNewsId, String postDate) {
+    public Comment(int id, String content, int createdById, int belongsToNewsId, String postDate,
+                    String username) {
         this.id = id;
         this.content = content;
         this.belongsToNewsId = belongsToNewsId;
         this.createdById = createdById;
+        this.username = username;
         try{
-            this.postDate = DateGetter.getDate(postDate);
+            this.postDate = DateAux.getDate(postDate);
         }
         catch (ParseException e) {
             e.printStackTrace();
@@ -70,9 +70,9 @@ public class Comment implements Serializable {
         return belongsToNewsId;
     }
 
-    public User getCreatedBy() {
-        return createdBy;
-    }
+//    public User getCreatedBy() {
+//        return createdBy;
+//    }
 
     public Date getPostDate() {
         return postDate;
@@ -92,10 +92,10 @@ public class Comment implements Serializable {
         this.belongsToNewsId = belongsToNewsId;
     }
 
-    public void setCreatedBy(User createdBy) {
-        this.createdBy = createdBy;
-        this.createdById = createdBy !=null ? createdBy.getId() : 0;
-    }
+//    public void setCreatedBy(User createdBy) {
+//        this.createdBy = createdBy;
+//        this.createdById = createdBy !=null ? createdBy.getId() : 0;
+//    }
 
     public void setPostDate(Date postDate) {
         this.postDate = postDate;
@@ -109,4 +109,14 @@ public class Comment implements Serializable {
     public void setCreatedById(int createdById) {
         this.createdById = createdById;
     }
+
+    public String getUsername() {
+        return username;
+    }
+
+    public void setUsername(String username) {
+        this.username = username;
+    }
+
+
 }

@@ -9,19 +9,16 @@ public class AppExecutors {
     private static AppExecutors mInstance;
     private final Executor networkIO;
     private final Executor databaseIO;
-    private final Executor MQConsumer;
 
-    private AppExecutors(Executor networkIO, Executor databaseIO, Executor MQConsumer) {
+    private AppExecutors(Executor networkIO, Executor databaseIO) {
         this.networkIO = networkIO;
         this.databaseIO = databaseIO;
-        this.MQConsumer = MQConsumer;
     }
 
     public static AppExecutors getInstance() {
         if (mInstance == null) {
             synchronized (LOCK) {
                 mInstance = new AppExecutors( Executors.newFixedThreadPool(NUMBER_OF_NETWORK_THREADS),
-                        Executors.newSingleThreadExecutor(),
                         Executors.newSingleThreadExecutor());
 
             }
@@ -35,10 +32,6 @@ public class AppExecutors {
 
     public Executor getDatabaseIO() {
         return databaseIO;
-    }
-
-    public Executor getMQConsumer() {
-        return MQConsumer;
     }
 
 }

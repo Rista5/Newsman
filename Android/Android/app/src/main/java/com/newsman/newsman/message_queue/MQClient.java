@@ -2,6 +2,8 @@ package com.newsman.newsman.message_queue;
 
 import android.content.Context;
 
+import com.newsman.newsman.message_queue.update_objects.DBUpdate;
+import com.newsman.newsman.message_queue.update_objects.DBUpdateFactory;
 import com.rabbitmq.client.AMQP;
 import com.rabbitmq.client.Channel;
 import com.rabbitmq.client.Connection;
@@ -17,9 +19,9 @@ import java.util.concurrent.TimeoutException;
 
 public class MQClient implements Runnable {
 
-    final static String opInsert = "Insert";
-    final static String opUpdate = "Update";
-    final static String opDelete = "Delete";
+    public final static String opInsert = "Insert";
+    public final static String opUpdate = "Update";
+    public final static String opDelete = "Delete";
 
     public static final String EXCHANGE_NAME = "Newsman";
     public static final String EXCHAMGE_TYPE = "topic";
@@ -35,11 +37,7 @@ public class MQClient implements Runnable {
         this.host = host;
         this.context = context;
         this.newsIds = newsIds;
-        factory = new ConnectionFactory();
-        factory.setHost(host);
-        factory.setPort(5672);
-        factory.setUsername("admin");
-        factory.setPassword("admin");
+        initConnFactory();
     }
 
     @Override
@@ -51,30 +49,9 @@ public class MQClient implements Runnable {
                     channel = connection.createChannel();
                     channel.exchangeDeclare(EXCHANGE_NAME, EXCHAMGE_TYPE);
                     AMQP.Queue.DeclareOk q = channel.queueDeclare();
-//                channel.queueBind(q.getQueue(),"Newsman","#");
                     bindChannelTopic(channel, q.getQueue());
                     channel.basicConsume(q.getQueue(),true,
-                            new DefaultConsumer(channel){
-                                @Override
-                                public void handleDelivery(String consumerTag, Envelope envelope, AMQP.BasicProperties properties, byte[] body) throws IOException {
-                                    String routingKey = envelope.getRoutingKey();
-                                    // route: News.1.Update.Picture.1
-                                    String[] routes = routingKey.split("\\.");
-                                    try {
-                                        JSONObject jsonObject = null;
-                                        String data = new String(body);
-                                        if(!data.equals(""))
-                                            jsonObject = new JSONObject(data);
-                                        MessageInfo info = new MessageInfo(Integer.parseInt(routes[1]),
-                                                Integer.parseInt(routes[4]), routes[2], jsonObject);
-                                        DBUpdate updateDB = DBUpdateFactory.createInstance(routes[3],
-                                                info, context);
-                                        updateDB.update();
-                                    } catch (JSONException e) {
-                                        e.printStackTrace();
-                                    }
-                                }
-                            });
+                            new NewsUpdateConsumer(channel, context));
                     while(!Thread.interrupted()){
                         Thread.sleep(5000);
                     }
@@ -98,6 +75,14 @@ public class MQClient implements Runnable {
             }
         }
 
+    }
+
+    private void initConnFactory() {
+        factory = new ConnectionFactory();
+        factory.setHost(host);
+        factory.setPort(5672);
+        factory.setUsername("admin");
+        factory.setPassword("admin");
     }
 
     private void bindChannelTopic(Channel channel, String queue) throws IOException {

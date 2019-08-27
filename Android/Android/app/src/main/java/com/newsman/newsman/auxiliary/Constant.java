@@ -31,6 +31,7 @@ public class Constant {
     public static final int INVALID_PICTURE_ID = 0;
     public static final int INVALID_NEWS_ID = 0;
     public static final int INVALID_COMMENT_ID = 0;
+    public static final int INVALID_USER_ID = 0;
 
     public static final int SUBSCRIBED = 1;
     public static final int UNSUBSCRIBED = 0;

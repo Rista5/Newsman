@@ -18,15 +18,19 @@ public class SimpleNews {
     private Bitmap backgroundPicture;
     private int backgroundId;
     private int subscribed;
+    private int modifierId;
+    private String modifierUsername;
 
     public SimpleNews(int id, String title, String content, Date lastModified, Bitmap background,
-                      int backgroundId){
+                      int backgroundId, int modifierId, String modifierUsername){
         this.id = id;
         this.title = title;
         this.content = content;
         this.lastModified = lastModified;
         this.backgroundPicture = background;
         this.backgroundId = backgroundId;
+        this.modifierId = modifierId;
+        this.modifierUsername = modifierUsername;
         this.subscribed = Constant.UNSUBSCRIBED;
     }
 
@@ -52,8 +56,9 @@ public class SimpleNews {
                 news.getContent(),
                 news.getLastModified(),
                 background,
-                news.getBackgroundId()
-        );
+                news.getBackgroundId(),
+                news.getModifierId(),
+                news.getModifierUsername());
         result.subscribed = news.getSubscribed();
         return result;
     }
@@ -114,4 +119,19 @@ public class SimpleNews {
         this.subscribed = subscribed;
     }
 
+    public int getModifierId() {
+        return modifierId;
+    }
+
+    public void setModifierId(int modifierId) {
+        this.modifierId = modifierId;
+    }
+
+    public String getModifierUsername() {
+        return modifierUsername;
+    }
+
+    public void setModifierUsername(String modifierUsername) {
+        this.modifierUsername = modifierUsername;
+    }
 }

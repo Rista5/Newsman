@@ -1,13 +1,16 @@
-package com.newsman.newsman.message_queue;
+package com.newsman.newsman.message_queue.update_objects;
 
 import android.content.Context;
 
 import com.newsman.newsman.auxiliary.Constant;
-import com.newsman.newsman.auxiliary.DateGetter;
+import com.newsman.newsman.auxiliary.DateAux;
 import com.newsman.newsman.database.AppDatabase;
+import com.newsman.newsman.message_queue.MQClient;
+import com.newsman.newsman.message_queue.MessageInfo;
 import com.newsman.newsman.server_entities.Comment;
 import com.newsman.newsman.server_entities.News;
 import com.newsman.newsman.server_entities.Picture;
+import com.newsman.newsman.server_entities.User;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -64,6 +67,8 @@ public class UpdateNews extends DBUpdate {
         int id = json.getInt("Id");
         String title = json.getString("Title");
         String content = json.getString("Content");
+        String lastModified = json.getString("LasModified");
+        User user = JSONParser.parseUser(json.getJSONObject("LastModifiedUser"));
         JSONArray commentsJson = json.getJSONArray("Comments");
         updateComments = new ArrayList<>(commentsJson.length());
         for(int i=0; i<commentsJson.length(); i++) {
@@ -82,7 +87,6 @@ public class UpdateNews extends DBUpdate {
         }
         List<Comment> comments = new ArrayList<>();
         List<Picture> pictures = new ArrayList<>();
-        String lastModified = json.getString("LasModified");
         // pozadina se ponasa kao klasicna slika prilikom update-a
         int backId = Constant.INVALID_PICTURE_ID;
         JSONObject pictureJson = json.getJSONObject("BackgroundPicture");
@@ -92,6 +96,6 @@ public class UpdateNews extends DBUpdate {
                     messageInfo.getOperation(), pictureJson);
             updatePictures.add(new UpdatePicture(info, mContext));
         }
-        return new News(id,title,content,comments, DateGetter.parseDate(lastModified), pictures, backId);
+        return new News(id,title,content,comments, DateAux.parseDate(lastModified), pictures, backId, user.getId(), user.getUsername());
     }
 }

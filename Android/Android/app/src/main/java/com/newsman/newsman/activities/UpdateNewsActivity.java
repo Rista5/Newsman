@@ -3,13 +3,14 @@ package com.newsman.newsman.activities;
 import android.content.Intent;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.FragmentManager;
-import androidx.appcompat.app.ActionBar;
 import androidx.appcompat.app.AppCompatActivity;
 import android.os.Bundle;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
 
+import com.newsman.newsman.auxiliary.BackArrowHelper;
+import com.newsman.newsman.fragments.comment_fragment.delete_strategy.DeleteComment;
 import com.newsman.newsman.thread_management.AppExecutors;
 import com.newsman.newsman.auxiliary.Constant;
 import com.newsman.newsman.auxiliary.PictureLoader;
@@ -25,7 +26,7 @@ import com.newsman.newsman.server_entities.News;
 import com.newsman.newsman.server_entities.Picture;
 import com.newsman.newsman.server_entities.SimpleNews;
 import com.newsman.newsman.server_entities.User;
-import com.newsman.newsman.fragments.CommentsFragment;
+import com.newsman.newsman.fragments.comment_fragment.CommentsFragment;
 import com.newsman.newsman.fragments.CreateNewsFragment;
 import com.newsman.newsman.fragments.PicturesFragment;
 
@@ -53,12 +54,12 @@ public class UpdateNewsActivity extends AppCompatActivity {
         // TODO verovatno je najbolje da se posalje vest umesto id, ali za sad nek ide iz db
         //TODO back arrow
 
-
-        ActionBar actionBar = getSupportActionBar();
-        if (actionBar != null) {
-            actionBar.setDisplayHomeAsUpEnabled(true);
-        }
-
+//
+//        ActionBar actionBar = getSupportActionBar();
+//        if (actionBar != null) {
+//            actionBar.setDisplayHomeAsUpEnabled(true);
+//        }
+        BackArrowHelper.displayBackArrow(this);
 
         Bundle extras = getIntent().getExtras();
         if(extras != null) {
@@ -73,8 +74,7 @@ public class UpdateNewsActivity extends AppCompatActivity {
     public boolean onOptionsItemSelected(MenuItem item) {
         switch (item.getItemId()) {
             case android.R.id.home:
-                finish();
-                return true;
+                return BackArrowHelper.backArrowClicked(this);
             default:
                 return super.onOptionsItemSelected(item);
         }
@@ -101,12 +101,7 @@ public class UpdateNewsActivity extends AppCompatActivity {
         picturesFragment = PicturesFragment.newInstance(newsId, pictureHistoryList, false);
         commentList= AppDatabase.getInstance(this).commentDao()
                 .getCommentsForNewsNonLive(newsId);
-        List<CommentWithUsername> cwu = new ArrayList<>(commentList.size());
-        for(Comment c: commentList) {
-            User u = AppDatabase.getInstance(this).userDao().getUserByIdNonLive(c.getCreatedById());
-            cwu.add(new CommentWithUsername(c, u.getUsername()));
-        }
-        commentsFragment = CommentsFragment.newInstance(newsId, cwu);
+        commentsFragment = CommentsFragment.newInstance(newsId, commentList, new DeleteComment());
 
         FragmentManager fragmentManager = getSupportFragmentManager();
         fragmentManager.beginTransaction()
@@ -146,12 +141,7 @@ public class UpdateNewsActivity extends AppCompatActivity {
         pictureHistoryList = new HistoryList<>(pictures);
         picturesFragment.setPictureList(pictureHistoryList);
         commentList = db.commentDao().getCommentsForNewsNonLive(newsId);
-        List<CommentWithUsername> cwu = new ArrayList<>(commentList.size());
-        for(Comment c: commentList) {
-            User u = AppDatabase.getInstance(this).userDao().getUserByIdNonLive(c.getCreatedById());
-            cwu.add(new CommentWithUsername(c, u.getUsername()));
-        }
-        commentsFragment.setCommentList(cwu);
+        commentsFragment.setCommentList(commentList);
     }
 
     private void sendUpdateRequest() {

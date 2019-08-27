@@ -13,6 +13,7 @@ import android.view.ViewGroup;
 import android.widget.EditText;
 import android.widget.ImageView;
 
+import com.newsman.newsman.auxiliary.Constant;
 import com.newsman.newsman.auxiliary.PictureLoader;
 import com.newsman.newsman.R;
 import com.newsman.newsman.server_entities.SimpleNews;
@@ -68,7 +69,7 @@ public class CreateNewsFragment extends Fragment {
             background = news.getBackgroundPicture();
 
         return new SimpleNews(news.getId(), newsTitle, newsContent,
-                news.getLastModified(), background, backId);
+                news.getLastModified(), background, backId, Constant.USER_ID, Constant.getThisUser().getUsername());
     }
 
     private void setImageListeners(){

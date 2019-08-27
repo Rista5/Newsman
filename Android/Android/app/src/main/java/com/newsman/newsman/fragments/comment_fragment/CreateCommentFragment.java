@@ -1,4 +1,4 @@
-package com.newsman.newsman.fragments;
+package com.newsman.newsman.fragments.comment_fragment;
 
 import android.os.Bundle;
 import androidx.annotation.NonNull;
@@ -9,6 +9,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.ImageView;
 
 import com.newsman.newsman.auxiliary.Constant;
 import com.newsman.newsman.R;
@@ -36,7 +37,7 @@ public class CreateCommentFragment extends Fragment {
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         View rootView = inflater.inflate(R.layout.fragment_create_comment, container, false);
-        Button postButton = rootView.findViewById(R.id.create_comment_post_button);
+        ImageView postButton = rootView.findViewById(R.id.create_comment_post);
         contentEditText = rootView.findViewById(R.id.create_comment_content);
         postButton.setOnClickListener(new View.OnClickListener() {
             @Override

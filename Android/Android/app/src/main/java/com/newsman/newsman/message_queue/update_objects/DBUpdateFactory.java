@@ -1,9 +1,10 @@
-package com.newsman.newsman.message_queue;
+package com.newsman.newsman.message_queue.update_objects;
 
 import android.content.Context;
 
+import com.newsman.newsman.message_queue.MessageInfo;
+
 import org.json.JSONException;
-import org.json.JSONObject;
 
 public class DBUpdateFactory {
     public static DBUpdate createInstance(String type, MessageInfo info,

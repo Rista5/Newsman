@@ -1,8 +1,8 @@
-package com.newsman.newsman.message_queue;
+package com.newsman.newsman.message_queue.update_objects;
 
 import android.content.Context;
 
-import org.json.JSONObject;
+import com.newsman.newsman.message_queue.MessageInfo;
 
 public class NullUpdate extends DBUpdate {
 

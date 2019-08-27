@@ -1,8 +1,10 @@
-package com.newsman.newsman.message_queue;
+package com.newsman.newsman.message_queue.update_objects;
 
 import android.content.Context;
 
 import com.newsman.newsman.database.AppDatabase;
+import com.newsman.newsman.message_queue.MQClient;
+import com.newsman.newsman.message_queue.MessageInfo;
 import com.newsman.newsman.server_entities.Comment;
 
 import org.json.JSONException;
@@ -38,18 +40,6 @@ public class UpdateComment extends DBUpdate {
     }
 
     private Comment parseComment(JSONObject json) throws JSONException {
-        int commentId = json.getInt("Id");
-        JSONObject userJson = json.getJSONObject("CreatedBy");
-        MessageInfo info = new MessageInfo(
-                messageInfo.getNewsId(),
-                userJson.getInt("Id"),
-                messageInfo.getOperation(),
-                userJson
-        );
-        updateUser = new UpdateUser(info, mContext);
-        String commentContent = json.getString("Content");
-        int belongsToNews = json.getInt("BelongsToNewsId");
-        String postDate = json.getString("PostDate");
-        return new Comment(commentId, commentContent, updateUser.getUser().getId(), belongsToNews, postDate);
+        return JSONParser.parseComment(json);
     }
 }

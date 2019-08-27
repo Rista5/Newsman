@@ -78,7 +78,8 @@ public class CreateNewsActivity extends AppCompatActivity {
     }
 
     private void setFragments() {
-        SimpleNews news = new SimpleNews(Constant.INVALID_NEWS_ID, "", "", new Date(), null, Constant.INVALID_PICTURE_ID);
+        SimpleNews news = new SimpleNews(Constant.INVALID_NEWS_ID, "", "", new Date(),
+                null, Constant.INVALID_PICTURE_ID, Constant.USER_ID, Constant.getThisUser().getUsername());
         createNewsFragment = CreateNewsFragment.newInstance(news);
         picturesFragment = PicturesFragment.newInstance(Constant.INVALID_NEWS_ID, new ArrayList<Picture>(), false);
         getSupportFragmentManager().beginTransaction()

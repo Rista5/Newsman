@@ -1,9 +1,11 @@
-package com.newsman.newsman.message_queue;
+package com.newsman.newsman.message_queue.update_objects;
 
 import android.content.Context;
 import android.graphics.Bitmap;
 
 import com.newsman.newsman.auxiliary.PictureLoader;
+import com.newsman.newsman.message_queue.MQClient;
+import com.newsman.newsman.message_queue.MessageInfo;
 
 import org.json.JSONException;
 

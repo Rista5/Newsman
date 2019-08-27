@@ -27,6 +27,8 @@ public class News implements Serializable, Parcelable {
     private Date lastModified;
     private int backgroundId;
     private int subscribed;
+    private int modifierId;
+    private String modifierUsername;
 
     @Ignore
     private Picture backgroundPic;
@@ -46,7 +48,7 @@ public class News implements Serializable, Parcelable {
 
     @Ignore
     public News(int id, String title, String content, List<Comment> comments, Date lastModified,
-                List<Picture> pictures, int backgroundId) {
+                List<Picture> pictures, int backgroundId, int modifierId, String modifierUsername) {
         this.id = id;
         this.title = title;
         this.content = content;
@@ -55,6 +57,8 @@ public class News implements Serializable, Parcelable {
         this.lastModified = lastModified;
         this.backgroundId = backgroundId;
         this.subscribed = Constant.UNSUBSCRIBED;
+        this.modifierId = modifierId;
+        this.modifierUsername = modifierUsername;
     }
 
     protected News(Parcel in) {
@@ -65,6 +69,8 @@ public class News implements Serializable, Parcelable {
         backgroundId = in.readInt();
         lastModified = new Date(in.readLong());
         subscribed = in.readInt();
+        modifierId = in.readInt();
+        modifierUsername = in.readString();
     }
 
     public static final Creator<News> CREATOR = new Creator<News>() {
@@ -93,6 +99,8 @@ public class News implements Serializable, Parcelable {
         dest.writeInt(backgroundId);
         dest.writeLong(lastModified.getTime());
         dest.writeInt(subscribed);
+        dest.writeInt(modifierId);
+        dest.writeString(modifierUsername);
     }
 
     public int getId() {
@@ -175,4 +183,19 @@ public class News implements Serializable, Parcelable {
         this.subscribed = subscribed;
     }
 
+    public int getModifierId() {
+        return modifierId;
+    }
+
+    public void setModifierId(int modifierId) {
+        this.modifierId = modifierId;
+    }
+
+    public String getModifierUsername() {
+        return modifierUsername;
+    }
+
+    public void setModifierUsername(String modifierUsername) {
+        this.modifierUsername = modifierUsername;
+    }
 }

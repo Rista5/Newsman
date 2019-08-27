@@ -1,11 +1,10 @@
-package com.newsman.newsman.message_queue;
+package com.newsman.newsman.message_queue.update_objects;
 
 import android.content.Context;
-import android.graphics.Bitmap;
-import android.util.Base64;
 
-import com.newsman.newsman.auxiliary.PictureConverter;
 import com.newsman.newsman.database.AppDatabase;
+import com.newsman.newsman.message_queue.MQClient;
+import com.newsman.newsman.message_queue.MessageInfo;
 import com.newsman.newsman.server_entities.Picture;
 
 import org.json.JSONException;
@@ -41,17 +40,6 @@ class UpdatePicture extends DBUpdate {
     }
 
     protected Picture parsePicture(JSONObject json) throws JSONException {
-        int pictureId = json.getInt("Id");
-        String name = json.getString("Name");
-        String description = json.getString("Description");
-        int newsId = json.getInt("BelongsToNewsId");
-        byte[] data = Base64.decode(json.getString("PictureData"), Base64.DEFAULT);
-        Bitmap bmp = null;
-        try{
-            bmp = PictureConverter.getBitmap(data);
-        }catch (NullPointerException e ){
-            e.printStackTrace();
-        }
-        return new Picture(pictureId, name, description, newsId, bmp);
+        return JSONParser.parsePicture(json);
     }
 }

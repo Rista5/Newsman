@@ -129,5 +129,4 @@ public class Picture implements Parcelable {
         this.pictureData = pictureData;
     }
 
-
 }

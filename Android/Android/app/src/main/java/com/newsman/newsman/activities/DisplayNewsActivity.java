@@ -19,13 +19,14 @@ import com.newsman.newsman.auxiliary.PopUpMenuController;
 import com.newsman.newsman.database.AppDatabase;
 import com.newsman.newsman.database.UserDao;
 import com.newsman.newsman.auxiliary.Constant;
+import com.newsman.newsman.fragments.comment_fragment.delete_strategy.HideDelete;
 import com.newsman.newsman.server_entities.Comment;
 import com.newsman.newsman.server_entities.CommentWithUsername;
 import com.newsman.newsman.server_entities.News;
 import com.newsman.newsman.server_entities.Picture;
 import com.newsman.newsman.R;
 import com.newsman.newsman.server_entities.User;
-import com.newsman.newsman.fragments.CommentsFragment;
+import com.newsman.newsman.fragments.comment_fragment.CommentsFragment;
 import com.newsman.newsman.fragments.PicturesFragment;
 
 import java.util.ArrayList;
@@ -105,12 +106,7 @@ public class DisplayNewsActivity extends AppCompatActivity {
             @Override
             public void onChanged(@Nullable List<Comment> commentList) {
                 if(commentsFragment!=null) {
-                    List<CommentWithUsername> commentUserList = new ArrayList<>(commentList.size());
-                    for(Comment c:commentList){
-                        User user = userDao.getUserByIdNonLive(c.getCreatedById());
-                        commentUserList.add(new CommentWithUsername(c, user.getUsername()));
-                    }
-                    commentsFragment.setCommentList(commentUserList);
+                    commentsFragment.setCommentList(commentList);
                 }
             }
         });
@@ -129,7 +125,8 @@ public class DisplayNewsActivity extends AppCompatActivity {
     }
 
     private void inflateCommentsFragment() {
-        commentsFragment = CommentsFragment.newInstance(newsId, new ArrayList<CommentWithUsername>());
+        commentsFragment = CommentsFragment.newInstance(newsId,
+                new ArrayList<Comment>(), new HideDelete());
         FragmentManager fragmentManager = getSupportFragmentManager();
         fragmentManager.beginTransaction()
                 .add(R.id.news_item_comments_fragment, commentsFragment)

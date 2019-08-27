@@ -6,7 +6,7 @@ import android.util.JsonReader;
 import android.util.JsonToken;
 
 import com.newsman.newsman.auxiliary.Constant;
-import com.newsman.newsman.auxiliary.DateGetter;
+import com.newsman.newsman.auxiliary.DateAux;
 import com.newsman.newsman.auxiliary.PictureConverter;
 import com.newsman.newsman.server_entities.Comment;
 import com.newsman.newsman.server_entities.News;
@@ -27,6 +27,7 @@ class JsonDeserializer {
         List<Comment> comments = new ArrayList<>();
         List<Picture> pictures = new ArrayList<>();
         String lastModified = "";
+        User user = new User(Constant.INVALID_USER_ID, "");
         Picture back =  null;
         jsonReader.beginObject();
         while(jsonReader.hasNext()){
@@ -46,6 +47,9 @@ class JsonDeserializer {
                     break;
                 case "LasModified":
                     lastModified = jsonReader.nextString();
+                    break;
+                case "LastModifiedUser":
+                    user = readUser(jsonReader);
                     break;
                 case "Pictures":
                     pictures = readPictureArray(jsonReader);
@@ -67,7 +71,8 @@ class JsonDeserializer {
             pictures.add(back);
             backId = back.getId();
         }
-        return new News(id, title, content, comments, DateGetter.parseDate(lastModified), pictures, backId);
+        return new News(id, title, content, comments, DateAux.parseDate(lastModified), pictures,
+                backId, user.getId(), user.getUsername());
     }
 
     static SimpleNews readSimpleNews(JsonReader jsonReader) throws IOException {
@@ -75,6 +80,7 @@ class JsonDeserializer {
         String title = "";
         String content="";
         String lastModified = "";
+        User user = new User(Constant.INVALID_USER_ID, "");
         Picture back = new Picture(Constant.INVALID_PICTURE_ID, null,null,Constant.INVALID_NEWS_ID, null);
         while(jsonReader.hasNext()) {
             String name = jsonReader.nextName();
@@ -91,6 +97,9 @@ class JsonDeserializer {
                 case "LasModified":
                     lastModified = jsonReader.nextString();
                     break;
+                case "LastModifiedUser":
+                    user = readUser(jsonReader);
+                    break;
                 case "BackgroundPicture":
                     if (!jsonReader.peek().equals(JsonToken.NULL))
                         back = readPicture(jsonReader);
@@ -102,8 +111,8 @@ class JsonDeserializer {
                     break;
             }
         }
-        return new SimpleNews(id, title, content, DateGetter.parseDate(lastModified),
-                back.getPictureData(), back.getBelongsToNewsId());
+        return new SimpleNews(id, title, content, DateAux.parseDate(lastModified),
+                back.getPictureData(), back.getBelongsToNewsId(), user.getId(), user.getUsername());
     }
 
     public static List<Comment> readCommentArray(JsonReader jsonReader)throws IOException {
@@ -147,9 +156,8 @@ class JsonDeserializer {
             }
         }
         jsonReader.endObject();
-        Comment comment = new Comment(id,content,user.getId(),newsId, postDate);
-        comment.setCreatedBy(user);
-        return comment;
+        //        comment.setCreatedBy(user);
+        return new Comment(id,content,user.getId(),newsId, postDate, user.getUsername());
     }
 
     private static User readUser(JsonReader reader) throws IOException {

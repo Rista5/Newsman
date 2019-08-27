@@ -90,10 +90,6 @@ public class PicturesFragment extends Fragment implements LoaderManager.LoaderCa
             return;
         Bundle extras = data.getExtras();
         if(extras != null) {
-//            && extras.get(Constant.PICTURE_BUNDLE_KEY) != null &&
-//                    extras.get(Constant.PICTURE_BUNDLE_KEY) instanceof Picture
-//            Picture picture = (Picture) extras.getParcelable(Constant.PICTURE_BUNDLE_KEY);
-//            adapter.addPicture(picture);
             LoaderManager loaderManager = LoaderManager.getInstance(this);
             Loader<Picture> loader = loaderManager.getLoader(Constant.PICTURE_TRANSPORT_LOADER);
             Bundle bundle = data.getExtras();

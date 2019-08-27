@@ -14,11 +14,18 @@
         android:layout_marginTop="4dp"
         android:layout_marginLeft="4dp"
         android:layout_marginBottom="8dp"/>
+
+    <ImageView
+        android:id="@+id/comment_item_delete"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:src="@drawable/ic_remove"
+        android:layout_alignParentRight="true"/>
     <TextView
         android:id="@+id/comment_item_post_date"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_alignParentRight="true"
+        android:layout_toLeftOf="@+id/comment_item_delete"
         tools:text="27.01.2018"
         android:layout_marginTop="4dp"
         android:layout_marginRight="8dp"/>

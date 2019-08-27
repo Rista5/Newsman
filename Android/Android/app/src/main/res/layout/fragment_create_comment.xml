@@ -11,10 +11,11 @@
         android:inputType="text|textMultiLine"
         android:gravity="top"
         android:hint="@string/create_comment_content_hint"/>
-    <Button
-        android:id="@+id/create_comment_post_button"
+    <ImageView
+        android:id="@+id/create_comment_post"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_gravity="right"
-        android:text="@string/create_comment_post_button_text"/>
+        android:layout_marginRight="@dimen/icon_margin_right"
+        android:src="@drawable/ic_reply_comment"/>
 </LinearLayout>

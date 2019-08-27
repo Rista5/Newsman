@@ -34,7 +34,7 @@ public class ReadNews extends ReadJson {
         //TODO try to find better aproach for update of comments and users
         newsDao.insertNews(news); // using insert because on conflict strategy is repalce
         for(Comment c: news.getComments()) {
-            userDao.insertUser(c.getCreatedBy());
+//            userDao.insertUser(c.getCreatedBy());
             commentDao.insertComment(c);
         }
         for(Picture p: news.getPictures()) {

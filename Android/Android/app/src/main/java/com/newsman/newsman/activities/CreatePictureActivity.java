@@ -14,6 +14,7 @@ import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.Toast;
 
+import com.newsman.newsman.auxiliary.BackArrowHelper;
 import com.newsman.newsman.auxiliary.Constant;
 import com.newsman.newsman.auxiliary.PictureLoader;
 import com.newsman.newsman.R;
@@ -39,10 +40,11 @@ public class CreatePictureActivity extends AppCompatActivity {
             newsId = extras.getInt(Constant.NEWS_BUNDLE_KEY);
         }
 
-        ActionBar actionBar = getSupportActionBar();
-        if (actionBar != null) {
-            actionBar.setDisplayHomeAsUpEnabled(true);
-        }
+//        ActionBar actionBar = getSupportActionBar();
+//        if (actionBar != null) {
+//            actionBar.setDisplayHomeAsUpEnabled(true);
+//        }
+        BackArrowHelper.displayBackArrow(this);
 
         setViews();
         setAllButtonListeners();
@@ -52,8 +54,7 @@ public class CreatePictureActivity extends AppCompatActivity {
     public boolean onOptionsItemSelected(MenuItem item) {
         switch (item.getItemId()) {
             case android.R.id.home:
-                finish();
-                return true;
+                return BackArrowHelper.backArrowClicked(this);
             default:
                 return super.onOptionsItemSelected(item);
         }

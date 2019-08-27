@@ -1,8 +1,10 @@
-package com.newsman.newsman.message_queue;
+package com.newsman.newsman.message_queue.update_objects;
 
 import android.content.Context;
 
 import com.newsman.newsman.database.AppDatabase;
+import com.newsman.newsman.message_queue.MQClient;
+import com.newsman.newsman.message_queue.MessageInfo;
 import com.newsman.newsman.server_entities.User;
 
 import org.json.JSONException;

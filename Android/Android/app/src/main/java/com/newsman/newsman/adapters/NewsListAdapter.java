@@ -11,6 +11,7 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.newsman.newsman.auxiliary.Constant;
+import com.newsman.newsman.auxiliary.DateAux;
 import com.newsman.newsman.auxiliary.PopUpMenuController;
 import com.newsman.newsman.R;
 import com.newsman.newsman.server_entities.SimpleNews;
@@ -41,8 +42,8 @@ public class NewsListAdapter extends RecyclerView.Adapter<NewsListAdapter.NewsIt
         SimpleNews news = newsList.get(position);
         final int newsId = news.getId();
         newsItemViewHolder.title.setText(news.getTitle());
-        newsItemViewHolder.dateModified.setText(news.getLastModified().toString());
-        newsItemViewHolder.userModifier.setText(USER_MODIFIER);
+        newsItemViewHolder.dateModified.setText(DateAux.formatDate(news.getLastModified()));
+        newsItemViewHolder.userModifier.setText(news.getModifierUsername());
         newsItemViewHolder.content.setText(news.getContent());
         if(news.getBackgroundId() != Constant.INVALID_PICTURE_ID)
             newsItemViewHolder.backgroud.setImageBitmap(news.getBackgroundPicture());
