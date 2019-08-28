@@ -32,9 +32,9 @@ public class GetBitmap extends ConnectionConsumer {
         if (connection.getResponseCode() == 200) {
             InputStream responseBody = connection.getInputStream();
             bmp = BitmapFactory.decodeStream(responseBody);
-            //BitmapCache.getInstance().setBitmap(pictureId, newsId,bmp);
+            BitmapCache.getInstance().setBitmap(pictureId, newsId,bmp);
             //TODO loader na file sistem
-            PictureLoader.savePictureData(context,pictureId,bmp);
+//            PictureLoader.savePictureData(context,pictureId,bmp);
 //            AppDatabase.getInstance(context).pictureDao().setPictureDiscFlag(pictureId, Constant.PICTURE_ON_DISC);
         }
         connection.disconnect();

@@ -67,7 +67,7 @@ public class CreateNewsFragment extends Fragment {
         Bitmap background = null;
         if(updated) {
             background = ((BitmapDrawable)backgroundImage.getDrawable()).getBitmap();
-            BitmapCache.getInstance().setBitmap(news.getBackgroundId(), news.getId(), background);
+//            BitmapCache.getInstance().setBitmap(news.getBackgroundId(), news.getId(), background);
         }
         else
             background = news.getBackgroundPicture();

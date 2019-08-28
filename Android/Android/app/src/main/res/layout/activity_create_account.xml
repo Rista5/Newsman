@@ -43,7 +43,7 @@
         app:layout_constraintTop_toBottomOf="@+id/create_account_password" />
 
     <Button
-        android:id="@+id/login_request_btn"
+        android:id="@+id/create_account_send_request"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginTop="@dimen/login_vertical_distance"

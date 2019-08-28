@@ -4,6 +4,7 @@ import android.graphics.Bitmap;
 import android.util.Base64;
 import android.util.JsonWriter;
 
+import com.newsman.newsman.auxiliary.Constant;
 import com.newsman.newsman.auxiliary.PictureConverter;
 import com.newsman.newsman.server_entities.Comment;
 import com.newsman.newsman.server_entities.News;
@@ -109,6 +110,7 @@ class JsonSerializer {
 
     static void writeUserPass(JsonWriter jsonWriter, UserWithPassword user) throws IOException {
         jsonWriter.beginObject();
+        jsonWriter.name("Id").value(Constant.INVALID_USER_ID);
         jsonWriter.name("Username").value(user.getUsername());
         jsonWriter.name("Password").value(user.getPassword());
         jsonWriter.endObject();

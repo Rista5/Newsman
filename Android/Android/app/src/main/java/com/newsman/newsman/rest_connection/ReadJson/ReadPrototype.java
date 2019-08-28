@@ -5,6 +5,7 @@ import com.newsman.newsman.rest_connection.WriteJson.WriteNews;
 import com.newsman.newsman.rest_connection.WriteJson.WritePicture;
 import com.newsman.newsman.rest_connection.WriteJson.WriteSimpleNews;
 import com.newsman.newsman.rest_connection.WriteJson.WriteUser;
+import com.newsman.newsman.rest_connection.WriteJson.WriteUserPass;
 
 import java.util.HashMap;
 
@@ -25,6 +26,7 @@ public class ReadPrototype {
         protoMap.put(WriteNews.class,readNewsWithPictureCash);
         protoMap.put(WritePicture.class, new ReadPicture());
         protoMap.put(WriteSimpleNews.class, new ReadSimpleNews());
+        protoMap.put(WriteUserPass.class, new ReadUserWithPassword());
     }
 
     public ReadJson GetReader(java.lang.Class writer){

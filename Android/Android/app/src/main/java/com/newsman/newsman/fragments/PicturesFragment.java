@@ -92,16 +92,6 @@ public class PicturesFragment extends Fragment implements LoaderManager.LoaderCa
         if(extras != null) {
             Picture p = getBundlePicture(extras);
             adapter.addPicture(p);
-//            LoaderManager loaderManager = LoaderManager.getInstance(this);
-//            Loader<Picture> loader = loaderManager.getLoader(Constant.PICTURE_TRANSPORT_LOADER);
-//            Bundle bundle = data.getExtras();
-//            if(loader == null) {
-//                loader = loaderManager.initLoader(Constant.PICTURE_TRANSPORT_LOADER, bundle, this);
-//            } else {
-//                loader = loaderManager.restartLoader(Constant.PICTURE_TRANSPORT_LOADER, bundle, this);
-//            }
-//            loader.startLoading();
-
         }
     }
 
@@ -116,9 +106,7 @@ public class PicturesFragment extends Fragment implements LoaderManager.LoaderCa
             desc = bundle.getString("Description");
             belongToNews = bundle.getInt("BelongsToNewsId");
         }
-        Picture p = new Picture(id, name, desc, belongToNews, null);
-        p.setTempID(id);
-        return p;
+        return new Picture(id, name, desc, belongToNews, null);
     }
 
     @NonNull

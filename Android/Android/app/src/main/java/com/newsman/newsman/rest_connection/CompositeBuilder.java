@@ -1,5 +1,7 @@
 package com.newsman.newsman.rest_connection;
 
+import android.content.Context;
+
 import com.newsman.newsman.auxiliary.Constant;
 import com.newsman.newsman.rest_connection.ConnectionStrategy.Delete;
 import com.newsman.newsman.rest_connection.ConnectionStrategy.Post;
@@ -11,6 +13,12 @@ import com.newsman.newsman.server_entities.SimpleNews;
 
 public class CompositeBuilder extends UpdateBuilder {
 
+    public CompositeBuilder(Context context) {
+        this.context = context;
+        composite = new RunnableComposite();
+    }
+
+    private Context context;
     private RunnableComposite composite;
 
     @Override
@@ -25,7 +33,7 @@ public class CompositeBuilder extends UpdateBuilder {
 
     @Override
     public void addPicture(Picture picture) {
-        composite.add(new RestConnector(new Put(new WritePicture(picture)), Constant.PICTURE_ROUTE));
+        composite.add(new RestConnector(new Put(context, new WritePicture(picture)), Constant.PICTURE_ROUTE));
     }
 
     @Override

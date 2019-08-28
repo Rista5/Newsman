@@ -5,6 +5,9 @@ import android.graphics.Bitmap;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 import android.os.Bundle;
+import android.view.Menu;
+import android.view.MenuInflater;
+import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
 import android.widget.Toast;
@@ -22,7 +25,6 @@ import com.newsman.newsman.fragments.CreateNewsFragment;
 import com.newsman.newsman.fragments.PicturesFragment;
 
 import java.util.ArrayList;
-import java.util.Date;
 import java.util.List;
 
 public class CreateNewsActivity extends AppCompatActivity {
@@ -44,6 +46,21 @@ public class CreateNewsActivity extends AppCompatActivity {
     }
 
     @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        MenuInflater inflater = getMenuInflater();
+        inflater.inflate(R.menu.save_news_menu, menu);
+        return true;
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        if(item.getItemId() == R.id.action_save_news) {
+            save();
+        }
+        return super.onOptionsItemSelected(item);
+    }
+
+    @Override
     protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
         if(resultCode == RESULT_OK && (requestCode == Constant.REQUEST_LOAD_IMAGE
                 || requestCode == Constant.REQUEST_IMAGE_CAPTURE)) {
@@ -59,14 +76,7 @@ public class CreateNewsActivity extends AppCompatActivity {
         buttonPostNews.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                News news = createNews();
-                if(!checkValidNews(news)) {
-                    displayToast();
-                } else {
-                    new RestConnector(new Put(new WriteNews(news, backgroundPic)), Constant.createNewsRoute())
-                            .execute();
-                    finish();
-                }
+                save();
             }
         });
         buttonCancel = findViewById(R.id.create_news_cancel);
@@ -77,6 +87,17 @@ public class CreateNewsActivity extends AppCompatActivity {
                 finish();
             }
         });
+    }
+
+    private void save(){
+        News news = createNews();
+        if(!checkValidNews(news)) {
+            displayToast();
+        } else {
+            new RestConnector(new Put(getApplicationContext(), new WriteNews(news, backgroundPic)), Constant.createNewsRoute())
+                    .execute();
+            finish();
+        }
     }
 
     private void setFragments() {

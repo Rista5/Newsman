@@ -112,21 +112,20 @@ public class CreatePictureActivity extends AppCompatActivity {
         bundle.putString("Name", picture.getName());
         bundle.putString("Description", picture.getDescription());
         bundle.putInt("BelongsToNewsId", picture.getBelongsToNewsId());
-        bundle.putString("FileName", Constant.PICTURE_TRASPORT);
-        FileOutputStream stream = null;
-        try {
-            stream = openFileOutput(Constant.PICTURE_TRASPORT, Context.MODE_PRIVATE);
-            picture.getPictureData().compress(Bitmap.CompressFormat.PNG, 100, stream);
-        } catch (FileNotFoundException e) {
-            e.printStackTrace();
-        }
+//        bundle.putString("FileName", Constant.PICTURE_TRASPORT);
+//        FileOutputStream stream = null;
+//        try {
+//            stream = openFileOutput(Constant.PICTURE_TRASPORT, Context.MODE_PRIVATE);
+//            picture.getPictureData().compress(Bitmap.CompressFormat.PNG, 100, stream);
+//        } catch (FileNotFoundException e) {
+//            e.printStackTrace();
+//        }
         return bundle;
     }
 
     private void captcurePhoto() {
         PictureLoader.capturePhoto(this);
     }
-    //mozda pravi problem sa rezolucijama slike, pogledaj na netu
     private void pickPhotoFromGallery() {
         PictureLoader.loadPictureFromGallery(this);
     }
@@ -143,8 +142,6 @@ public class CreatePictureActivity extends AppCompatActivity {
         String description = descriptionEditText.getText().toString();
         BitmapCache.getInstance().setBitmap(id, newsId, pictureBitmap);
         //TODO ovde bitmap ne treba da se koristi
-
-        //        p.setTempID(id);
         return new Picture(id, name, description, newsId, pictureBitmap);
     }
 

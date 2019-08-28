@@ -6,6 +6,7 @@ import com.newsman.newsman.auxiliary.PictureLoader;
 import com.newsman.newsman.database.AppDatabase;
 import com.newsman.newsman.message_queue.MQClient;
 import com.newsman.newsman.message_queue.MessageInfo;
+import com.newsman.newsman.picture_management.BitmapCache;
 import com.newsman.newsman.server_entities.News;
 import com.newsman.newsman.server_entities.SimpleNews;
 
@@ -30,11 +31,13 @@ public class UpdateSimpleNews extends DBUpdate {
         switch (messageInfo.getOperation()) {
             case MQClient.opInsert:
                 AppDatabase.getInstance(mContext).newsDao().insertNews(news);
-                PictureLoader.savePictureData(mContext, this.news.getBackgroundId(), this.news.getBackgroundPicture());
+//                PictureLoader.savePictureData(mContext, this.news.getBackgroundId(), this.news.getBackgroundPicture());
                 break;
             case MQClient.opUpdate:
                 AppDatabase.getInstance(mContext).newsDao().updateNews(news);
-                PictureLoader.savePictureData(mContext, this.news.getBackgroundId(), this.news.getBackgroundPicture());
+//                PictureLoader.savePictureData(mContext, this.news.getBackgroundId(), this.news.getBackgroundPicture());
+                //Invalidacija kesa
+                BitmapCache.getInstance().setBitmap(this.news.getBackgroundId(), this.news.getId(), null);
                 break;
             case MQClient.opDelete:
                 AppDatabase.getInstance(mContext).newsDao()

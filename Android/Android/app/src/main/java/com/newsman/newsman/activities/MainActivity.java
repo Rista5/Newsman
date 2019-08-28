@@ -1,15 +1,13 @@
 package com.newsman.newsman.activities;
 
 import android.annotation.SuppressLint;
-import androidx.lifecycle.LiveData;
-import androidx.lifecycle.Observer;
 import android.content.Context;
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.os.Handler;
 import android.os.Looper;
 import android.os.Message;
-import android.provider.MediaStore;
+
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 import android.os.Bundle;
@@ -39,8 +37,8 @@ public class MainActivity extends AppCompatActivity {
 
     private Context mContext;
     private Button mLoadNewsButton;
-    private Button mTestDbButton;
-    private Button mTestPicture;
+    private Button mLogin;
+    private Button mCreateAccount;
     private ImageView mImageView;
     private Button mRestPictureButton, mTestUpdate;
     private String KEY = "key";
@@ -84,11 +82,18 @@ public class MainActivity extends AppCompatActivity {
         });
         mLoadNewsButton = findViewById(R.id.load_news_button);
         mImageView = findViewById(R.id.iv_picture);
-        mTestPicture = findViewById(R.id.test_picture);
-        mTestPicture.setOnClickListener(new View.OnClickListener() {
+        mCreateAccount = findViewById(R.id.create_account_activity);
+        mCreateAccount.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                takePicture();
+                createAccount();
+            }
+        });
+        mLogin = findViewById(R.id.login_activity_btn);
+        mLogin.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                login();
             }
         });
         mRestPictureButton = findViewById(R.id.rest_picture);
@@ -151,14 +156,6 @@ public class MainActivity extends AppCompatActivity {
 //                new RestConnector(new InStreamConn(mContext, PICTURE_ID), testRoute).execute();
             }
         });
-
-        mTestDbButton = findViewById(R.id.load_news_from_db);
-        mTestDbButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                logNews();
-            }
-        });
         startServiceBtn = findViewById(R.id.start_service_btn);
         sendServiceMsgBtn = findViewById(R.id.send_service_msg);
         startServiceBtn.setOnClickListener(new View.OnClickListener() {
@@ -187,24 +184,15 @@ public class MainActivity extends AppCompatActivity {
         startService(intent);
     }
 
-    private void logNews() {
-        LiveData<List<News>> liveNews = mDB.newsDao().getAllNews();
-        liveNews.observe(this, new Observer<List<News>>() {
-            @Override
-            public void onChanged(@Nullable List<News> news) {
-                Log.d("THIS", this.toString());
-                for(News n:news) {
-                    Log.d("DB", "news id: "+n.getId());
-                }
-            }
-        });
+    private void login() {
+        Intent intent = new Intent(this, LoginActivity3.class);
+        startActivity(intent);
     }
 
-    private void takePicture() {
-        Intent takePictureIntent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
-        if(takePictureIntent.resolveActivity(getPackageManager())!=null) {
-            startActivityForResult(takePictureIntent, REQUEST_IMAGE_CAPTURE);
-        }
+    private void createAccount() {
+        Intent intent = new Intent(this, CreateAccountActivity.class);
+        startActivity(intent);
+
     }
 
     @Override
@@ -230,17 +218,7 @@ public class MainActivity extends AppCompatActivity {
     }
 
     private void getPictureRest() {
-//        new RestConnector(new Get(this, new ReadPicture()), Constant.PICTURE_ROUTE+10);
-//        LiveData<Picture> livePicture = AppDatabase.getInstance(this).pictureDao().getPicture(10);
-//        livePicture.observe(this, new Observer<Picture>() {
-//            @Override
-//            public void onChanged(@Nullable Picture picture) {
-//                if(picture!=null) {
-//                    Bitmap bmp = picture.getPictureData();
-//                    mImageView.setImageBitmap(bmp);
-//                }
-//            }
-//        });
+
         Bitmap bmp = PictureLoader.loadPictureData(this, 37);
         mImageView.setImageBitmap(bmp);
         new RestConnector(new OutStreamConn(bmp), testRoute).execute();

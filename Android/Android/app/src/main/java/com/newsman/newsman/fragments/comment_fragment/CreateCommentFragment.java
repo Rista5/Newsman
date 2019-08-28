@@ -43,7 +43,7 @@ public class CreateCommentFragment extends Fragment {
             @Override
             public void onClick(View v) {
                 Comment comment = createComment();
-                new RestConnector(new Put(new WriteComment(comment)), Constant.COMMENT_ROUTE).execute();
+                new RestConnector(new Put(getContext(), new WriteComment(comment)), Constant.COMMENT_ROUTE).execute();
             }
         });
         return rootView;

@@ -190,41 +190,4 @@ public class PictureLoader extends AsyncTaskLoader<List<SimpleNews>> {
         return null;
     }
 
-
-
-
-    //TODO trebalo bi ovako nesto umesto parcelable
-    //link https://stackoverflow.com/questions/11010386/passing-android-bitmap-data-within-activity-using-intent-in-android
-    private void alternative(Bitmap bmp, Context context){
-        try {
-            //Write file
-            String filename = "bitmap.png";
-            FileOutputStream stream = context.openFileOutput(filename, Context.MODE_PRIVATE);
-            bmp.compress(Bitmap.CompressFormat.PNG, 100, stream);
-
-            //Cleanup
-            stream.close();
-            bmp.recycle();
-
-            //Pop intent
-//            Intent in1 = new Intent(this, Activity2.class);
-//            in1.putExtra("image", filename);
-//            startActivity(in1);
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-    }
-
-    private void res(Context context){
-        Bitmap bmp = null;
-        String filename = "";
-//                getIntent().getStringExtra("image");
-        try {
-            FileInputStream is = context.openFileInput(filename);
-            bmp = BitmapFactory.decodeStream(is);
-            is.close();
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-    }
 }

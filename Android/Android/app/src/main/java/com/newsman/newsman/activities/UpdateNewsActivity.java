@@ -5,6 +5,8 @@ import androidx.annotation.Nullable;
 import androidx.fragment.app.FragmentManager;
 import androidx.appcompat.app.AppCompatActivity;
 import android.os.Bundle;
+import android.view.Menu;
+import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
@@ -64,12 +66,21 @@ public class UpdateNewsActivity extends AppCompatActivity {
         }
     }
 
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        MenuInflater inflater = getMenuInflater();
+        inflater.inflate(R.menu.save_news_menu, menu);
+        return true;
+    }
+
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         switch (item.getItemId()) {
             case android.R.id.home:
                 return BackArrowHelper.backArrowClicked(this);
+            case R.id.action_save_news:
+                sendUpdateRequest();
             default:
                 return super.onOptionsItemSelected(item);
         }
@@ -92,7 +103,7 @@ public class UpdateNewsActivity extends AppCompatActivity {
                 .newInstance(SimpleNews.getSimpleNews(news, this));
         List<Picture> pictures = AppDatabase.getInstance(this).pictureDao()
                 .getPicturesForNewsNonLive(newsId);
-//        BitmapCache.getInstance().loadPicturesInCache(this, pictures);
+
         pictureHistoryList = new HistoryList<>(PictureLoader.loadPictureListData(this, pictures));
         picturesFragment = PicturesFragment.newInstance(newsId, pictureHistoryList, false);
         commentList= AppDatabase.getInstance(this).commentDao()
@@ -128,22 +139,9 @@ public class UpdateNewsActivity extends AppCompatActivity {
         return createNewsFragment.getNews();
     }
 
-    private void setFragmentData() {
-        AppDatabase db = AppDatabase.getInstance(this);
-        news = db.newsDao().getNewsByIdNonLive(newsId);
-        SimpleNews simpleNews = SimpleNews.getSimpleNews(news, this);
-        createNewsFragment.setNews(simpleNews);
-        List<Picture> pictures = db.pictureDao().getPicturesForNewsNonLive(newsId);
-//        BitmapCache.getInstance().loadPicturesInCache(this, pictures);
-        pictureHistoryList = new HistoryList<>(pictures);
-        picturesFragment.setPictureList(pictureHistoryList);
-        commentList = db.commentDao().getCommentsForNewsNonLive(newsId);
-        commentsFragment.setCommentList(commentList);
-    }
-
     private void sendUpdateRequest() {
         List<HistoryObject<Picture>> history = pictureHistoryList.getHistory();
-        UpdateBuilder ub = new CompositeBuilder();
+        UpdateBuilder ub = new CompositeBuilder(getApplicationContext());
         if(createNewsFragment.getUpdateStatus()) {
             ub.createNews(getNewsData());
         }

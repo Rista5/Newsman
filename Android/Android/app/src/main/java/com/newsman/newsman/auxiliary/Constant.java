@@ -6,9 +6,11 @@ public class Constant {
     private static String IP_ADDRESS = "192.168.1.7";
     public static final String NEWS_BUNDLE_KEY = "news_bundle_key";
     public static final String PICTURE_BUNDLE_KEY = "image_bundle_key";
+    public static final String USER_BUNDLE_KEY = "user_bundle_key";
     public static final int PICTURE_REQUEST_CODE = 12;
     public static final int PICTURE_LOADER_ID = 20;
     public static final int PICTURE_TRANSPORT_LOADER = 21;
+    public static final int USER_LOADER = 22;
 
     public static final String USER_ROUTE = "/User/";
     public static final String NEWS_ROUTE = "/News/";

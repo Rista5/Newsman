@@ -57,8 +57,6 @@ public class PicturesListAdapter extends RecyclerView.Adapter<PicturesListAdapte
         Observable observable = BitmapCache.getInstance().getBitmap(context, pictureItem.getId(), pictureItem.getBelongsToNewsId());
         observable.addObserver(observer);
 
-//        if(pictureItem.getPictureData() != null)
-//            newsImageViewHolder.imageView.setImageBitmap(pictureItem.getPictureData());
     }
 
     @Override
@@ -68,7 +66,7 @@ public class PicturesListAdapter extends RecyclerView.Adapter<PicturesListAdapte
 
     public void addPicture(Picture picture) {
         if(sendToRest){
-            new RestConnector(new Put(new WritePicture(picture)), Constant.PICTURE_ROUTE)
+            new RestConnector(new Put(context, new WritePicture(picture)), Constant.PICTURE_ROUTE)
                     .execute();
         } else {
             int position = pictureList.size();

@@ -16,19 +16,16 @@ import java.io.OutputStream;
 import java.io.OutputStreamWriter;
 import java.net.HttpURLConnection;
 
-public class Put extends ConnectionConsumer {
-
-    public static final String PUT = "PUT";
-
-    private WriteJson jsonStrategy;
+public class PostWithUpdate extends ConnectionConsumer {
+    public static final String POST = "POST";
+    private WriteJson writeJson;
     private Context context;
 
-    public Put(Context context, WriteJson jsonStrategy) {
+    public PostWithUpdate(Context context, WriteJson writeJson) {
         super(new JsonParam());
-        this.jsonStrategy = jsonStrategy;
+        this.writeJson = writeJson;
         this.context = context;
     }
-
 
     @Override
     public void useConnection(HttpURLConnection connection) throws IOException {
@@ -36,7 +33,7 @@ public class Put extends ConnectionConsumer {
         OutputStreamWriter outputStreamWriter = new OutputStreamWriter(outputStream);
         JsonWriter jsonWriter = new JsonWriter(outputStreamWriter);
 
-        jsonStrategy.writeJson(jsonWriter);
+        writeJson.writeJson(jsonWriter);
         jsonWriter.close();
         outputStream.flush();
         outputStream.close();
@@ -45,7 +42,7 @@ public class Put extends ConnectionConsumer {
             InputStreamReader isr = new InputStreamReader(responseBody, "UTF-8");
             JsonReader jsonReader = new JsonReader(isr);
 
-            ReadJson readJson = ReadPrototype.getInstance().GetReader(jsonStrategy.getClass());
+            ReadJson readJson = ReadPrototype.getInstance().GetReader(writeJson.getClass());
             readJson.readJson(jsonReader);
             readJson.updateDB(context);
             jsonReader.close();
@@ -54,6 +51,6 @@ public class Put extends ConnectionConsumer {
 
     @Override
     public String getType() {
-        return PUT;
+        return POST;
     }
 }

@@ -13,6 +13,7 @@ import com.newsman.newsman.server_entities.News;
 import com.newsman.newsman.server_entities.Picture;
 import com.newsman.newsman.server_entities.SimpleNews;
 import com.newsman.newsman.server_entities.User;
+import com.newsman.newsman.server_entities.UserWithPassword;
 
 import java.io.IOException;
 import java.util.ArrayList;
@@ -178,6 +179,30 @@ class JsonDeserializer {
         return new User(id, username);
     }
 
+    public static UserWithPassword readUserWithPassword(JsonReader jsonReader) throws IOException {
+        int id = Constant.INVALID_USER_ID;
+        String username = "";
+        String password = "";
+        jsonReader.beginObject();
+        while(jsonReader.hasNext()){
+            String name = jsonReader.nextName();
+            switch (name) {
+                case "Id":
+                    id = jsonReader.nextInt();
+                    break;
+                case "Username":
+                    username = jsonReader.nextString();
+                    break;
+                case "Password":
+                    password = jsonReader.nextString();
+                    break;
+                default:
+                    jsonReader.skipValue();
+            }
+        }
+        jsonReader.endObject();
+        return new UserWithPassword(id, username, password);
+    }
 
     private static List<Picture> readPictureArray(JsonReader jsonReader) throws IOException {
         List<Picture> pictures = new ArrayList<>();
