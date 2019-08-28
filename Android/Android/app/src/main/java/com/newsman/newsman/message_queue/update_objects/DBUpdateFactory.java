@@ -20,7 +20,7 @@ public class DBUpdateFactory {
                 return new UpdatePicture(info, context);
             case "SimpleNewsDTO":
                 return new UpdateSimpleNews(info, context);
-            case "RawPictureUpdate":
+            case "PictureUpdateObject":
                 return new UpdatePictureRaw(info,context);
         }
         return new NullUpdate(info, context);
