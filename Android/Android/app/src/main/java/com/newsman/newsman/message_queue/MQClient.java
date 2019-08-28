@@ -22,6 +22,7 @@ public class MQClient implements Runnable {
     public final static String opInsert = "Insert";
     public final static String opUpdate = "Update";
     public final static String opDelete = "Delete";
+    public final static String opRawPitctureUpdate = "RawPictureUpdate";
 
     public static final String EXCHANGE_NAME = "Newsman";
     public static final String EXCHAMGE_TYPE = "topic";
