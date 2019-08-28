@@ -23,8 +23,25 @@ namespace BuisnessLogicLayer.Services
 
         public bool PutPicture(int pictureId,int newsId, byte[] pictureData)
         {
-            return loader.SaveMedia(pictureId, newsId, pictureData);
+            bool res = loader.SaveMedia(pictureId, newsId, pictureData);
+            if (res)
+            {
+                MessageQueueManager manager = MessageQueueManager.Instance;
+                manager.PublishMessage(newsId, pictureId, new PictureUpdateObject(pictureId, newsId), MessageOperation.RawPictureUpdate);
+            }
+            return res;
         }
+        
+        class PictureUpdateObject
+        {
+            public PictureUpdateObject(int pictureId, int newsId)
+            {
+                PictureId = pictureId;
+                NewsId = newsId;
+            }
 
+            public int PictureId { get; set; }
+            public int NewsId { get; set; }
+        }
     }
 }

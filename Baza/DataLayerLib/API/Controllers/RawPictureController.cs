@@ -66,22 +66,5 @@ namespace API.Controllers
             response.StatusCode = HttpStatusCode.OK;
             return response;
         }
-
-        [HttpPut]
-        [Route("api/picture/raw/")]
-        public async System.Threading.Tasks.Task<HttpResponseMessage> PutAsync(HttpRequestMessage msg, [FromUri]int picId)
-        {
-            HttpResponseMessage response = new HttpResponseMessage();
-            if (msg.Content.Headers.ContentType.MediaType != "application/octet-stream")
-            {
-                response.StatusCode = HttpStatusCode.UnsupportedMediaType;
-                return response;
-            }
-            int newsId = Service.PictureService.GetPictureById(picId).BelongsToNewsId;
-            byte[] pic = await msg.Content.ReadAsByteArrayAsync();
-            Service.RawPictureService.PutPicture(picId, newsId, pic);
-            response.StatusCode = HttpStatusCode.OK;
-            return response;
-        }
     }
 }

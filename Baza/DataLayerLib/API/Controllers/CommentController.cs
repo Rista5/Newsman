@@ -48,7 +48,7 @@ namespace API.Controllers
         }
 
         // PUT api/values
-        public bool Put([FromBody]CommentSimpleDTO value)
+        public CommentDTO Put([FromBody]CommentDTO value)
         {
             service = Service.CommentService;
             return service.CreateComment(value);
