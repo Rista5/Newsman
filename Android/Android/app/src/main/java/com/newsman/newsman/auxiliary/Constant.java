@@ -37,9 +37,6 @@ public class Constant {
     public static final int SUBSCRIBED = 1;
     public static final int UNSUBSCRIBED = 0;
 
-    public static final int PICRURE_NOT_ON_DISC = 0;
-    public static final int PICTURE_ON_DISC = 1;
-
     public static String getIpAddress() {
         return IP_ADDRESS;
     }

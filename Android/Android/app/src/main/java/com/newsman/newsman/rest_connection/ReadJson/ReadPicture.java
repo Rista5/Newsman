@@ -19,7 +19,7 @@ public class ReadPicture extends ReadJson {
 
     @Override
     public void updateDB(Context context) {
-        AppDatabase.getInstance(context).pictureDao().insertPictureWithLoader(context, picture);
+        AppDatabase.getInstance(context).pictureDao().insertPicture(picture);
     }
 
     @Override

@@ -92,7 +92,7 @@ public class UpdateNewsActivity extends AppCompatActivity {
                 .newInstance(SimpleNews.getSimpleNews(news, this));
         List<Picture> pictures = AppDatabase.getInstance(this).pictureDao()
                 .getPicturesForNewsNonLive(newsId);
-        BitmapCache.getInstance().loadPicturesInCache(this, pictures);
+//        BitmapCache.getInstance().loadPicturesInCache(this, pictures);
         pictureHistoryList = new HistoryList<>(PictureLoader.loadPictureListData(this, pictures));
         picturesFragment = PicturesFragment.newInstance(newsId, pictureHistoryList, false);
         commentList= AppDatabase.getInstance(this).commentDao()
@@ -134,7 +134,7 @@ public class UpdateNewsActivity extends AppCompatActivity {
         SimpleNews simpleNews = SimpleNews.getSimpleNews(news, this);
         createNewsFragment.setNews(simpleNews);
         List<Picture> pictures = db.pictureDao().getPicturesForNewsNonLive(newsId);
-        BitmapCache.getInstance().loadPicturesInCache(this, pictures);
+//        BitmapCache.getInstance().loadPicturesInCache(this, pictures);
         pictureHistoryList = new HistoryList<>(pictures);
         picturesFragment.setPictureList(pictureHistoryList);
         commentList = db.commentDao().getCommentsForNewsNonLive(newsId);

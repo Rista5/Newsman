@@ -21,16 +21,13 @@ public class Picture implements Parcelable {
     private String name;
     private String description;
     private int belongsToNewsId;
-    private int onDisc;
 
     @Ignore
     private Bitmap pictureData;
     @Ignore
     private int tempID;
 
-    public Picture() {
-        onDisc = Constant.PICRURE_NOT_ON_DISC;
-    }
+    public Picture() { }
 
     @Ignore
     public Picture(int id, String name, String description, int belongsToNewsId, Bitmap pictureData) {
@@ -39,7 +36,6 @@ public class Picture implements Parcelable {
         this.description = description;
         this.belongsToNewsId = belongsToNewsId;
         this.pictureData = pictureData;
-        onDisc = Constant.PICRURE_NOT_ON_DISC;
     }
 
     protected Picture(Parcel in) {
@@ -141,9 +137,5 @@ public class Picture implements Parcelable {
 
     public void setTempID(int tempID) {
         this.tempID = tempID;
-    }
-
-    public int getOnDisc() {
-        return onDisc;
     }
 }

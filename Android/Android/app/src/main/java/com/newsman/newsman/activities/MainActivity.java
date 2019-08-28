@@ -7,6 +7,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.os.Handler;
+import android.os.Looper;
 import android.os.Message;
 import android.provider.MediaStore;
 import androidx.annotation.Nullable;
@@ -50,6 +51,15 @@ public class MainActivity extends AppCompatActivity {
     static final int REQUEST_IMAGE_CAPTURE = 1;
     private static int PICTURE_ID = 20000;
     private String testRoute = Constant.PICTURE_ROUTE + "test";
+
+    private static Handler uiHandler;
+    static {
+        uiHandler = new Handler(Looper.getMainLooper());
+    }
+
+    public static void runOnUI(Runnable runnable) {
+        uiHandler.post(runnable);
+    }
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {

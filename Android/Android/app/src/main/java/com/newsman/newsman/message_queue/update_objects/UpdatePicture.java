@@ -27,16 +27,16 @@ class UpdatePicture extends DBUpdate {
         switch (messageInfo.getOperation()) {
             case MQClient.opInsert:
                 AppDatabase.getInstance(mContext).pictureDao()
-                        .insertPictureWithLoader(mContext, picture);
+                        .insertPicture(picture);
                 break;
             case MQClient.opUpdate:
                 AppDatabase.getInstance(mContext).pictureDao()
-                        .updatePictureWithLoader(mContext, picture);
+                        .updatePicture(picture);
 //                BitmapCache.getInstance().updateBitmap(picture.getId(),picture.getBelongsToNewsId());
                 break;
             case MQClient.opDelete:
                 AppDatabase.getInstance(mContext).pictureDao()
-                        .deletePictureByIdWithData(mContext, messageInfo.getObjectId());
+                        .deletePictureById(messageInfo.getObjectId());
                 break;
         }
     }

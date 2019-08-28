@@ -99,17 +99,14 @@ public class BitmapCache {
         }
     }
 
-    public void loadPicturesInCache(Context context, List<Picture> pictureList){
-        for(Picture p : pictureList){
-            BitmapObservable observable = cache.get(p.getId());
-            if(p.getOnDisc() == Constant.PICTURE_ON_DISC && observable.getBitmap()==null){
-                new LoadPictureTask().execute(new InParam(p.getId(), p.getBelongsToNewsId(), context));
-            }
-            else if(p.getOnDisc() == Constant.PICRURE_NOT_ON_DISC ) {
-                getBitmapFromRest(context, p.getId(), p.getBelongsToNewsId());
-            }
-        }
-    }
+//    public void loadPicturesInCache(List<Picture> pictureList){
+//        for(Picture p : pictureList){
+//            BitmapObservable observable = cache.get(p.getId());
+//            if(observable != null && observable.getBitmap()==null) {
+//
+//            }
+//        }
+//    }
 //    public void updateBitmap(int pictureId, int newsId){
 //        getBitmapFromRest(pictureId,newsId);
 //    }

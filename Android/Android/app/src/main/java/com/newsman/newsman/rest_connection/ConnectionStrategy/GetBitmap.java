@@ -35,7 +35,7 @@ public class GetBitmap extends ConnectionConsumer {
             //BitmapCache.getInstance().setBitmap(pictureId, newsId,bmp);
             //TODO loader na file sistem
             PictureLoader.savePictureData(context,pictureId,bmp);
-            AppDatabase.getInstance(context).pictureDao().setPictureDiscFlag(pictureId, Constant.PICTURE_ON_DISC);
+//            AppDatabase.getInstance(context).pictureDao().setPictureDiscFlag(pictureId, Constant.PICTURE_ON_DISC);
         }
         connection.disconnect();
     }

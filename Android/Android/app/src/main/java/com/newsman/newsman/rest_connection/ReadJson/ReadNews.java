@@ -42,7 +42,8 @@ public class ReadNews extends ReadJson {
         }
         for(Picture p: news.getPictures()) {
             if(p.getPictureData()!=null)
-                pictureDao.insertPictureWithLoader(context, p);
+//                pictureDao.insertPictureWithLoader(context, p);
+                pictureDao.insertPicture(p);
             else
                 Log.d("delete picture", p.getId() +"    " +p.getName());
         }

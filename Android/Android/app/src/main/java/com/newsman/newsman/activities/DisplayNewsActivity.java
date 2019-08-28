@@ -123,7 +123,7 @@ public class DisplayNewsActivity extends AppCompatActivity {
             @Override
             public void onChanged(@Nullable List<Picture> pictures) {
                 if(pictures == null)return;
-                BitmapCache.getInstance().loadPicturesInCache(getApplicationContext(), pictures);
+//                BitmapCache.getInstance().loadPicturesInCache(getApplicationContext(), pictures);
                 picturesFragment.setPictureList(PictureLoader.loadPictureListData(mContext, pictures));
             }
         });
