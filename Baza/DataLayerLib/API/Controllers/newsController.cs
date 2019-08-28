@@ -41,7 +41,7 @@ namespace API.Controllers
 
         [HttpPut]
         [Route("api/News/{userId}")]
-        public bool CreateNews([FromBody]NewsDTO news, int userId)
+        public NewsDTO CreateNews([FromBody]NewsDTO news, int userId)
         {
             service = Service.NewsService;
             return service.CreateNews(news, userId);
@@ -49,7 +49,7 @@ namespace API.Controllers
 
         [HttpPost]
         [Route("api/News/{userId}")]
-        public bool UpdateNews([FromBody] SimpleNewsDTO simpleDTO, int userId)
+        public SimpleNewsDTO UpdateNews([FromBody] SimpleNewsDTO simpleDTO, int userId)
         {
             service = Service.NewsService;
             return service.UpdateNews(simpleDTO, userId);

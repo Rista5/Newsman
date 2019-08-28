@@ -27,7 +27,7 @@ namespace DataLayerLib.DTOManagers
                     NewsDTO dto = new NewsDTO(n);
 
                     var newestDate = n.Modifications.Max(x => x.ModificationDate);
-                    int LastModifiedUser = n.Modifications.First(x => x.ModificationDate == newestDate).Id;
+                    int LastModifiedUser = n.Modifications.First(x => x.ModificationDate == newestDate).User.Id;
                     dto.LastModifiedUser = new UserDTO(session.Load<User>(LastModifiedUser));
 
                     news.Add(dto);

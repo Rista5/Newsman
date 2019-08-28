@@ -43,17 +43,19 @@ namespace API.Controllers
             return service.DeleteUser(id);
         }
 
-        public bool Put([FromBody] UserWithPassword user)
+        public UserWithPassword Put([FromBody] ObjectModel.DTOs.UserWithPassword user)
         {
             service = Service.UserService;
             return service.CreateUser(user.Username, user.Password);
         }
+
+        public UserWithPassword Post(UserWithPassword user)
+        {
+            service = Service.UserService;
+            return service.GetUser(user.Username, user.Password);
+        }
     }
 
-    // POCO class for Put method
-    public class UserWithPassword
-    {
-        public string Username { get; set; }
-        public string Password { get; set; }
-    }
+
+
 }

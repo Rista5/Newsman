@@ -40,7 +40,7 @@ namespace API.Controllers
 
         [HttpPut]
         [ActionName("DefaultAction")]
-        public bool CreatePicture(PictureDTO pic)
+        public PictureDTO CreatePicture(PictureDTO pic)
         {
             service = Service.PictureService;
             return service.CreatePicture(pic);

@@ -194,7 +194,7 @@ namespace DataLayerLib
             CreateUserForm form = new CreateUserForm();
             if(form.ShowDialog() == DialogResult.OK)
             {
-                if (new DTOManagers.UserDTOManager().CreateUser(form.Username, form.Password))
+                if (new DTOManagers.UserDTOManager().CreateUser(form.Username, form.Password) != null)
                 {
                     MessageBox.Show("Kreiran user: " + form.Username);
                 }

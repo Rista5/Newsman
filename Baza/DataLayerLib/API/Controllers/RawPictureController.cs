@@ -18,6 +18,11 @@ namespace API.Controllers
         {        
             HttpResponseMessage Response = new HttpResponseMessage(HttpStatusCode.OK);
             byte[] picture = Service.RawPictureService.GetPicture(picId, newsId);
+            if (picture == null)
+            {
+                Response.StatusCode = HttpStatusCode.NoContent;
+                return Response;
+            }
             Response.Content = new ByteArrayContent(picture);
             Response.Content.Headers.ContentType = new System.Net.Http.Headers.MediaTypeHeaderValue("application/octet-stream");
             return Response;
@@ -57,7 +62,24 @@ namespace API.Controllers
                 return response;
             }
             byte[] pic = await msg.Content.ReadAsByteArrayAsync();
-            Service.RawPictureService.PutPicture(67, 18, pic);
+            Service.RawPictureService.PutPicture(picId, newsId, pic);
+            response.StatusCode = HttpStatusCode.OK;
+            return response;
+        }
+
+        [HttpPut]
+        [Route("api/picture/raw/")]
+        public async System.Threading.Tasks.Task<HttpResponseMessage> PutAsync(HttpRequestMessage msg, [FromUri]int picId)
+        {
+            HttpResponseMessage response = new HttpResponseMessage();
+            if (msg.Content.Headers.ContentType.MediaType != "application/octet-stream")
+            {
+                response.StatusCode = HttpStatusCode.UnsupportedMediaType;
+                return response;
+            }
+            int newsId = Service.PictureService.GetPictureById(picId).BelongsToNewsId;
+            byte[] pic = await msg.Content.ReadAsByteArrayAsync();
+            Service.RawPictureService.PutPicture(picId, newsId, pic);
             response.StatusCode = HttpStatusCode.OK;
             return response;
         }

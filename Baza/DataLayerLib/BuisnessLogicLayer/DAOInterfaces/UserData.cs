@@ -18,7 +18,9 @@ namespace BuisnessLogicLayer.DAOInterfaces
 
         UserDTO GetUser(int userId);
 
-        bool CreateUser(string username, string password);
+        UserWithPassword CreateUser(string username, string password);
+
+        UserWithPassword GetUser(string username, string password);
 
         UserDTO UpdateUser(int userId, string oldPassword,
             string newUsername, string newPassword);

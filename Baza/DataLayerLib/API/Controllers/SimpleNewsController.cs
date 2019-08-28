@@ -11,8 +11,8 @@ namespace API.Controllers
     public class SimpleNewsController : BaseController
     {
         [HttpGet]
-        [Route("api/News/{string}")]
-        public IEnumerable<SimpleNewsDTO> Get(string simple)
+        [Route("api/SimpleNews/")]
+        public IEnumerable<SimpleNewsDTO> Get()
         {
             return Service.NewsService.GetAllNewsSimple();
         }

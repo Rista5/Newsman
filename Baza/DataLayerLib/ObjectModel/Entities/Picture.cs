@@ -16,7 +16,7 @@ namespace ObjectModel.Entities
         public Picture() { }
         public Picture(int id, string name, string description, News belongsTo)
         {
-            Id = id;
+            Id = id<0 ? 0 : id;
             Name = name;
             Description = description;
             BelongsTo = belongsTo;

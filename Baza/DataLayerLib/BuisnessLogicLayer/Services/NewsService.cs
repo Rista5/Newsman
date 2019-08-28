@@ -45,48 +45,46 @@ namespace BuisnessLogicLayer.Services
         
 
         //This Shit needs testing
-        public bool CreateNews(NewsDTO news, int userId)
+        public NewsDTO CreateNews(NewsDTO news, int userId)
         {
-            bool result = false;
             NewsDTO dataResult = newsData.CreateNews(news, userId);
 
             if (news.BackgroundPicture != null)
             {
-                loader.SaveMedia(news.BackgroundPicture.Id, news.Id, news.BackgroundPicture.GetPictureBytes());
-                dataResult.BackgroundPicture = news.BackgroundPicture;
+                //loader.SaveMedia(news.BackgroundPicture.Id, news.Id, news.BackgroundPicture.GetPictureBytes());
+                dataResult.BackgroundPicture.PictureData = news.BackgroundPicture.PictureData;
             }
 
             //TODO ovo uopste ne izgleda dobro, ne znam kako bi bolje mogle da se ucitavaju slike
 
-            //for (int i = 0; i < news.Pictures.Count; i++)
-            //{
-            //    loader.SaveMedia(news.Pictures[i].Id, news.Id, news.Pictures[i].GetPictureBytes());
+            for (int i = 0; i < news.Pictures.Count; i++)
+            {
+                //loader.SaveMedia(news.Pictures[i].Id, news.Id, news.Pictures[i].GetPictureBytes());
 
-            //    PictureDTO dto = dataResult.Pictures[i];
-            //    dto.PictureData = news.Pictures[i].PictureData;
+                PictureDTO dto = dataResult.Pictures[i];
+                dto.PictureData = news.Pictures[i].PictureData;
 
-            //}
+            }
 
             if (dataResult!= null)
             {
                 MessageQueueManager manager = MessageQueueManager.Instance;
                 manager.PublishMessage(dataResult.Id, dataResult.Id, dataResult, MessageOperation.Insert);
-                result = true;
             }
 
-            return result;
+            return dataResult;
         }
         
-        public bool UpdateNews(SimpleNewsDTO simpleDTO, int userId)
+        public SimpleNewsDTO UpdateNews(SimpleNewsDTO simpleDTO, int userId)
         {
             bool result = false;
             SimpleNewsDTO dataResult = newsData.UpdateNews(simpleDTO, userId);
-            
-            //if (simpleDTO.BackgroundPicture != null)
-            //{
-            //    loader.SaveMedia(simpleDTO.BackgroundPicture.Id, simpleDTO.Id, simpleDTO.BackgroundPicture.GetPictureBytes());
-            //    dataResult.BackgroundPicture.PictureData = simpleDTO.BackgroundPicture.PictureData;
-            //}
+
+            if (simpleDTO.BackgroundPicture != null)
+            {
+                //loader.SaveMedia(simpleDTO.BackgroundPicture.Id, simpleDTO.Id, simpleDTO.BackgroundPicture.GetPictureBytes());
+                dataResult.BackgroundPicture.PictureData = simpleDTO.BackgroundPicture.PictureData;
+            }
 
             if (dataResult != null)
             {
@@ -94,7 +92,7 @@ namespace BuisnessLogicLayer.Services
                 manager.PublishMessage(dataResult.Id, dataResult.Id, dataResult, MessageOperation.Update);
                 result = true;
             }
-            return result;
+            return dataResult;
         }
         
         public bool DeleteNews(int newsId)

@@ -45,20 +45,17 @@ namespace BuisnessLogicLayer.Services
             return result;
         }
         
-        public bool CreatePicture(PictureDTO pic)
+        public PictureDTO CreatePicture(PictureDTO pic)
         {
-            bool resault = false;
             PictureDTO dataResult = pictureData.CreatePicture(pic);
             if (dataResult != null)
             {
-                loader.SaveMedia(dataResult.Id, dataResult.BelongsToNewsId, dataResult.GetPictureBytes());
+                //loader.SaveMedia(dataResult.Id, dataResult.BelongsToNewsId, dataResult.GetPictureBytes());
 
                 MessageQueueManager menager = MessageQueueManager.Instance;
                 menager.PublishMessage(dataResult.BelongsToNewsId, dataResult.Id, dataResult, MessageOperation.Insert);
-
-                resault = true;
             }
-            return resault;
+            return dataResult;
         }
         
         public bool DeletePicture(int id)
