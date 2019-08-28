@@ -89,15 +89,18 @@ public class DisplayNewsActivity extends AppCompatActivity {
         liveNews.observe(this, new Observer<News>() {
             @Override
             public void onChanged(@Nullable News news) {
+                if(news == null) return;
                 title.setText(news.getTitle());
                 postDate.setText(news.getLastModified().toString());
                 content.setText(news.getContent());
                 //TODO razmisli da li moze ovo bolje
-                if(news.getBackgroundId() != Constant.INVALID_PICTURE_ID){
-                    BitmapObserver observer = new BitmapObserver(background);
-                    Observable observable = BitmapCache.getInstance().getBitmap(getApplicationContext(), news.getBackgroundId(), news.getId());
-                    observable.addObserver(observer);
-                }
+//                BitmapCache.getInstance().loadPictureInCache(getApplicationContext(), news.getBackgroundId(),
+//                        news.getId(), news.getBackgroundOnDisc());
+//                if(news.getBackgroundId() != Constant.INVALID_PICTURE_ID){
+//                    BitmapObserver observer = new BitmapObserver(background);
+//                    Observable observable = BitmapCache.getInstance().getBitmap(getApplicationContext(), news.getBackgroundId(), news.getId());
+//                    observable.addObserver(observer);
+//                }
 //                    background.setImageBitmap(PictureLoader.loadPictureData(mContext, news.getBackgroundId()));
             }
         });

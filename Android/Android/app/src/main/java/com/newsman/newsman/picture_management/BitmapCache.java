@@ -101,16 +101,24 @@ public class BitmapCache {
 
     public void loadPicturesInCache(Context context, List<Picture> pictureList){
         for(Picture p : pictureList){
-            BitmapObservable observable = cache.get(p.getId());
-            if(p.getOnDisc() == Constant.PICTURE_ON_DISC && observable.getBitmap()==null){
-                new LoadPictureTask().execute(new InParam(p.getId(), p.getBelongsToNewsId(), context));
-            }
-            else if(p.getOnDisc() == Constant.PICRURE_NOT_ON_DISC ) {
-                getBitmapFromRest(context, p.getId(), p.getBelongsToNewsId());
-            }
+            loadPictureInCache(context, p.getId(), p.getBelongsToNewsId(), p.getOnDisc());
+//            BitmapObservable observable = cache.get(p.getId());
+//            if(p.getOnDisc() == Constant.PICTURE_ON_DISC && observable.getBitmap()==null){
+//                new LoadPictureTask().execute(new InParam(p.getId(), p.getBelongsToNewsId(), context));
+//            }
+//            else if(p.getOnDisc() == Constant.PICRURE_NOT_ON_DISC ) {
+//                getBitmapFromRest(context, p.getId(), p.getBelongsToNewsId());
+//            }
         }
     }
-//    public void updateBitmap(int pictureId, int newsId){
-//        getBitmapFromRest(pictureId,newsId);
-//    }
+
+    public void loadPictureInCache(Context context, int pictureId, int newsId, int onDisc) {
+        BitmapObservable observable = cache.get(pictureId);
+        if(onDisc == Constant.PICTURE_ON_DISC && observable.getBitmap()==null){
+            new LoadPictureTask().execute(new InParam(pictureId, newsId, context));
+        }
+        else if(onDisc == Constant.PICRURE_NOT_ON_DISC ) {
+            getBitmapFromRest(context, pictureId, newsId);
+        }
+    }
 }
