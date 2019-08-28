@@ -12,7 +12,9 @@ import android.widget.Toast;
 import com.newsman.newsman.auxiliary.Constant;
 import com.newsman.newsman.R;
 import com.newsman.newsman.auxiliary.TempObjectGenerator;
+import com.newsman.newsman.picture_management.BitmapCache;
 import com.newsman.newsman.rest_connection.ConnectionStrategy.Put;
+import com.newsman.newsman.rest_connection.ConnectionStrategy.PutNewsTest;
 import com.newsman.newsman.rest_connection.RestConnector;
 import com.newsman.newsman.rest_connection.WriteJson.WriteNews;
 import com.newsman.newsman.server_entities.News;
@@ -60,10 +62,11 @@ public class CreateNewsActivity extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 News news = createNews();
+                BitmapCache.getInstance().setBitmap(news.getBackgroundId(),news.getId(),backgroundPic);
                 if(!checkValidNews(news)) {
                     displayToast();
                 } else {
-                    new RestConnector(new Put(new WriteNews(news, backgroundPic)), Constant.createNewsRoute())
+                    new RestConnector(new PutNewsTest(getApplicationContext(), new WriteNews(news, backgroundPic)), Constant.createNewsRoute())
                             .execute();
                     finish();
                 }

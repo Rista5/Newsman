@@ -62,6 +62,7 @@ public class CommentsFragment extends Fragment {
     }
 
     private void displayCommentItems() {
+        //TODO Check null reference
         for(Comment c: commentList) {
             View view = getLayoutInflater().inflate(R.layout.comment_item, null);
             final TextView username = view.findViewById(R.id.comment_item_username);

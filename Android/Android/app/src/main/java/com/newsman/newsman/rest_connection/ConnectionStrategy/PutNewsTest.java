@@ -1,5 +1,6 @@
 package com.newsman.newsman.rest_connection.ConnectionStrategy;
 
+import android.content.Context;
 import android.util.JsonReader;
 import android.util.JsonWriter;
 
@@ -18,9 +19,12 @@ import java.net.HttpURLConnection;
 public class PutNewsTest extends ConnectionConsumer {
 
     private WriteJson jsonStrategyWriter;
-    public PutNewsTest(WriteJson jsonStrategyW) {
+    private Context context;
+
+    public PutNewsTest(Context context, WriteJson jsonStrategyW) {
         super(new JsonParam());
         this.jsonStrategyWriter = jsonStrategyW;
+        this.context = context;
     }
 
     public void useConnection(HttpURLConnection connection) throws IOException {
@@ -39,6 +43,7 @@ public class PutNewsTest extends ConnectionConsumer {
 
             ReadJson readJson = ReadPrototype.getInstance().GetReader(jsonStrategyWriter.getClass());
             readJson.readJson(jsonReader);
+            readJson.updateDB(context);
             jsonReader.close();
         }
     }

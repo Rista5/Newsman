@@ -113,13 +113,15 @@ public class CreatePictureActivity extends AppCompatActivity {
         bundle.putString("Description", picture.getDescription());
         bundle.putInt("BelongsToNewsId", picture.getBelongsToNewsId());
         bundle.putString("FileName", Constant.PICTURE_TRASPORT);
-        FileOutputStream stream = null;
-        try {
-            stream = openFileOutput(Constant.PICTURE_TRASPORT, Context.MODE_PRIVATE);
-            picture.getPictureData().compress(Bitmap.CompressFormat.PNG, 100, stream);
-        } catch (FileNotFoundException e) {
-            e.printStackTrace();
-        }
+//        FileOutputStream stream = null;
+//        try {
+//            stream = openFileOutput(Constant.PICTURE_TRASPORT, Context.MODE_PRIVATE);
+//            picture.getPictureData().compress(Bitmap.CompressFormat.PNG, 100, stream);
+//        } catch (FileNotFoundException e) {
+//            e.printStackTrace();
+//        }
+        //TODO REVIEW if this is correct
+        BitmapCache.getInstance().setBitmap(picture.getId(),picture.getBelongsToNewsId(),picture.getPictureData());
         return bundle;
     }
 

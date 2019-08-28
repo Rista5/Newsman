@@ -69,8 +69,8 @@ public abstract class PictureDao {
 
     public void insertPictureWithLoader(Context context, Picture picture) {
         insertPicture(picture);
-        Bitmap bmp = picture.getPictureData();
-        PictureLoader.savePictureData(context, picture.getId(), bmp);
+//        Bitmap bmp = picture.getPictureData();
+//        PictureLoader.savePictureData(context, picture.getId(), bmp);
     }
 
     @Update(onConflict = OnConflictStrategy.REPLACE)

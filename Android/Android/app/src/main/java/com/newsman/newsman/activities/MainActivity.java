@@ -7,6 +7,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.os.Handler;
+import android.os.Looper;
 import android.os.Message;
 import android.provider.MediaStore;
 import androidx.annotation.Nullable;
@@ -17,6 +18,7 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.ImageView;
 
+import com.newsman.newsman.picture_management.BitmapCache;
 import com.newsman.newsman.thread_management.AppExecutors;
 import com.newsman.newsman.auxiliary.Constant;
 import com.newsman.newsman.auxiliary.PictureLoader;
@@ -247,5 +249,13 @@ public class MainActivity extends AppCompatActivity {
         PictureLoader.savePictureData(this, id, bmp);
         Bitmap res = PictureLoader.loadPictureData(this, id);
         mImageView.setImageBitmap(res);
+    }
+
+    public static Handler UIHandler;
+    static {
+        UIHandler = new Handler(Looper.getMainLooper());
+    }
+    public static void runOnUI(Runnable run){
+        UIHandler.post(run);
     }
 }
