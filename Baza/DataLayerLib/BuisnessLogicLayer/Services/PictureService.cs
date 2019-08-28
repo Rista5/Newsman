@@ -81,5 +81,27 @@ namespace BuisnessLogicLayer.Services
             }
             return resault;
         }
+
+        public bool UpdatePicture(int picId, int newsId, byte[] data)
+        {
+            bool result = false;
+            if(loader.SaveMedia(picId, newsId, data))
+            {
+                MessageQueueManager manager = MessageQueueManager.Instance;
+                manager.PublishMessage(newsId, picId, new PictureUpdateObject()
+                {
+                    PictureId = picId,
+                    NewsId = newsId
+                }, MessageOperation.RawPictureUpdate);
+                result = true;
+            }
+            return result;
+        }
+    }
+
+    class PictureUpdateObject
+    {
+        public int PictureId { get; set; }
+        public int NewsId { get; set; }
     }
 }

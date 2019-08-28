@@ -82,6 +82,8 @@ namespace BuisnessLogicLayer
                     break;
                 case MessageOperation.Delete: result += "Delete.";
                     break;
+                case MessageOperation.RawPictureUpdate: result += "RawPictureUpdate.";
+                    break;
                 default: result += "Update.";
                     break;
             }
@@ -103,5 +105,6 @@ namespace BuisnessLogicLayer
         Insert = 0,
         Update = 1,
         Delete = 2,
+        RawPictureUpdate = 4
     }
 }
