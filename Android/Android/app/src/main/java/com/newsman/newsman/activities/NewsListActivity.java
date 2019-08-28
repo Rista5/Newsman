@@ -21,6 +21,7 @@ import android.view.MenuItem;
 import com.newsman.newsman.auxiliary.Constant;
 import com.newsman.newsman.auxiliary.PictureLoader;
 import com.newsman.newsman.database.AppDatabase;
+import com.newsman.newsman.picture_management.BitmapCache;
 import com.newsman.newsman.server_entities.News;
 import com.newsman.newsman.R;
 import com.newsman.newsman.server_entities.SimpleNews;
@@ -88,6 +89,8 @@ public class NewsListActivity extends AppCompatActivity implements LoaderManager
                 List<SimpleNews> simpleNews = new ArrayList<>(news.size());
                 for(News n: news) {
                     simpleNews.add(SimpleNews.getSimpleNews(n, getApplicationContext()));
+                    BitmapCache.getInstance().loadPictureInCache(getApplicationContext(),
+                            n.getBackgroundId(), n.getId(), n.getBackgroundOnDisc());
                 }
                 adapter.setNewsList(simpleNews);
 //                createLoader(news);

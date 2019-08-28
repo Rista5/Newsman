@@ -26,6 +26,7 @@ public class News implements Serializable, Parcelable {
     private String content;
     private Date lastModified;
     private int backgroundId;
+    private int backgroundOnDisc;
     private int subscribed;
     private int modifierId;
     private String modifierUsername;
@@ -44,6 +45,7 @@ public class News implements Serializable, Parcelable {
         pictures = new ArrayList<>();
         audioRecordings = new ArrayList<>();
         subscribed = Constant.UNSUBSCRIBED;
+        backgroundOnDisc = Constant.PICRURE_NOT_ON_DISC;
     }
 
     @Ignore
@@ -59,6 +61,7 @@ public class News implements Serializable, Parcelable {
         this.subscribed = Constant.UNSUBSCRIBED;
         this.modifierId = modifierId;
         this.modifierUsername = modifierUsername;
+        backgroundOnDisc = Constant.PICRURE_NOT_ON_DISC;
     }
 
     protected News(Parcel in) {
@@ -71,6 +74,7 @@ public class News implements Serializable, Parcelable {
         subscribed = in.readInt();
         modifierId = in.readInt();
         modifierUsername = in.readString();
+        backgroundOnDisc = in.readInt();
     }
 
     public static final Creator<News> CREATOR = new Creator<News>() {
@@ -101,6 +105,7 @@ public class News implements Serializable, Parcelable {
         dest.writeInt(subscribed);
         dest.writeInt(modifierId);
         dest.writeString(modifierUsername);
+        dest.writeInt(backgroundOnDisc);
     }
 
     public int getId() {
@@ -197,5 +202,13 @@ public class News implements Serializable, Parcelable {
 
     public void setModifierUsername(String modifierUsername) {
         this.modifierUsername = modifierUsername;
+    }
+
+    public int getBackgroundOnDisc() {
+        return backgroundOnDisc;
+    }
+
+    public void setBackgroundOnDisc(int backgroundOnDisc) {
+        this.backgroundOnDisc = backgroundOnDisc;
     }
 }

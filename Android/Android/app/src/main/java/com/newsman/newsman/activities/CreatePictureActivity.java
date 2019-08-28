@@ -140,8 +140,7 @@ public class CreatePictureActivity extends AppCompatActivity {
         int id = BitmapCache.getNonValidIdentifier();
         String name = nameEditText.getText().toString();
         String description = descriptionEditText.getText().toString();
-        BitmapCache.getInstance().setBitmap(id, newsId, pictureBitmap);
-        //TODO ovde bitmap ne treba da se koristi
+
         return new Picture(id, name, description, newsId, pictureBitmap);
     }
 
