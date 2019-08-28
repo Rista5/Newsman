@@ -13,7 +13,6 @@ import org.json.JSONObject;
 public class UpdateComment extends DBUpdate {
 
     private Comment comment;
-    private UpdateUser updateUser;
 
     UpdateComment(MessageInfo info, Context context) throws JSONException {
         super(info, context);
@@ -26,11 +25,9 @@ public class UpdateComment extends DBUpdate {
     public void update() {
         switch (messageInfo.getOperation()) {
             case MQClient.opInsert:
-                updateUser.update();
                 AppDatabase.getInstance(mContext).commentDao().insertComment(comment);
                 break;
             case MQClient.opUpdate:
-                updateUser.update();
                 AppDatabase.getInstance(mContext).commentDao().updateComment(comment);
                 break;
             case MQClient.opDelete:

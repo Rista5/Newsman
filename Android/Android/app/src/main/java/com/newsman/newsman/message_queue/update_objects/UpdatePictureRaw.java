@@ -4,6 +4,7 @@ import android.content.Context;
 
 import com.newsman.newsman.message_queue.MQClient;
 import com.newsman.newsman.message_queue.MessageInfo;
+import com.newsman.newsman.picture_management.BitmapCache;
 
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -26,6 +27,7 @@ public class UpdatePictureRaw extends DBUpdate{
     public void update() {
         switch (messageInfo.getOperation()){
             case MQClient.opRawPitctureUpdate:
+                BitmapCache.getInstance().updateBitmap(mContext,pictureId,newsId);
                 break;
         }
     }

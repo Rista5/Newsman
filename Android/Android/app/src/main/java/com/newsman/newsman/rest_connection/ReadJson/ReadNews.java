@@ -41,10 +41,10 @@ public class ReadNews extends ReadJson {
             commentDao.insertComment(c);
         }
         for(Picture p: news.getPictures()) {
-            if(p.getPictureData()!=null)
-                pictureDao.insertPictureWithLoader(context, p);
-            else
-                Log.d("delete picture", p.getId() +"    " +p.getName());
+//            if(p.getPictureData()!=null)
+            pictureDao.insertPictureWithLoader(context, p);
+//            else
+//                Log.d("delete picture", p.getId() +"    " +p.getName());
         }
     }
 

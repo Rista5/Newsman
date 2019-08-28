@@ -122,6 +122,9 @@ public class DisplayNewsActivity extends AppCompatActivity {
         LiveData<List<Picture>> livePictres = AppDatabase.getInstance(this).pictureDao()
                 .getPicturesForNews(newsId);
         final Context mContext = this;
+
+//
+
         livePictres.observe(this, new Observer<List<Picture>>() {
             @Override
             public void onChanged(@Nullable List<Picture> pictures) {
@@ -142,7 +145,9 @@ public class DisplayNewsActivity extends AppCompatActivity {
     }
 
     private void inflatePicturesFragment() {
+//        List<Picture> pictures = AppDatabase.getInstance(this).pictureDao().getPicturesForNewsNonLive(newsId);
         picturesFragment = PicturesFragment.newInstance(newsId, new ArrayList<Picture>(), true);
+//        picturesFragment = PicturesFragment.newInstance(newsId, pictures, true);
         FragmentManager fragmentManager = getSupportFragmentManager();
         fragmentManager.beginTransaction()
                 .add(R.id.news_item_pictures_fragment, picturesFragment)

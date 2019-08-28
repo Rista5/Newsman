@@ -41,12 +41,16 @@ public class BitmapCache {
 
     public void setBitmap(int pictureId, int newsId, Bitmap bitmap){
         BitmapObservable cachedBitmap = cache.get(pictureId);
-        if(cachedBitmap != null)
+        if(cachedBitmap != null) {
             cachedBitmap.setBitmap(bitmap);
+            if(bitmap == null)
+                getBitmapFromRest(null,pictureId,newsId);
+        }
         else {
             cachedBitmap = new BitmapObservable();
             cachedBitmap.setBitmap(bitmap);
             cachedBitmap.setNewsId(newsId);
+            cache.put(pictureId,cachedBitmap);
         }
 
     }
@@ -75,11 +79,16 @@ public class BitmapCache {
 
             return cachedBitmap;
         }
-        else
+        else{
+            if(cachedBitmap.getBitmap() == null)
+                getBitmapFromRest(context,picId,newsId);
             return cachedBitmap;
+        }
     }
 
     private void getBitmapFromRest(Context context, int picId, int newsId) {
+        if(picId<=0)
+            return;
         new RestConnector(new GetBitmap(picId, newsId, context), Constant.getRawPictureRoute(picId,newsId))
                 .execute();
     }
@@ -90,6 +99,7 @@ public class BitmapCache {
     }
 
     public void putBitmapsCreateNews(List<Integer> oldId, List<Integer> newId, int newsId){
+        //TODO background image se ne salje. Why is that?
         for(int i=0;i<oldId.size();i++){
             BitmapObservable bmp = cache.get(oldId.get(i));
             bmp.setNewsId(newsId);
@@ -101,24 +111,17 @@ public class BitmapCache {
 
     public void loadPicturesInCache(Context context, List<Picture> pictureList){
         for(Picture p : pictureList){
-            loadPictureInCache(context, p.getId(), p.getBelongsToNewsId(), p.getOnDisc());
-//            BitmapObservable observable = cache.get(p.getId());
-//            if(p.getOnDisc() == Constant.PICTURE_ON_DISC && observable.getBitmap()==null){
-//                new LoadPictureTask().execute(new InParam(p.getId(), p.getBelongsToNewsId(), context));
-//            }
-//            else if(p.getOnDisc() == Constant.PICRURE_NOT_ON_DISC ) {
-//                getBitmapFromRest(context, p.getId(), p.getBelongsToNewsId());
-//            }
+            BitmapObservable observable = cache.get(p.getId());
+            if(p.getOnDisc() == Constant.PICTURE_ON_DISC && observable.getBitmap()==null){
+                new LoadPictureTask().execute(new InParam(p.getId(), p.getBelongsToNewsId(), context));
+            }
+            else if(p.getOnDisc() == Constant.PICRURE_NOT_ON_DISC ) {
+                getBitmapFromRest(context, p.getId(), p.getBelongsToNewsId());
+            }
         }
     }
 
-    public void loadPictureInCache(Context context, int pictureId, int newsId, int onDisc) {
-        BitmapObservable observable = cache.get(pictureId);
-        if(onDisc == Constant.PICTURE_ON_DISC && observable.getBitmap()==null){
-            new LoadPictureTask().execute(new InParam(pictureId, newsId, context));
-        }
-        else if(onDisc == Constant.PICRURE_NOT_ON_DISC ) {
-            getBitmapFromRest(context, pictureId, newsId);
-        }
+    public void updateBitmap(Context context, int pictureId, int newsId){
+        getBitmapFromRest(context,pictureId,newsId);
     }
 }

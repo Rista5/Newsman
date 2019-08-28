@@ -15,6 +15,7 @@ import android.widget.TextView;
 import com.newsman.newsman.auxiliary.Constant;
 import com.newsman.newsman.auxiliary.PictureConverter;
 import com.newsman.newsman.picture_management.BitmapCache;
+import com.newsman.newsman.picture_management.BitmapConsumer;
 import com.newsman.newsman.picture_management.BitmapObserver;
 import com.newsman.newsman.rest_connection.ConnectionStrategy.Delete;
 import com.newsman.newsman.rest_connection.ConnectionStrategy.Post;
@@ -53,9 +54,12 @@ public class PicturesListAdapter extends RecyclerView.Adapter<PicturesListAdapte
         Picture pictureItem = pictureList.get(position);
         newsImageViewHolder.title.setText(pictureItem.getName());
         //TODO razmisli da li moze ovo bolje
-        BitmapObserver observer = new BitmapObserver(newsImageViewHolder.imageView);
-        Observable observable = BitmapCache.getInstance().getBitmap(context, pictureItem.getId(), pictureItem.getBelongsToNewsId());
-        observable.addObserver(observer);
+//        BitmapObserver observer = new BitmapObserver(newsImageViewHolder.imageView);
+//        Observable observable = BitmapCache.getInstance().getBitmap(context, pictureItem.getId(), pictureItem.getBelongsToNewsId());
+//        observable.addObserver(observer);
+          BitmapConsumer observer = new BitmapConsumer(newsImageViewHolder.imageView);
+          Observable observable = BitmapCache.getInstance().getBitmap(context, pictureItem.getId(), pictureItem.getBelongsToNewsId());
+          observable.addObserver(observer);
 
 //        if(pictureItem.getPictureData() != null)
 //            newsImageViewHolder.imageView.setImageBitmap(pictureItem.getPictureData());

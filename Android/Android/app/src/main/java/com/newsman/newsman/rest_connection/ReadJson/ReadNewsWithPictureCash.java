@@ -1,10 +1,8 @@
 package com.newsman.newsman.rest_connection.ReadJson;
 
-import android.app.Activity;
+import android.app.Application;
 import android.content.Context;
 import android.util.JsonReader;
-
-import androidx.appcompat.app.AppCompatActivity;
 
 import com.newsman.newsman.activities.MainActivity;
 import com.newsman.newsman.picture_management.BitmapCache;

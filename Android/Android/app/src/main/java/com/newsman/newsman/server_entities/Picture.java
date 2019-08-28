@@ -146,4 +146,8 @@ public class Picture implements Parcelable {
     public int getOnDisc() {
         return onDisc;
     }
+
+    public void setOnDisc(int onDisc) {
+        this.onDisc = onDisc;
+    }
 }
