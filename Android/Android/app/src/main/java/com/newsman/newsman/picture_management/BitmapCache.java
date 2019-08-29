@@ -109,6 +109,19 @@ public class BitmapCache {
         }
     }
 
+    public void putBitmap(int oldPictureId,int newPictureId, int newsId){
+        BitmapObservable bmp = cache.get(oldPictureId);
+        if(oldPictureId != newPictureId){
+            cache.remove(oldPictureId);
+            cache.put(newPictureId,bmp);
+        }
+        else{
+
+        }
+
+        this.putBitmapToRest(pictureId,newsId,bmp);
+    }
+
     public void loadPicturesInCache(Context context, List<Picture> pictureList){
         for(Picture p : pictureList){
             BitmapObservable observable = cache.get(p.getId());

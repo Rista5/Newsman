@@ -31,12 +31,12 @@ class JsonSerializer {
 
     static void writeComment(JsonWriter jsonWriter, Comment comment) throws IOException {
         jsonWriter.beginObject();
-        //jsonWriter.name("Id").value(comment.getId());
-        jsonWriter.name("CreatedBy").value(comment.getCreatedById());
-        //writeUser(jsonWriter, comment.getCreatedById(), comment.getUsername());
+        jsonWriter.name("Id").value(comment.getId());
+        jsonWriter.name("CreatedBy");
+        writeUser(jsonWriter, comment.getCreatedById(), comment.getUsername());
         jsonWriter.name("Content").value(comment.getContent());
         jsonWriter.name("BelongsToNewsId").value(comment.getBelongsToNewsId());
-        //jsonWriter.name("PostDate").value(comment.getPostDate().toString());
+        jsonWriter.name("PostDate").value(comment.getPostDate().toString());
         jsonWriter.endObject();
     }
 
