@@ -11,7 +11,7 @@ import java.io.IOException;
 
 public class ReadSimpleNews extends ReadJson {
 
-    private SimpleNews news;
+    protected SimpleNews news;
 
     @Override
     public void readJson(JsonReader jsonReader) throws IOException {
