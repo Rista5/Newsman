@@ -13,8 +13,7 @@ import com.newsman.newsman.auxiliary.Constant;
 import com.newsman.newsman.R;
 import com.newsman.newsman.auxiliary.TempObjectGenerator;
 import com.newsman.newsman.picture_management.BitmapCache;
-import com.newsman.newsman.rest_connection.ConnectionStrategy.Put;
-import com.newsman.newsman.rest_connection.ConnectionStrategy.PutNewsTest;
+import com.newsman.newsman.rest_connection.ConnectionStrategy.PutAndGet;
 import com.newsman.newsman.rest_connection.RestConnector;
 import com.newsman.newsman.rest_connection.WriteJson.WriteNews;
 import com.newsman.newsman.server_entities.News;
@@ -24,7 +23,6 @@ import com.newsman.newsman.fragments.CreateNewsFragment;
 import com.newsman.newsman.fragments.PicturesFragment;
 
 import java.util.ArrayList;
-import java.util.Date;
 import java.util.List;
 
 public class CreateNewsActivity extends AppCompatActivity {
@@ -66,7 +64,7 @@ public class CreateNewsActivity extends AppCompatActivity {
                 if(!checkValidNews(news)) {
                     displayToast();
                 } else {
-                    new RestConnector(new PutNewsTest(getApplicationContext(), new WriteNews(news, backgroundPic)), Constant.createNewsRoute())
+                    new RestConnector(new PutAndGet(getApplicationContext(), new WriteNews(news, backgroundPic)), Constant.createNewsRoute())
                             .execute();
                     finish();
                 }

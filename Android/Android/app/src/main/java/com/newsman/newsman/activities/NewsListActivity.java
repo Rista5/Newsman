@@ -89,8 +89,8 @@ public class NewsListActivity extends AppCompatActivity implements LoaderManager
                 List<SimpleNews> simpleNews = new ArrayList<>(news.size());
                 for(News n: news) {
                     simpleNews.add(SimpleNews.getSimpleNews(n, getApplicationContext()));
-                    BitmapCache.getInstance().loadPictureInCache(getApplicationContext(),
-                            n.getBackgroundId(), n.getId(), n.getBackgroundOnDisc());
+//                    BitmapCache.getInstance().loadPictureInCache(getApplicationContext(),
+//                            n.getBackgroundId(), n.getId(), n.getBackgroundOnDisc());
                 }
                 adapter.setNewsList(simpleNews);
 //                createLoader(news);

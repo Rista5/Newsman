@@ -44,7 +44,7 @@ public class MQClient implements Runnable {
     @Override
     public void run() {
         try{
-            while(!Thread.interrupted()){
+//            while(!Thread.interrupted()){
                 try {
                     connection = factory.newConnection();
                     channel = connection.createChannel();
@@ -53,16 +53,16 @@ public class MQClient implements Runnable {
                     bindChannelTopic(channel, q.getQueue());
                     channel.basicConsume(q.getQueue(),true,
                             new NewsUpdateConsumer(channel, context));
-                    while(!Thread.interrupted()){
-                        Thread.sleep(5000);
-                    }
+//                    while(!Thread.interrupted()){
+//                        Thread.sleep(5000);
+//                    }
                 } catch (IOException e) {
                     e.printStackTrace();
                 } catch (TimeoutException e) {
                     e.printStackTrace();
                 }
-            }
-        }catch (InterruptedException e) {
+//            }
+        }catch (Exception e) {
             e.printStackTrace();
             if(connection != null && connection.isOpen()){
                 try {

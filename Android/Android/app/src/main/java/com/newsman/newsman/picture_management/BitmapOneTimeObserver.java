@@ -6,11 +6,11 @@ import android.widget.ImageView;
 import java.util.Observable;
 import java.util.Observer;
 
-public class BitmapConsumer implements Observer {
+public class BitmapOneTimeObserver implements Observer {
     private ImageView imageView;
 
-    private BitmapConsumer() {}
-    public BitmapConsumer(ImageView imageView)
+    private BitmapOneTimeObserver() {}
+    public BitmapOneTimeObserver(ImageView imageView)
     {
         this.imageView = imageView;
     }

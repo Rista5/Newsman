@@ -55,4 +55,11 @@ dependencies {
     //work manager
     def work_version = '2.2.0'
     implementation "androidx.work:work-runtime:$work_version"
+
+    //gson, json serializator
+    implementation 'com.google.code.gson:gson:2.8.5'
+
+    //retorfit, api client
+    implementation 'com.squareup.retrofit2:retrofit:2.6.1'
+    implementation 'com.squareup.retrofit2:converter-gson:2.6.1'
 }

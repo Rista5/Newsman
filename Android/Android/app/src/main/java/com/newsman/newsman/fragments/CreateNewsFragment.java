@@ -16,8 +16,7 @@ import android.widget.ImageView;
 import com.newsman.newsman.auxiliary.PictureLoader;
 import com.newsman.newsman.R;
 import com.newsman.newsman.picture_management.BitmapCache;
-import com.newsman.newsman.picture_management.BitmapConsumer;
-import com.newsman.newsman.picture_management.BitmapObserver;
+import com.newsman.newsman.picture_management.BitmapOneTimeObserver;
 import com.newsman.newsman.server_entities.SimpleNews;
 
 public class CreateNewsFragment extends Fragment {
@@ -54,7 +53,7 @@ public class CreateNewsFragment extends Fragment {
 //        backgroundImage.setImageBitmap(news.getBackgroundPicture());
 //        BitmapObserver observer = new BitmapObserver(backgroundImage);
 //        BitmapCache.getInstance().getBitmap(getContext(), news.getBackgroundId(), news.getId()).addObserver(observer);
-        BitmapConsumer consumer = new BitmapConsumer(backgroundImage);
+        BitmapOneTimeObserver consumer = new BitmapOneTimeObserver(backgroundImage);
         BitmapCache.getInstance().getBitmap(getContext(),news.getBackgroundId(),news.getId()).addObserver(consumer);
     }
 

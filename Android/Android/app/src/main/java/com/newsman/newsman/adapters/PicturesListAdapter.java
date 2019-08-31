@@ -15,8 +15,7 @@ import android.widget.TextView;
 import com.newsman.newsman.auxiliary.Constant;
 import com.newsman.newsman.auxiliary.PictureConverter;
 import com.newsman.newsman.picture_management.BitmapCache;
-import com.newsman.newsman.picture_management.BitmapConsumer;
-import com.newsman.newsman.picture_management.BitmapObserver;
+import com.newsman.newsman.picture_management.BitmapOneTimeObserver;
 import com.newsman.newsman.rest_connection.ConnectionStrategy.Delete;
 import com.newsman.newsman.rest_connection.ConnectionStrategy.Post;
 import com.newsman.newsman.rest_connection.ConnectionStrategy.Put;
@@ -57,7 +56,7 @@ public class PicturesListAdapter extends RecyclerView.Adapter<PicturesListAdapte
 //        BitmapObserver observer = new BitmapObserver(newsImageViewHolder.imageView);
 //        Observable observable = BitmapCache.getInstance().getBitmap(context, pictureItem.getId(), pictureItem.getBelongsToNewsId());
 //        observable.addObserver(observer);
-          BitmapConsumer observer = new BitmapConsumer(newsImageViewHolder.imageView);
+          BitmapOneTimeObserver observer = new BitmapOneTimeObserver(newsImageViewHolder.imageView);
           Observable observable = BitmapCache.getInstance().getBitmap(context, pictureItem.getId(), pictureItem.getBelongsToNewsId());
           observable.addObserver(observer);
 

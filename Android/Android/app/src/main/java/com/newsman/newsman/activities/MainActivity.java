@@ -18,14 +18,19 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.ImageView;
 
-import com.newsman.newsman.picture_management.BitmapCache;
+import com.google.gson.FieldNamingPolicy;
+import com.google.gson.Gson;
+import com.google.gson.GsonBuilder;
+import com.newsman.newsman.message_queue.MQClient;
+import com.newsman.newsman.new_rest.CommentDTO;
+import com.newsman.newsman.new_rest.CommentService;
+import com.newsman.newsman.server_entities.Comment;
 import com.newsman.newsman.thread_management.AppExecutors;
 import com.newsman.newsman.auxiliary.Constant;
 import com.newsman.newsman.auxiliary.PictureLoader;
 import com.newsman.newsman.database.AppDatabase;
 import com.newsman.newsman.R;
 import com.newsman.newsman.rest_connection.ConnectionStrategy.Get;
-import com.newsman.newsman.rest_connection.ConnectionStrategy.OutStreamConn;
 import com.newsman.newsman.rest_connection.ReadJson.ReadComposite;
 import com.newsman.newsman.rest_connection.ReadJson.ReadNews;
 import com.newsman.newsman.rest_connection.RestConnector;
@@ -33,8 +38,15 @@ import com.newsman.newsman.server_entities.News;
 import com.newsman.newsman.server_entities.Picture;
 import com.newsman.newsman.thread_management.SubscriptionService;
 
+import java.io.IOException;
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
+
+import retrofit2.Call;
+import retrofit2.Response;
+import retrofit2.Retrofit;
+import retrofit2.converter.gson.GsonConverterFactory;
 
 public class MainActivity extends AppCompatActivity {
 
@@ -87,7 +99,7 @@ public class MainActivity extends AppCompatActivity {
         mRestPictureButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                getPictureRest();
+                testMq();
             }
         });
         mTestUpdate = findViewById(R.id.test_update_activity);
@@ -221,27 +233,59 @@ public class MainActivity extends AppCompatActivity {
         return p;
     }
 
-    private void getPictureRest() {
-//        new RestConnector(new Get(this, new ReadPicture()), Constant.PICTURE_ROUTE+10);
-//        LiveData<Picture> livePicture = AppDatabase.getInstance(this).pictureDao().getPicture(10);
-//        livePicture.observe(this, new Observer<Picture>() {
-//            @Override
-//            public void onChanged(@Nullable Picture picture) {
-//                if(picture!=null) {
-//                    Bitmap bmp = picture.getPictureData();
-//                    mImageView.setImageBitmap(bmp);
-//                }
-//            }
-//        });
-        Bitmap bmp = PictureLoader.loadPictureData(this, 37);
-        mImageView.setImageBitmap(bmp);
-        new RestConnector(new OutStreamConn(bmp), testRoute).execute();
+    private void testMq() {
+        int[] subs = new int[100];
+        for(int i=0; i< 100; i++)
+            subs[i] = i+1;
+        new Thread(new MQClient(Constant.getIpAddress(), this, subs), "TEST_THREAD");
     }
 
     private void testPictureSave(){
-//        PictureLoader.loadPictureFromGallery(this);
-        Bitmap bmp = PictureLoader.loadPictureData(this, PICTURE_ID);
-        mImageView.setImageBitmap(bmp);
+//        Gson gson = new GsonBuilder()
+//                .setFieldNamingPolicy(FieldNamingPolicy.UPPER_CAMEL_CASE).create();
+//        String commentJson = gson.toJson(genNews());
+//        Log.d("GSON josn", commentJson);
+//        News n = gson.fromJson(commentJson, News.class);
+//        Log.d("Comment", "id= "+c.getId()+", content= "+c.getContent()+ ",username= "+c.getUsername()+", postDate= "+c.getPostDate().toString());
+        Retrofit retrofit = new Retrofit.Builder()
+                .baseUrl("http://" + Constant.getIpAddress() + ":52752/api/")
+                .addConverterFactory(GsonConverterFactory
+                        .create(new GsonBuilder().setFieldNamingPolicy(FieldNamingPolicy.UPPER_CAMEL_CASE).create()))
+                .build();
+        CommentService service = retrofit.create(CommentService.class);
+        Call<List<CommentDTO>> comments = service.getAllComments();
+        new Thread(() -> {
+            Response<List<CommentDTO>> res = null;
+            try {
+                res = comments.execute();
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+            List<CommentDTO> body = res.body();
+        }).start();
+
+    }
+
+    private News genNews() {
+        News n= new News();
+        n.setId(0);
+        n.setTitle("Title");
+        List<Comment> coms = new ArrayList<>();
+        coms.add(genComment());
+        coms.add(genComment());
+        n.setComments(coms);
+        n.setContent("COTNENT");
+        return n;
+    }
+
+    private Comment genComment() {
+        Comment c= new Comment();
+        c.setId(0);
+        c.setCreatedById(3);
+        c.setContent("Contentntntntnt");
+        c.setPostDate(new Date());
+        c.setUsername("Neki user");
+        return c;
     }
 
     private void savePicture(Bitmap bmp) {

@@ -109,28 +109,22 @@ public class BitmapCache {
         }
     }
 
-    public void putBitmap(int oldPictureId,int newPictureId, int newsId){
+    //TODO fix this, ako treba
+    public void putBitmap(int oldPictureId, int newPictureId, int newsId){
         BitmapObservable bmp = cache.get(oldPictureId);
         if(oldPictureId != newPictureId){
             cache.remove(oldPictureId);
             cache.put(newPictureId,bmp);
         }
-        else{
+        else {
 
         }
-
-        this.putBitmapToRest(pictureId,newsId,bmp);
+//        this.putBitmapToRest(newPictureId,newsId, bmp);
     }
 
     public void loadPicturesInCache(Context context, List<Picture> pictureList){
         for(Picture p : pictureList){
             BitmapObservable observable = cache.get(p.getId());
-            if(p.getOnDisc() == Constant.PICTURE_ON_DISC && observable.getBitmap()==null){
-                new LoadPictureTask().execute(new InParam(p.getId(), p.getBelongsToNewsId(), context));
-            }
-            else if(p.getOnDisc() == Constant.PICRURE_NOT_ON_DISC ) {
-                getBitmapFromRest(context, p.getId(), p.getBelongsToNewsId());
-            }
         }
     }
 

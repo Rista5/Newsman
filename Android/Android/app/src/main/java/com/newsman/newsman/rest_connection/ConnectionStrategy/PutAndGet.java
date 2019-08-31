@@ -16,12 +16,12 @@ import java.io.OutputStream;
 import java.io.OutputStreamWriter;
 import java.net.HttpURLConnection;
 
-public class PutNewsTest extends ConnectionConsumer {
+public class PutAndGet extends ConnectionConsumer {
 
     private WriteJson jsonStrategyWriter;
     private Context context;
 
-    public PutNewsTest(Context context, WriteJson jsonStrategyW) {
+    public PutAndGet(Context context, WriteJson jsonStrategyW) {
         super(new JsonParam());
         this.jsonStrategyWriter = jsonStrategyW;
         this.context = context;
