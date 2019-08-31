@@ -22,7 +22,9 @@ import com.google.gson.FieldNamingPolicy;
 import com.google.gson.GsonBuilder;
 import com.newsman.newsman.message_queue.MQClient;
 import com.newsman.newsman.new_rest.dtos.CommentDTO;
+import com.newsman.newsman.new_rest.dtos.NewsDTO;
 import com.newsman.newsman.new_rest.retrofit_services.CommentService;
+import com.newsman.newsman.new_rest.retrofit_services.NewsService;
 import com.newsman.newsman.server_entities.Comment;
 import com.newsman.newsman.thread_management.AppExecutors;
 import com.newsman.newsman.auxiliary.Constant;
@@ -253,14 +255,18 @@ public class MainActivity extends AppCompatActivity {
                 .build();
         CommentService service = retrofit.create(CommentService.class);
         Call<List<CommentDTO>> comments = service.getAllComments();
+
+        NewsService newsService = retrofit.create(NewsService.class);
+        Call<NewsDTO> news = newsService.getNewsById(18);
+
         new Thread(() -> {
-            Response<List<CommentDTO>> res = null;
+            Response<NewsDTO> res = null;
             try {
-                res = comments.execute();
+                res = news.execute();
             } catch (IOException e) {
                 e.printStackTrace();
             }
-            List<CommentDTO> body = res.body();
+            NewsDTO body = res.body();
         }).start();
 
     }
