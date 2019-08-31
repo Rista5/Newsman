@@ -19,11 +19,10 @@ import android.widget.Button;
 import android.widget.ImageView;
 
 import com.google.gson.FieldNamingPolicy;
-import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import com.newsman.newsman.message_queue.MQClient;
-import com.newsman.newsman.new_rest.CommentDTO;
-import com.newsman.newsman.new_rest.CommentService;
+import com.newsman.newsman.new_rest.dtos.CommentDTO;
+import com.newsman.newsman.new_rest.retrofit_services.CommentService;
 import com.newsman.newsman.server_entities.Comment;
 import com.newsman.newsman.thread_management.AppExecutors;
 import com.newsman.newsman.auxiliary.Constant;

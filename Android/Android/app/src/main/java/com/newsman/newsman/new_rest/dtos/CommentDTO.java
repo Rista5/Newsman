@@ -1,4 +1,4 @@
-package com.newsman.newsman.new_rest;
+package com.newsman.newsman.new_rest.dtos;
 
 public class CommentDTO {
 
