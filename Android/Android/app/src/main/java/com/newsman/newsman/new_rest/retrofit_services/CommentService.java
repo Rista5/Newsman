@@ -11,6 +11,7 @@ import retrofit2.http.GET;
 import retrofit2.http.POST;
 import retrofit2.http.PUT;
 import retrofit2.http.Path;
+import retrofit2.http.Query;
 
 public interface CommentService {
     @GET("Comment")
@@ -22,8 +23,8 @@ public interface CommentService {
     @GET("Comment/FromNews/{newsId}")
     Call<List<CommentDTO>> getCommentsForNews(@Path("newsId") int newsId);
 
-    @POST("Comment/{userId}?content={content}")
-    Call<CommentDTO> createComment(@Path("userId") int userId, @Path("content") String content);
+    @POST("Comment/{userId}")
+    Call<CommentDTO> createComment(@Path("userId") int userId, @Query("content") String content);
 
     @PUT("Comment")
     Call<CommentDTO> createComment(@Body CommentDTO comment);

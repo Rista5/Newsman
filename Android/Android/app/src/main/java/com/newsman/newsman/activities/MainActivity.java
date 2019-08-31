@@ -6,6 +6,7 @@ import androidx.lifecycle.Observer;
 import android.content.Context;
 import android.content.Intent;
 import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.os.Handler;
 import android.os.Looper;
 import android.os.Message;
@@ -22,7 +23,10 @@ import com.google.gson.FieldNamingPolicy;
 import com.google.gson.GsonBuilder;
 import com.newsman.newsman.message_queue.MQClient;
 import com.newsman.newsman.new_rest.dtos.CommentDTO;
+import com.newsman.newsman.new_rest.dtos.PictureDTO;
+import com.newsman.newsman.new_rest.retrofit_services.BitmapService;
 import com.newsman.newsman.new_rest.retrofit_services.CommentService;
+import com.newsman.newsman.new_rest.retrofit_services.PictureService;
 import com.newsman.newsman.server_entities.Comment;
 import com.newsman.newsman.thread_management.AppExecutors;
 import com.newsman.newsman.auxiliary.Constant;
@@ -42,7 +46,9 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
+import okhttp3.ResponseBody;
 import retrofit2.Call;
+import retrofit2.Callback;
 import retrofit2.Response;
 import retrofit2.Retrofit;
 import retrofit2.converter.gson.GsonConverterFactory;
@@ -251,17 +257,24 @@ public class MainActivity extends AppCompatActivity {
                 .addConverterFactory(GsonConverterFactory
                         .create(new GsonBuilder().setFieldNamingPolicy(FieldNamingPolicy.UPPER_CAMEL_CASE).create()))
                 .build();
-        CommentService service = retrofit.create(CommentService.class);
-        Call<List<CommentDTO>> comments = service.getAllComments();
-        new Thread(() -> {
-            Response<List<CommentDTO>> res = null;
-            try {
-                res = comments.execute();
-            } catch (IOException e) {
-                e.printStackTrace();
+        PictureService service = retrofit.create(PictureService.class);
+        Call<PictureDTO> call = service.getPicture(66);
+//        new Thread(() -> {
+//            Response<>
+//        }).start();
+
+        call.enqueue(new Callback<PictureDTO>() {
+
+            @Override
+            public void onResponse(Call<PictureDTO> call, Response<PictureDTO> response) {
+                PictureDTO pic = response.body();
             }
-            List<CommentDTO> body = res.body();
-        }).start();
+
+            @Override
+            public void onFailure(Call<PictureDTO> call, Throwable t) {
+                Log.e("error", t.getMessage());
+            }
+        });
 
     }
 

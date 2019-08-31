@@ -11,14 +11,15 @@ import retrofit2.http.GET;
 import retrofit2.http.POST;
 import retrofit2.http.PUT;
 import retrofit2.http.Path;
+import retrofit2.http.Query;
 
 public interface PictureService {
 
-    @GET("Picture/FromNews/{newsId}")
-    Call<List<PictureDTO>> getPicturesForNews(@Path("newsId") int newsId);
+    @GET("Picture/FromNews")
+    Call<List<PictureDTO>> getPicturesForNews(@Query("newsID") int newsId);
 
-    @GET("Picture/{pictureId}")
-    Call<PictureDTO> getPicture(@Path("pictureId") int pictureId);
+    @GET("Picture/{id}")
+    Call<PictureDTO> getPicture(@Path("id") int pictureId);
 
     @PUT("Picture")
     Call<PictureDTO> createPicture(@Body PictureDTO picture);
@@ -26,6 +27,6 @@ public interface PictureService {
     @POST("Picture")
     Call<PictureDTO> updatePicture(@Body PictureDTO picture);
 
-    @DELETE("Picture/{pictureId}")
-    Call<Boolean> deletePicture(@Path("pictureId") int pictureId);
+    @DELETE("Picture/{id}")
+    Call<Boolean> deletePicture(@Path("id") int pictureId);
 }
