@@ -60,11 +60,6 @@ public class Constant {
 
     public static final String PICTURE_TRASPORT = "file.png";
 
-    public static String getBaseUrl(){
-        String url = "http://" + Constant.getIpAddress() + ":52752/api/";
-        return  url;
-    }
-
     //TODO remove later
     // only temorarly
     public static int USER_ID = 3;

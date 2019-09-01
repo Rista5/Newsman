@@ -26,8 +26,14 @@ public class CommentDTO {
         this.postDate = comment.getPostDate().toString();
     }
 
-    public Comment getComment(){
-        return new Comment(id,content,createdBy.getId(),belongsToNewsId,postDate,createdBy.getUsername());
+    public static Comment getComment(CommentDTO commentDTO){
+        return new Comment(
+                commentDTO.id,
+                commentDTO.content,
+                commentDTO.createdBy.getId(),
+                commentDTO.belongsToNewsId,
+                commentDTO.postDate,
+                commentDTO.createdBy.getUsername());
     }
 
     public int getId() {

@@ -21,14 +21,16 @@ import retrofit2.Retrofit;
 import retrofit2.converter.gson.GsonConverterFactory;
 
 public class CommentConnector {
-    public Runnable saveComment(final Comment comment){
+    public Runnable saveComment(final Context context, final Comment comment){
         return () -> {
-            Retrofit retrofit;
+            Retrofit retrofit = RetrofitFactory.createInstance();;
             CommentDTO commentDTO = new CommentDTO(comment);
             CommentService service = retrofit.create(CommentService.class);
             Call<CommentDTO> commentCall = service.createComment(commentDTO);
             try {
-                commentCall.execute();
+                Response<CommentDTO> response = commentCall.execute();
+                if(response.body() == null) return;
+                AppDatabase.getInstance(context).commentDao().insertComment(CommentDTO.getComment(response.body()));
             }
             catch (IOException ex){
                 ex.printStackTrace();
@@ -36,34 +38,35 @@ public class CommentConnector {
         };
     }
 
-    public Runnable loadComment(Context context, final int newsId){
+    public Runnable loadComment(final Context context, final int newsId){
         return () -> {
-          Retrofit retrofit;
+          Retrofit retrofit = RetrofitFactory.createInstance();;
           Call<List<CommentDTO>> commentCall = retrofit.create(CommentService.class).getCommentsForNews(newsId);
           try{
               Response<List<CommentDTO>> response = commentCall.execute();
               List<CommentDTO> comments = response.body();
+              if(comments == null) return;
               for(CommentDTO comment: comments){
-                  AppDatabase.getInstance(context).commentDao().insertComment(comment.getComment());
+                  AppDatabase.getInstance(context).commentDao().insertComment(CommentDTO.getComment(comment));
               }
           }
           catch (IOException ex){
-
+              ex.printStackTrace();
           }
         };
     }
 
-    public Runnable deleteComment(Context context, final int commentId){
+    public Runnable deleteComment(final Context context, final int commentId){
         return () -> {
-            Retrofit retrofit;
+            Retrofit retrofit = RetrofitFactory.createInstance();;
             Call<Boolean> deleteCall = retrofit.create(CommentService.class).deleteComment(commentId);
             try{
                 Response<Boolean> response = deleteCall.execute();
-                if(response.body())
+                if(response.body() != null)
                     AppDatabase.getInstance(context).commentDao().deleteCommentById(commentId);
             }
             catch (IOException ex){
-
+                ex.printStackTrace();
             }
         };
     }

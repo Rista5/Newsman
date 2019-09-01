@@ -1,9 +1,5 @@
 package com.newsman.newsman.new_rest.dtos;
 
-import android.content.Context;
-
-import androidx.versionedparcelable.VersionedParcel;
-
 import com.newsman.newsman.auxiliary.DateAux;
 import com.newsman.newsman.server_entities.Audio;
 import com.newsman.newsman.server_entities.Comment;
@@ -15,90 +11,90 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class NewsDTO {
-    private int Id;
-    private String Title;
-    private String Content;
-    private String LastModified;
-    private UserDTO LastModifiedUser;
-    private PictureDTO BackgroundPicture;
-    private List<CommentDTO> Comments;
-    private List<PictureDTO> Pictures;
-    private List<AudioDTO> AudioRecordings;
+    private int id;
+    private String title;
+    private String content;
+    private String lastModified;
+    private UserDTO lastModifiedUser;
+    private PictureDTO backgroundPicture;
+    private List<CommentDTO> comments;
+    private List<PictureDTO> pictures;
+    private List<AudioDTO> audioRecordings;
 
 
     public NewsDTO(int id, String title, String content, String lasModified, UserDTO lastModifiedUser,
                    PictureDTO backgroundPicture) {
-        Id = id;
-        Title = title;
-        Content = content;
-        LastModified = lasModified;
-        LastModifiedUser = lastModifiedUser;
-        BackgroundPicture = backgroundPicture;
+        this.id = id;
+        this.title = title;
+        this.content = content;
+        lastModified = lasModified;
+        this.lastModifiedUser = lastModifiedUser;
+        this.backgroundPicture = backgroundPicture;
     }
 
     public NewsDTO(int id, String title, String content, String lasModified, UserDTO lastModifiedUser,
                    PictureDTO backgroundPicture, List<CommentDTO> comments, List<PictureDTO> pictures,
                    List<AudioDTO> audioRecordings) {
-        Id = id;
-        Title = title;
-        Content = content;
-        LastModified = lasModified;
-        LastModifiedUser = lastModifiedUser;
-        BackgroundPicture = backgroundPicture;
-        Comments = comments;
-        Pictures = pictures;
-        AudioRecordings = audioRecordings;
+        this.id = id;
+        this.title = title;
+        this.content = content;
+        lastModified = lasModified;
+        this.lastModifiedUser = lastModifiedUser;
+        this.backgroundPicture = backgroundPicture;
+        this.comments = comments;
+        this.pictures = pictures;
+        this.audioRecordings = audioRecordings;
     }
 
     public NewsDTO(News news){
-        Id = news.getId();
-        Title = news.getTitle();
-        Content = news.getContent();
-        LastModified = news.getLastModified().toString();
-        LastModifiedUser = new UserDTO(news.getModifierId(),news.getModifierUsername());
-        BackgroundPicture = new PictureDTO(news.getBackgroundId(),"","",news.getId());
-        Comments = new ArrayList<>();
+        id = news.getId();
+        title = news.getTitle();
+        content = news.getContent();
+        lastModified = news.getLastModified().toString();
+        lastModifiedUser = new UserDTO(news.getModifierId(),news.getModifierUsername());
+        backgroundPicture = new PictureDTO(news.getBackgroundId(),"","",news.getId());
+        comments = new ArrayList<>();
         for(Comment comment: news.getComments()){
-            Comments.add(new CommentDTO(comment));
+            comments.add(new CommentDTO(comment));
         }
-        Pictures = new ArrayList<>();
+        pictures = new ArrayList<>();
         for(Picture picture: news.getPictures()){
-            Pictures.add(new PictureDTO(picture));
+            pictures.add(new PictureDTO(picture));
         }
-        AudioRecordings = new ArrayList<>();
+        audioRecordings = new ArrayList<>();
         for(Audio audio:news.getAudioRecordings()){
-            AudioRecordings.add(new AudioDTO(audio));
+            audioRecordings.add(new AudioDTO(audio));
         }
     }
 
-    public News getNews(){
+    public static News getNews(NewsDTO newsDTO){
         News retVal = new News();
-        retVal.setId(this.Id);
-        retVal.setTitle(Title);
-        retVal.setContent(Content);
+        retVal.setId(newsDTO.id);
+        retVal.setTitle(newsDTO.title);
+        retVal.setContent(newsDTO.content);
         try {
-            retVal.setLastModified(DateAux.getDate(LastModified));
+            retVal.setLastModified(DateAux.getDate(newsDTO.lastModified));
         }catch (ParseException e) {
             e.printStackTrace();
         }
-        retVal.setModifierUsername(LastModifiedUser.getUsername());
-        retVal.setModifierId(LastModifiedUser.getId());
-        retVal.setBackgroundId(BackgroundPicture.getId());
+        retVal.setModifierUsername(newsDTO.lastModifiedUser.getUsername());
+        retVal.setModifierId(newsDTO.lastModifiedUser.getId());
+        retVal.setBackgroundId(newsDTO.backgroundPicture.getId());
 
         List<Comment> commentList = new ArrayList<>();
-        for(CommentDTO comment: Comments){
-            commentList.add(comment.getComment());
+        for(CommentDTO comment: newsDTO.comments){
+            commentList.add(CommentDTO.getComment(comment));
         }
         retVal.setComments(commentList);
 
         List<Picture> pictureList = new ArrayList<>();
-        for(PictureDTO pictureDTO: Pictures){
+        for(PictureDTO pictureDTO: newsDTO.pictures){
             pictureList.add(PictureDTO.getPicture(pictureDTO));
         }
         retVal.setPictures(pictureList);
 
         List<Audio> audioList = new ArrayList<>();
-        for(AudioDTO audioDTO: AudioRecordings){
+        for(AudioDTO audioDTO: newsDTO.audioRecordings){
             audioList.add(AudioDTO.getAudio(audioDTO));
         }
         retVal.setAudioRecordings(audioList);
@@ -107,74 +103,74 @@ public class NewsDTO {
     }
 
     public int getId() {
-        return Id;
+        return id;
     }
 
     public void setId(int id) {
-        Id = id;
+        this.id = id;
     }
 
     public String getTitle() {
-        return Title;
+        return title;
     }
 
     public void setTitle(String title) {
-        Title = title;
+        this.title = title;
     }
 
     public String getContent() {
-        return Content;
+        return content;
     }
 
     public void setContent(String content) {
-        Content = content;
+        this.content = content;
     }
 
     public String getLasModified() {
-        return LastModified;
+        return lastModified;
     }
 
     public void setLasModified(String lasModified) {
-        LastModified = lasModified;
+        lastModified = lasModified;
     }
 
     public UserDTO getLastModifiedUser() {
-        return LastModifiedUser;
+        return lastModifiedUser;
     }
 
     public void setLastModifiedUser(UserDTO lastModifiedUser) {
-        LastModifiedUser = lastModifiedUser;
+        this.lastModifiedUser = lastModifiedUser;
     }
 
     public PictureDTO getBackgroundPicture() {
-        return BackgroundPicture;
+        return backgroundPicture;
     }
 
     public void setBackgroundPicture(PictureDTO backgroundPicture) {
-        BackgroundPicture = backgroundPicture;
+        this.backgroundPicture = backgroundPicture;
     }
 
     public List<CommentDTO> getComments() {
-        return Comments;
+        return comments;
     }
 
     public void setComments(List<CommentDTO> comments) {
-        Comments = comments;
+        this.comments = comments;
     }
 
     public List<PictureDTO> getPictures() {
-        return Pictures;
+        return pictures;
     }
 
     public void setPictures(List<PictureDTO> pictures) {
-        Pictures = pictures;
+        this.pictures = pictures;
     }
 
     public List<AudioDTO> getAudioRecordings() {
-        return AudioRecordings;
+        return audioRecordings;
     }
 
     public void setAudioRecordings(List<AudioDTO> audioRecordings) {
-        AudioRecordings = audioRecordings;
+        this.audioRecordings = audioRecordings;
     }
 }

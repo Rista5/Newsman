@@ -17,10 +17,11 @@ import retrofit2.*;
 public class NewsConnector {
     public Runnable loadAllSimpleNews(Context context){
         return ()->{
-            Retrofit retrofit;
+            Retrofit retrofit = RetrofitFactory.createInstance();
             Call<List<SimpleNewsDTO>> newsListCall = retrofit.create(NewsService.class).getAllSimpleNews();
             try{
                 Response<List<SimpleNewsDTO>> response = newsListCall.execute();
+                if(response.body() == null) return;
                 for(SimpleNewsDTO news: response.body()){
                     News retrivedNews = new News();
                     SimpleNews.populateNews(retrivedNews, news.getSimpleNews());
@@ -28,51 +29,52 @@ public class NewsConnector {
                 }
             }
             catch (IOException ex){
-
+                ex.printStackTrace();
             }
         };
     }
 
     public Runnable loadAllNews(Context context){
         return ()->{
-            Retrofit retrofit;
+            Retrofit retrofit = RetrofitFactory.createInstance();
             Call<List<NewsDTO>> newsListCall = retrofit.create(NewsService.class).getAllNews();
             try{
                 Response<List<NewsDTO>> response = newsListCall.execute();
+                if(response.body() == null) return;
                 for(NewsDTO news: response.body()){
-                    AppDatabase.getInstance(context).newsDao().insertNews(news.getNews());
+                    AppDatabase.getInstance(context).newsDao().insertNews(NewsDTO.getNews(news));
                 }
             }
             catch (IOException ex){
-
+                ex.printStackTrace();
             }
         };
     }
 
     public Runnable loadNewsById(Context context,final int Id){
         return  () -> {
-            Retrofit retrofit;
+            Retrofit retrofit = RetrofitFactory.createInstance();
             Call<NewsDTO> getCall = retrofit.create(NewsService.class).getNewsById(Id);
             try{
                 Response<NewsDTO> response = getCall.execute();
                 if(response.body()!= null){
-                    AppDatabase.getInstance(context).newsDao().insertNews(response.body().getNews());
+                    AppDatabase.getInstance(context).newsDao().insertNews(NewsDTO.getNews(response.body()));
                 }
             }
             catch (IOException ex){
-
+                ex.printStackTrace();
             }
         };
     }
 
     public Runnable saveNews(Context context,final int userId, final News news){
         return () -> {
-            Retrofit retrofit;
+            Retrofit retrofit = RetrofitFactory.createInstance();
             Call<NewsDTO> putCall = retrofit.create(NewsService.class).putNews(userId,new NewsDTO(news));
             try {
                 Response<NewsDTO> response = putCall.execute();
-                if(response.body()!=null)
-                    AppDatabase.getInstance(context).newsDao().insertNews(response.body().getNews());
+                if(response.body() != null)
+                    AppDatabase.getInstance(context).newsDao().insertNews(NewsDTO.getNews(response.body()));
             } catch (IOException e) {
                 e.printStackTrace();
             }
@@ -81,7 +83,7 @@ public class NewsConnector {
 
     public Runnable saveNews(Context context, final int userId, final SimpleNews news){
         return () -> {
-          Retrofit retrofit;
+          Retrofit retrofit = RetrofitFactory.createInstance();
           Call<SimpleNewsDTO> postCall = retrofit
                   .create(NewsService.class)
                   .postNews(userId,new SimpleNewsDTO(news));
@@ -102,14 +104,14 @@ public class NewsConnector {
 
     public Runnable deleteNews(Context context, final int newsId){
         return () -> {
-            Retrofit retrofit;
-            Call<SimpleNewsDTO> deleteNewsCall = retrofit
+            Retrofit retrofit = RetrofitFactory.createInstance();
+            Call<Boolean> deleteNewsCall = retrofit
                     .create(NewsService.class)
                     .deleteNews(newsId);
             try {
-                Response<SimpleNewsDTO> response = deleteNewsCall.execute();
-                SimpleNewsDTO dto = response.body();
-                if(dto!=null){
+                Response<Boolean> response = deleteNewsCall.execute();
+                Boolean result = response.body();
+                if(result != null){
                     AppDatabase.getInstance(context).newsDao().deleteNewsById(newsId);
                 }
             } catch (IOException e) {
