@@ -9,6 +9,8 @@ import android.widget.Toast;
 
 import com.newsman.newsman.R;
 import com.newsman.newsman.auxiliary.BackArrowHelper;
+import com.newsman.newsman.auxiliary.Constant;
+import com.newsman.newsman.server_entities.UserWithPassword;
 
 public class CreateAccountActivity extends AppCompatActivity {
 
@@ -37,6 +39,8 @@ public class CreateAccountActivity extends AppCompatActivity {
         String confirmPass = etConfirmPassword.getText().toString();
         if(validInput(username, password, confirmPass)) {
             //TODO create account
+            UserWithPassword user = new UserWithPassword(Constant.INVALID_USER_ID, username, password);
+
         } else {
             Toast.makeText(this, R.string.create_account_invalid_toast, Toast.LENGTH_LONG).show();
         }

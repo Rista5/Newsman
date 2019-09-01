@@ -54,7 +54,7 @@ public class PicturesListAdapter extends RecyclerView.Adapter<PicturesListAdapte
         newsImageViewHolder.title.setText(pictureItem.getName());
         //TODO razmisli da li moze ovo bolje
 //        BitmapObserver observer = new BitmapObserver(newsImageViewHolder.imageView);
-//        Observable observable = BitmapCache.getInstance().getBitmap(context, pictureItem.getId(), pictureItem.getBelongsToNewsId());
+//        Observable observable = BitmapCache.getInstance().loadBitmap(context, pictureItem.getId(), pictureItem.getBelongsToNewsId());
 //        observable.addObserver(observer);
           BitmapOneTimeObserver observer = new BitmapOneTimeObserver(newsImageViewHolder.imageView);
           Observable observable = BitmapCache.getInstance().getBitmap(context, pictureItem.getId(), pictureItem.getBelongsToNewsId());

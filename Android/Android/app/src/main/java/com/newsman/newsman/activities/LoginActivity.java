@@ -9,16 +9,19 @@ import android.widget.Toast;
 
 import com.newsman.newsman.R;
 import com.newsman.newsman.auxiliary.BackArrowHelper;
+import com.newsman.newsman.auxiliary.Constant;
+import com.newsman.newsman.new_rest.UserConnector;
 import com.newsman.newsman.server_entities.UserWithPassword;
+import com.newsman.newsman.thread_management.AppExecutors;
 
-public class LoginActivity3 extends AppCompatActivity {
+public class LoginActivity extends AppCompatActivity {
 
     private EditText etUsername, etPassword;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_login3);
+        setContentView(R.layout.activity_login);
 
         BackArrowHelper.displayBackArrow(this);
         setUpViews();
@@ -44,8 +47,9 @@ public class LoginActivity3 extends AppCompatActivity {
             String username = etUsername.getText().toString();
             String password = etPassword.getText().toString();
             if(validInput(username, password)){
-                UserWithPassword userWithPassword = new UserWithPassword(username, password);
+                UserWithPassword userWithPassword = new UserWithPassword(Constant.INVALID_USER_ID, username, password);
                 //TODO implement login
+                AppExecutors.getInstance().getNetworkIO().execute(UserConnector.createUser(userWithPassword));
             } else {
                 Toast.makeText(this, R.string.login_invalid_toast, Toast.LENGTH_LONG).show();
             }

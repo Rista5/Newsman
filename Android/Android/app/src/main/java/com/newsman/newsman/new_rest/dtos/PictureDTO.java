@@ -1,5 +1,7 @@
 package com.newsman.newsman.new_rest.dtos;
 
+import com.newsman.newsman.server_entities.Picture;
+
 public class PictureDTO {
     private int id;
     private String name;
@@ -12,6 +14,23 @@ public class PictureDTO {
         this.name = name;
         this.description = description;
         this.belongsToNewsId = belongsToNewsId;
+    }
+
+    public PictureDTO(Picture picture){
+        this.id = picture.getId();
+        this.name = picture.getName();
+        this.description = picture.getDescription();
+        this.belongsToNewsId = getBelongsToNewsId();
+    }
+
+    public static Picture getPicture(PictureDTO pictureDTO) {
+        return new Picture(
+                pictureDTO.id,
+                pictureDTO.name,
+                pictureDTO.description,
+                pictureDTO.belongsToNewsId,
+                null
+        );
     }
 
     public int getId() {

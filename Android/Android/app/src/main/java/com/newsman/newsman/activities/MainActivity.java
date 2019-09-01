@@ -253,15 +253,12 @@ public class MainActivity extends AppCompatActivity {
 //        News n = gson.fromJson(commentJson, News.class);
 //        Log.d("Comment", "id= "+c.getId()+", content= "+c.getContent()+ ",username= "+c.getUsername()+", postDate= "+c.getPostDate().toString());
         Retrofit retrofit = new Retrofit.Builder()
-                .baseUrl("http://" + Constant.getIpAddress() + ":52752/api/")
+                .baseUrl(Constant.getBaseUrl())
                 .addConverterFactory(GsonConverterFactory
                         .create(new GsonBuilder().setFieldNamingPolicy(FieldNamingPolicy.UPPER_CAMEL_CASE).create()))
                 .build();
         PictureService service = retrofit.create(PictureService.class);
         Call<PictureDTO> call = service.getPicture(66);
-//        new Thread(() -> {
-//            Response<>
-//        }).start();
 
         call.enqueue(new Callback<PictureDTO>() {
 

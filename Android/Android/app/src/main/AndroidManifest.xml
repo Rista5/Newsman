@@ -15,7 +15,7 @@
         <activity android:name=".activities.SettingsActivity"></activity>
         <activity android:name=".activities.CreateAccountActivity" />
         <activity android:name=".activities.ui.login.LoginActivity" />
-        <activity android:name=".activities.LoginActivity3" />
+        <activity android:name=".activities.LoginActivity" />
         <activity android:name=".activities.UpdateNewsActivity" />
         <activity android:name=".activities.CreatePictureActivity" />
         <activity android:name=".activities.ImageDisplayActivity" />

@@ -1,5 +1,7 @@
 package com.newsman.newsman.new_rest.dtos;
 
+import com.newsman.newsman.server_entities.UserWithPassword;
+
 public class UserWithPasswordDTO {
     private int Id;
     private String Username;
@@ -9,6 +11,16 @@ public class UserWithPasswordDTO {
         Id = id;
         Username = username;
         Password = password;
+    }
+
+    public UserWithPasswordDTO(UserWithPassword user) {
+        Id = user.getId();
+        Username = user.getUsername();
+        Password = user.getPassword();
+    }
+
+    public static UserWithPassword getUserWithPassword(UserWithPasswordDTO user) {
+        return new UserWithPassword(user.getId(), user.getUsername(), user.Password);
     }
 
     public int getId() {

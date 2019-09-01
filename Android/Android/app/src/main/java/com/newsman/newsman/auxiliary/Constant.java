@@ -48,6 +48,11 @@ public class Constant {
         IP_ADDRESS = adr;
     }
 
+    public static String getBaseUrl(){
+        String url = "http://" + Constant.getIpAddress() + ":52752/api/";
+        return  url;
+    }
+
     public static String getRawPictureRoute(int picId, int newsId){
         String route = Constant.RAW_PICTURE_ROUTE + "?picId="+picId+"&newsId="+newsId;
         return route;

@@ -98,7 +98,7 @@ public class DisplayNewsActivity extends AppCompatActivity {
 //                        news.getId(), news.getBackgroundOnDisc());
 //                if(news.getBackgroundId() != Constant.INVALID_PICTURE_ID){
 //                    BitmapObserver observer = new BitmapObserver(background);
-//                    Observable observable = BitmapCache.getInstance().getBitmap(getApplicationContext(), news.getBackgroundId(), news.getId());
+//                    Observable observable = BitmapCache.getInstance().loadBitmap(getApplicationContext(), news.getBackgroundId(), news.getId());
 //                    observable.addObserver(observer);
 //                }
 //                    background.setImageBitmap(PictureLoader.loadPictureData(mContext, news.getBackgroundId()));
