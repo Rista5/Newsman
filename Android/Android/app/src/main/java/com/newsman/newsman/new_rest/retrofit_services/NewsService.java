@@ -2,6 +2,7 @@ package com.newsman.newsman.new_rest.retrofit_services;
 
 import com.newsman.newsman.new_rest.dtos.NewsDTO;
 import com.newsman.newsman.new_rest.dtos.SimpleNewsDTO;
+import com.newsman.newsman.server_entities.SimpleNews;
 
 import java.util.List;
 
@@ -13,6 +14,9 @@ public interface NewsService {
 
     @GET("News")
     Call<List<NewsDTO>> getAllNews();
+
+    @GET("SimpleNews")
+    Call<List<SimpleNewsDTO>> getAllSimpleNews();
 
     @GET("NewsModifiedByUser/{id}")
     Call<List<NewsDTO>> getNewsModifiedByUser(@Path("id") int id);
