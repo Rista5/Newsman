@@ -1,5 +1,7 @@
 package com.newsman.newsman.new_rest.dtos;
 
+import com.newsman.newsman.server_entities.User;
+
 public class UserDTO {
 
     private int id;
@@ -8,6 +10,11 @@ public class UserDTO {
     public UserDTO(int id, String username) {
         this.id = id;
         this.username = username;
+    }
+
+    public UserDTO(User user){
+        this.id = user.getId();
+        this.username = user.getUsername();
     }
 
     public int getId() {

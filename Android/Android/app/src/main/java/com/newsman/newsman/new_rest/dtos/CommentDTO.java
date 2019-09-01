@@ -1,5 +1,7 @@
 package com.newsman.newsman.new_rest.dtos;
 
+import com.newsman.newsman.server_entities.Comment;
+
 public class CommentDTO {
 
     private int id;
@@ -14,6 +16,18 @@ public class CommentDTO {
         this.belongsToNewsId = belongsToNewsId;
         this.createdBy = createdBy;
         this.postDate = postDate;
+    }
+
+    public CommentDTO(Comment comment){
+        this.id = comment.getId();
+        this.content = comment.getContent();
+        this.belongsToNewsId = comment.getBelongsToNewsId();
+        this.createdBy = new UserDTO(comment.getCreatedById(),comment.getUsername());
+        this.postDate = comment.getPostDate().toString();
+    }
+
+    public Comment getComment(){
+        return new Comment(id,content,createdBy.getId(),belongsToNewsId,postDate,createdBy.getUsername());
     }
 
     public int getId() {

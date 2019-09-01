@@ -1,57 +1,76 @@
 package com.newsman.newsman.new_rest.dtos;
 
+import com.newsman.newsman.server_entities.Audio;
+
 public class AudioDTO {
-    private int Id;
-    private String Name;
-    private String Description;
-    private int BelongsToNewsId;
-    private String AudioData;
+    private int id;
+    private String name;
+    private String description;
+    private int belongsToNewsId;
+    private String audioData;
 
     public AudioDTO(int id, String name, String description, int belongsToNewsId, String audioData) {
-        Id = id;
-        Name = name;
-        Description = description;
-        BelongsToNewsId = belongsToNewsId;
-        AudioData = audioData;
+        this.id = id;
+        this.name = name;
+        this.description = description;
+        this.belongsToNewsId = belongsToNewsId;
+        this.audioData = audioData;
+    }
+
+    public AudioDTO(Audio audio){
+        this.id = audio.getId();
+        this.name = audio.getName();
+        this.description = audio.getDescription();
+        this.belongsToNewsId = getBelongsToNewsId();
+    }
+
+    public static Audio getAudio(AudioDTO audioDTO) {
+        return new Audio(
+                audioDTO.id,
+                audioDTO.name,
+                audioDTO.description,
+                audioDTO.belongsToNewsId,
+                null
+        );
     }
 
     public int getId() {
-        return Id;
+        return id;
     }
 
     public void setId(int id) {
-        Id = id;
+        this.id = id;
     }
 
     public String getName() {
-        return Name;
+        return name;
     }
 
     public void setName(String name) {
-        Name = name;
+        this.name = name;
     }
 
     public String getDescription() {
-        return Description;
+        return description;
     }
 
     public void setDescription(String description) {
-        Description = description;
+        this.description = description;
     }
 
     public int getBelongsToNewsId() {
-        return BelongsToNewsId;
+        return belongsToNewsId;
     }
 
     public void setBelongsToNewsId(int belongsToNewsId) {
-        BelongsToNewsId = belongsToNewsId;
+        this.belongsToNewsId = belongsToNewsId;
     }
 
     public String getAudioData() {
-        return AudioData;
+        return audioData;
     }
 
     public void setAudioData(String audioData) {
-        AudioData = audioData;
+        this.audioData = audioData;
     }
 }
