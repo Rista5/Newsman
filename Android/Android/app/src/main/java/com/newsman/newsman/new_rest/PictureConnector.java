@@ -52,7 +52,7 @@ public class PictureConnector {
         };
     }
 
-    public static Runnable loadPicturesFornews(final Context context, final int newsId) {
+    public static Runnable loadPicturesForNews(final Context context, final int newsId) {
         return () -> {
             Retrofit retrofit = RetrofitFactory.createInstance();
             PictureService service = retrofit.create(PictureService.class);

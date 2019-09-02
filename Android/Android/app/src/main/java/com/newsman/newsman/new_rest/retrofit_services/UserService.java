@@ -8,7 +8,7 @@ import retrofit2.http.*;
 
 public interface UserService {
 
-    @GET("User")
+    @POST("User")
     Call<UserWithPasswordDTO> getUser(@Body UserWithPasswordDTO user);
 
     @PUT("User/")

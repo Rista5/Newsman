@@ -19,11 +19,11 @@ import retrofit2.Retrofit;
 public class BitmapConnector {
     public static Runnable saveBitmap(final int newsId, final int pictureId, final Bitmap bitmap) {
         return () -> {
-            Retrofit retrofit = RetrofitFactory.createInstance();
+            Retrofit retrofit = RetrofitFactory.createSimple();
             BitmapService service = retrofit.create(BitmapService.class);
             byte[] pictureData = PictureConverter.getBitmapBytes(bitmap);
             RequestBody body = RequestBody.create(MediaType.parse("application/octet-stream"), pictureData);
-            Call<Response> resp = service.savePicture(pictureId, newsId, body);
+            Call<ResponseBody> resp = service.savePicture(pictureId, newsId, body);
             try {
                 retrofit2.Response rr2 = resp.execute();
             } catch (IOException e) {

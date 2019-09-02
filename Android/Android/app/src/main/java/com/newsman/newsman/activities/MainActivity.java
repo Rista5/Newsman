@@ -6,7 +6,6 @@ import androidx.lifecycle.Observer;
 import android.content.Context;
 import android.content.Intent;
 import android.graphics.Bitmap;
-import android.graphics.BitmapFactory;
 import android.os.Handler;
 import android.os.Looper;
 import android.os.Message;
@@ -22,10 +21,10 @@ import android.widget.ImageView;
 import com.google.gson.FieldNamingPolicy;
 import com.google.gson.GsonBuilder;
 import com.newsman.newsman.message_queue.MQClient;
-import com.newsman.newsman.new_rest.dtos.CommentDTO;
+import com.newsman.newsman.new_rest.BitmapConnector;
+import com.newsman.newsman.new_rest.NewsConnector;
+import com.newsman.newsman.new_rest.PictureConnector;
 import com.newsman.newsman.new_rest.dtos.PictureDTO;
-import com.newsman.newsman.new_rest.retrofit_services.BitmapService;
-import com.newsman.newsman.new_rest.retrofit_services.CommentService;
 import com.newsman.newsman.new_rest.retrofit_services.PictureService;
 import com.newsman.newsman.server_entities.Comment;
 import com.newsman.newsman.thread_management.AppExecutors;
@@ -41,12 +40,10 @@ import com.newsman.newsman.server_entities.News;
 import com.newsman.newsman.server_entities.Picture;
 import com.newsman.newsman.thread_management.SubscriptionService;
 
-import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
-import okhttp3.ResponseBody;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
@@ -93,11 +90,18 @@ public class MainActivity extends AppCompatActivity {
         });
         mLoadNewsButton = findViewById(R.id.load_news_button);
         mImageView = findViewById(R.id.iv_picture);
-        mTestPicture = findViewById(R.id.test_picture);
+        mTestPicture = findViewById(R.id.test_create_account);
         mTestPicture.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 takePicture();
+            }
+        });
+        mTestDbButton = findViewById(R.id.test_login);
+        mTestDbButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                logNews();
             }
         });
         mRestPictureButton = findViewById(R.id.rest_picture);
@@ -155,19 +159,15 @@ public class MainActivity extends AppCompatActivity {
         mLoadNewsButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                new RestConnector(new Get(mContext, new ReadComposite(new ReadNews())),
-                        Constant.NEWS_ROUTE).execute();
+                AppExecutors.getInstance().getNetworkIO()
+                        .execute(NewsConnector.loadAllNews(getApplicationContext()));
+//                new RestConnector(new Get(mContext, new ReadComposite(new ReadNews())),
+//                        Constant.NEWS_ROUTE).execute();
 //                new RestConnector(new InStreamConn(mContext, PICTURE_ID), testRoute).execute();
             }
         });
 
-        mTestDbButton = findViewById(R.id.load_news_from_db);
-        mTestDbButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                logNews();
-            }
-        });
+
         startServiceBtn = findViewById(R.id.start_service_btn);
         sendServiceMsgBtn = findViewById(R.id.send_service_msg);
         startServiceBtn.setOnClickListener(new View.OnClickListener() {
@@ -197,16 +197,8 @@ public class MainActivity extends AppCompatActivity {
     }
 
     private void logNews() {
-        LiveData<List<News>> liveNews = mDB.newsDao().getAllNews();
-        liveNews.observe(this, new Observer<List<News>>() {
-            @Override
-            public void onChanged(@Nullable List<News> news) {
-                Log.d("THIS", this.toString());
-                for(News n:news) {
-                    Log.d("DB", "news id: "+n.getId());
-                }
-            }
-        });
+        Intent intent = new Intent(this, LoginActivity.class);
+        startActivity(intent);
     }
 
     private void takePicture() {
@@ -298,10 +290,12 @@ public class MainActivity extends AppCompatActivity {
     }
 
     private void savePicture(Bitmap bmp) {
-        int id = 100000;
-        PictureLoader.savePictureData(this, id, bmp);
-        Bitmap res = PictureLoader.loadPictureData(this, id);
-        mImageView.setImageBitmap(res);
+        int newsId = 40;
+        int pictureId = 43;
+        Picture p = new Picture(0, "test", "desc", 43, null);
+        AppExecutors.getInstance().getNetworkIO().execute( PictureConnector.savePicture(this, p, bmp));
+        mImageView.setImageBitmap(bmp);
+
     }
 
     public static Handler UIHandler;

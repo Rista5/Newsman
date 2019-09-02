@@ -7,8 +7,10 @@ import android.view.MenuItem;
 import android.widget.PopupMenu;
 
 import com.newsman.newsman.R;
+import com.newsman.newsman.new_rest.NewsConnector;
 import com.newsman.newsman.rest_connection.ConnectionStrategy.Delete;
 import com.newsman.newsman.rest_connection.RestConnector;
+import com.newsman.newsman.thread_management.AppExecutors;
 import com.newsman.newsman.thread_management.SubscriptionService;
 import com.newsman.newsman.activities.UpdateNewsActivity;
 
@@ -38,7 +40,9 @@ public class MenuItemClickListener implements PopupMenu.OnMenuItemClickListener 
                 mContext.startActivity(intent);
                 return true;
             case R.id.action_delete_news:
-                new RestConnector(new Delete(newsId), Constant.NEWS_ROUTE).execute();
+//                new RestConnector(new Delete(newsId), Constant.NEWS_ROUTE).execute();
+                AppExecutors.getInstance().getNetworkIO()
+                        .execute(NewsConnector.deleteNews(mContext, newsId));
                 return true;
             default:
         }

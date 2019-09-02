@@ -10,12 +10,13 @@ import retrofit2.http.PUT;
 import retrofit2.http.Path;
 import retrofit2.http.Query;
 
+
 public interface BitmapService {
 
     @GET("picture/raw")
     Call<ResponseBody> getPictureData(@Query("picId") int pictureId, @Query("newsId") int newsId);
 
     @PUT("picture/raw")
-    Call<Response> savePicture(@Query("picId") int pictureId, @Query("newsId") int newsId, @Body RequestBody bytes);
+    Call<ResponseBody> savePicture(@Query("picId") int pictureId, @Query("newsId") int newsId, @Body RequestBody bytes);
 
 }

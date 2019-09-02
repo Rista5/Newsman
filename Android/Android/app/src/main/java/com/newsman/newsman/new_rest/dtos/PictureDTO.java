@@ -20,7 +20,7 @@ public class PictureDTO {
         this.id = picture.getId();
         this.name = picture.getName();
         this.description = picture.getDescription();
-        this.belongsToNewsId = getBelongsToNewsId();
+        this.belongsToNewsId = picture.getBelongsToNewsId();
     }
 
     public static Picture getPicture(PictureDTO pictureDTO) {

@@ -16,6 +16,7 @@ import android.widget.Toast;
 
 import com.newsman.newsman.auxiliary.BackArrowHelper;
 import com.newsman.newsman.auxiliary.Constant;
+import com.newsman.newsman.auxiliary.PictureConverter;
 import com.newsman.newsman.auxiliary.PictureLoader;
 import com.newsman.newsman.R;
 import com.newsman.newsman.picture_management.BitmapCache;
@@ -112,16 +113,10 @@ public class CreatePictureActivity extends AppCompatActivity {
         bundle.putString("Name", picture.getName());
         bundle.putString("Description", picture.getDescription());
         bundle.putInt("BelongsToNewsId", picture.getBelongsToNewsId());
-        bundle.putString("FileName", Constant.PICTURE_TRASPORT);
-//        FileOutputStream stream = null;
-//        try {
-//            stream = openFileOutput(Constant.PICTURE_TRASPORT, Context.MODE_PRIVATE);
-//            picture.getPictureData().compress(Bitmap.CompressFormat.PNG, 100, stream);
-//        } catch (FileNotFoundException e) {
-//            e.printStackTrace();
-//        }
+
         //TODO REVIEW if this is correct
-        BitmapCache.getInstance().setBitmap(picture.getId(),picture.getBelongsToNewsId(),picture.getPictureData());
+        BitmapCache.getInstance().setBitmap(picture.getId(),picture.getBelongsToNewsId(),
+                PictureConverter.getImageViewBitmap(pictureView));
         return bundle;
     }
 

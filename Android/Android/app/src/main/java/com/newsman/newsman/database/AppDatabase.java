@@ -13,7 +13,7 @@ import com.newsman.newsman.server_entities.News;
 import com.newsman.newsman.server_entities.Picture;
 import com.newsman.newsman.server_entities.User;
 
-@Database(entities = {News.class, User.class, Comment.class, Picture.class}, version = 11, exportSchema = false)
+@Database(entities = {News.class, User.class, Comment.class, Picture.class}, version = 12, exportSchema = false)
 @TypeConverters(DateConverter.class)
 public abstract class AppDatabase extends RoomDatabase {
 

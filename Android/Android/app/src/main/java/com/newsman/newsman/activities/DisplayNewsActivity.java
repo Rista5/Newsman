@@ -94,20 +94,12 @@ public class DisplayNewsActivity extends AppCompatActivity {
                 postDate.setText(news.getLastModified().toString());
                 content.setText(news.getContent());
                 //TODO razmisli da li moze ovo bolje
-//                BitmapCache.getInstance().loadPictureInCache(getApplicationContext(), news.getBackgroundId(),
-//                        news.getId(), news.getBackgroundOnDisc());
-//                if(news.getBackgroundId() != Constant.INVALID_PICTURE_ID){
-//                    BitmapObserver observer = new BitmapObserver(background);
-//                    Observable observable = BitmapCache.getInstance().loadBitmap(getApplicationContext(), news.getBackgroundId(), news.getId());
-//                    observable.addObserver(observer);
-//                }
-//                    background.setImageBitmap(PictureLoader.loadPictureData(mContext, news.getBackgroundId()));
+                Observable o = BitmapCache.getInstance().getBitmapObservable(getApplicationContext(), news.getBackgroundId(), news.getId());
+                o.addObserver(new BitmapObserver(background));
             }
         });
         LiveData<List<Comment>> liveComments =
                 AppDatabase.getInstance(this).commentDao().getCommentsForNews(newsId);
-        //TODO moze li ovo bolje, pogotovo ovo sa username-om, mozda da postane ugnjezdeni entitet
-        final UserDao userDao = AppDatabase.getInstance(this).userDao();
         liveComments.observe(this, new Observer<List<Comment>>() {
             @Override
             public void onChanged(@Nullable List<Comment> commentList) {
@@ -137,7 +129,7 @@ public class DisplayNewsActivity extends AppCompatActivity {
 
     private void inflateCommentsFragment() {
         commentsFragment = CommentsFragment.newInstance(newsId,
-                new ArrayList<Comment>(), new HideDelete());
+                new ArrayList<Comment>(), new HideDelete(), true);
         FragmentManager fragmentManager = getSupportFragmentManager();
         fragmentManager.beginTransaction()
                 .add(R.id.news_item_comments_fragment, commentsFragment)
@@ -145,9 +137,7 @@ public class DisplayNewsActivity extends AppCompatActivity {
     }
 
     private void inflatePicturesFragment() {
-//        List<Picture> pictures = AppDatabase.getInstance(this).pictureDao().getPicturesForNewsNonLive(newsId);
         picturesFragment = PicturesFragment.newInstance(newsId, new ArrayList<Picture>(), true);
-//        picturesFragment = PicturesFragment.newInstance(newsId, pictures, true);
         FragmentManager fragmentManager = getSupportFragmentManager();
         fragmentManager.beginTransaction()
                 .add(R.id.news_item_pictures_fragment, picturesFragment)

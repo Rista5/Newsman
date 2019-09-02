@@ -5,7 +5,7 @@ import android.widget.ImageView;
 
 public class HideDelete implements DeleteStrategy {
     @Override
-    public void setDelete(int commentId, ImageView view) {
+    public void setDelete(int position, ImageView view, RemoveAtPosition remover) {
         view.setVisibility(View.INVISIBLE);
     }
 }

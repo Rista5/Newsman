@@ -11,7 +11,10 @@ import android.widget.Toast;
 
 import com.newsman.newsman.auxiliary.Constant;
 import com.newsman.newsman.R;
+import com.newsman.newsman.auxiliary.LoginState;
+import com.newsman.newsman.auxiliary.PictureData;
 import com.newsman.newsman.auxiliary.TempObjectGenerator;
+import com.newsman.newsman.new_rest.NewsConnector;
 import com.newsman.newsman.picture_management.BitmapCache;
 import com.newsman.newsman.rest_connection.ConnectionStrategy.PutAndGet;
 import com.newsman.newsman.rest_connection.RestConnector;
@@ -21,6 +24,7 @@ import com.newsman.newsman.server_entities.Picture;
 import com.newsman.newsman.server_entities.SimpleNews;
 import com.newsman.newsman.fragments.CreateNewsFragment;
 import com.newsman.newsman.fragments.PicturesFragment;
+import com.newsman.newsman.thread_management.AppExecutors;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -64,8 +68,11 @@ public class CreateNewsActivity extends AppCompatActivity {
                 if(!checkValidNews(news)) {
                     displayToast();
                 } else {
-                    new RestConnector(new PutAndGet(getApplicationContext(), new WriteNews(news, backgroundPic)), Constant.createNewsRoute())
-                            .execute();
+//                    new RestConnector(new PutAndGet(getApplicationContext(), new WriteNews(news, backgroundPic)), Constant.createNewsRoute())
+//                            .execute();
+//                    List<Picture> pictures = picturesFragment.getPictureList();
+                    AppExecutors.getInstance().getNetworkIO()
+                            .execute(NewsConnector.saveNews(getApplicationContext(), LoginState.getInstance().getUserId(), news, backgroundPic));
                     finish();
                 }
             }
@@ -91,10 +98,7 @@ public class CreateNewsActivity extends AppCompatActivity {
     }
 
     private boolean checkValidNews(News news) {
-        if(news.getTitle().equals("") || news.getContent().equals(""))
-            return false;
-        else
-            return true;
+        return !news.getTitle().equals("") && !news.getContent().equals("");
     }
 
     private void displayToast() {

@@ -52,7 +52,7 @@ public class NewsDTO {
         content = news.getContent();
         lastModified = news.getLastModified().toString();
         lastModifiedUser = new UserDTO(news.getModifierId(),news.getModifierUsername());
-        backgroundPicture = new PictureDTO(news.getBackgroundId(),"","",news.getId());
+        backgroundPicture = new PictureDTO(news.getBackgroundId(),"","", news.getId());
         comments = new ArrayList<>();
         for(Comment comment: news.getComments()){
             comments.add(new CommentDTO(comment));

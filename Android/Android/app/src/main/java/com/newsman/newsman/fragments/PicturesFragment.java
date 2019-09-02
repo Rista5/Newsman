@@ -16,6 +16,7 @@ import android.view.ViewGroup;
 import android.widget.ImageView;
 
 import com.newsman.newsman.auxiliary.Constant;
+import com.newsman.newsman.auxiliary.PictureData;
 import com.newsman.newsman.auxiliary.PictureTransportLoader;
 import com.newsman.newsman.R;
 import com.newsman.newsman.server_entities.Picture;
@@ -24,7 +25,7 @@ import com.newsman.newsman.adapters.PicturesListAdapter;
 
 import java.util.List;
 
-public class PicturesFragment extends Fragment implements LoaderManager.LoaderCallbacks<Picture>{
+public class PicturesFragment extends Fragment{
 
     private List<Picture> pictureList;
     private PicturesListAdapter adapter;
@@ -50,16 +51,6 @@ public class PicturesFragment extends Fragment implements LoaderManager.LoaderCa
         setUpPictureAdapter();
         addButtonListener();
         return rootView;
-    }
-
-    private void setUpPictureAdapter() {
-        adapter = new PicturesListAdapter(getContext(), pictureList, sendToRest);
-
-        RecyclerView.LayoutManager mLayoutManager =
-                new LinearLayoutManager(getContext(), LinearLayoutManager.HORIZONTAL, false);
-        rvPicture.setLayoutManager(mLayoutManager);
-        rvPicture.setItemAnimator(new DefaultItemAnimator());
-        rvPicture.setAdapter(adapter);
     }
 
     public void setPictureList(List<Picture> pictures) {
@@ -92,17 +83,17 @@ public class PicturesFragment extends Fragment implements LoaderManager.LoaderCa
         if(extras != null) {
             Picture p = getBundlePicture(extras);
             adapter.addPicture(p);
-//            LoaderManager loaderManager = LoaderManager.getInstance(this);
-//            Loader<Picture> loader = loaderManager.getLoader(Constant.PICTURE_TRANSPORT_LOADER);
-//            Bundle bundle = data.getExtras();
-//            if(loader == null) {
-//                loader = loaderManager.initLoader(Constant.PICTURE_TRANSPORT_LOADER, bundle, this);
-//            } else {
-//                loader = loaderManager.restartLoader(Constant.PICTURE_TRANSPORT_LOADER, bundle, this);
-//            }
-//            loader.startLoading();
-
         }
+    }
+
+    private void setUpPictureAdapter() {
+        adapter = new PicturesListAdapter(getContext(), pictureList, sendToRest);
+
+        RecyclerView.LayoutManager mLayoutManager =
+                new LinearLayoutManager(getContext(), LinearLayoutManager.HORIZONTAL, false);
+        rvPicture.setLayoutManager(mLayoutManager);
+        rvPicture.setItemAnimator(new DefaultItemAnimator());
+        rvPicture.setAdapter(adapter);
     }
 
     private Picture getBundlePicture(Bundle bundle) {
@@ -121,22 +112,4 @@ public class PicturesFragment extends Fragment implements LoaderManager.LoaderCa
         return p;
     }
 
-    @NonNull
-    @Override
-    public Loader<Picture> onCreateLoader(int i, @Nullable Bundle bundle) {
-        String fileName = "";
-        fileName = bundle.getString("FileName");
-        Picture p = getBundlePicture(bundle);
-        return new PictureTransportLoader(getContext(), p, fileName);
-    }
-
-    @Override
-    public void onLoadFinished(@NonNull Loader<Picture> loader, Picture picture) {
-        adapter.addPicture(picture);
-    }
-
-    @Override
-    public void onLoaderReset(@NonNull Loader<Picture> loader) {
-
-    }
 }

@@ -21,7 +21,7 @@ import retrofit2.Retrofit;
 import retrofit2.converter.gson.GsonConverterFactory;
 
 public class CommentConnector {
-    public Runnable saveComment(final Context context, final Comment comment){
+    public static Runnable saveComment(final Context context, final Comment comment){
         return () -> {
             Retrofit retrofit = RetrofitFactory.createInstance();;
             CommentDTO commentDTO = new CommentDTO(comment);
@@ -38,7 +38,7 @@ public class CommentConnector {
         };
     }
 
-    public Runnable loadComment(final Context context, final int newsId){
+    public static Runnable loadComment(final Context context, final int newsId){
         return () -> {
           Retrofit retrofit = RetrofitFactory.createInstance();;
           Call<List<CommentDTO>> commentCall = retrofit.create(CommentService.class).getCommentsForNews(newsId);
@@ -56,7 +56,7 @@ public class CommentConnector {
         };
     }
 
-    public Runnable deleteComment(final Context context, final int commentId){
+    public static Runnable deleteComment(final Context context, final int commentId){
         return () -> {
             Retrofit retrofit = RetrofitFactory.createInstance();;
             Call<Boolean> deleteCall = retrofit.create(CommentService.class).deleteComment(commentId);

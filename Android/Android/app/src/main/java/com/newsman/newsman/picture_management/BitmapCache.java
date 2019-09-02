@@ -5,10 +5,13 @@ import android.graphics.Bitmap;
 import android.util.LruCache;
 
 import com.newsman.newsman.auxiliary.Constant;
+import com.newsman.newsman.new_rest.BitmapConnector;
+import com.newsman.newsman.new_rest.PictureConnector;
 import com.newsman.newsman.rest_connection.ConnectionStrategy.GetBitmap;
 import com.newsman.newsman.rest_connection.ConnectionStrategy.PutBitmap;
 import com.newsman.newsman.rest_connection.RestConnector;
 import com.newsman.newsman.server_entities.Picture;
+import com.newsman.newsman.thread_management.AppExecutors;
 
 import java.util.List;
 
@@ -67,7 +70,7 @@ public class BitmapCache {
         }
     }
 
-    public BitmapObservable getBitmap(Context context, int picId, int newsId){
+    public BitmapObservable getBitmapObservable(Context context, int picId, int newsId){
         BitmapObservable cachedBitmap = cache.get(picId);
         if(cachedBitmap == null){
             cachedBitmap = new BitmapObservable();
@@ -89,13 +92,17 @@ public class BitmapCache {
     private void getBitmapFromRest(Context context, int picId, int newsId) {
         if(picId<=0)
             return;
-        new RestConnector(new GetBitmap(picId, newsId, context), Constant.getRawPictureRoute(picId,newsId))
-                .execute();
+        AppExecutors.getInstance().getNetworkIO().execute(
+                BitmapConnector.loadBitmap(newsId, picId)
+        );
+//        new RestConnector(new GetBitmap(picId, newsId, context), Constant.getRawPictureRoute(picId,newsId))
+//                .execute();
     }
 
-    private void putBitmapToRest(int picId, int newsId, Bitmap bmp){
-        new RestConnector(new PutBitmap(bmp), Constant.getRawPictureRoute(picId,newsId))
-                .execute();
+    private void putBitmapToRest(int pictureId, int newsId, Bitmap bmp){
+//        new RestConnector(new PutBitmap(bmp), Constant.getRawPictureRoute(picId,newsId))
+//                .execute();
+        AppExecutors.getInstance().getNetworkIO().execute(BitmapConnector.saveBitmap(newsId, pictureId, bmp));
     }
 
     public void putBitmapsCreateNews(List<Integer> oldId, List<Integer> newId, int newsId){
@@ -107,19 +114,6 @@ public class BitmapCache {
             cache.put(newId.get(i),bmp);
             this.putBitmapToRest(newId.get(i),newsId,bmp.getBitmap());
         }
-    }
-
-    //TODO fix this, ako treba
-    public void putBitmap(int oldPictureId, int newPictureId, int newsId){
-        BitmapObservable bmp = cache.get(oldPictureId);
-        if(oldPictureId != newPictureId){
-            cache.remove(oldPictureId);
-            cache.put(newPictureId,bmp);
-        }
-        else {
-
-        }
-//        this.putBitmapToRest(newPictureId,newsId, bmp);
     }
 
     public void loadPicturesInCache(Context context, List<Picture> pictureList){

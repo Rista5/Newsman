@@ -25,6 +25,7 @@ public class LoginActivity extends AppCompatActivity {
 
         BackArrowHelper.displayBackArrow(this);
         setUpViews();
+        setLoginButtonListener();
     }
 
     @Override
@@ -49,7 +50,8 @@ public class LoginActivity extends AppCompatActivity {
             if(validInput(username, password)){
                 UserWithPassword userWithPassword = new UserWithPassword(Constant.INVALID_USER_ID, username, password);
                 //TODO implement login
-                AppExecutors.getInstance().getNetworkIO().execute(UserConnector.createUser(userWithPassword));
+                AppExecutors.getInstance().getNetworkIO().execute(UserConnector.loadUser(userWithPassword));
+                finish();
             } else {
                 Toast.makeText(this, R.string.login_invalid_toast, Toast.LENGTH_LONG).show();
             }

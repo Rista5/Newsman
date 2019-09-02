@@ -5,6 +5,8 @@ import androidx.annotation.Nullable;
 import androidx.fragment.app.FragmentManager;
 import androidx.appcompat.app.AppCompatActivity;
 import android.os.Bundle;
+import android.view.Menu;
+import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
@@ -20,18 +22,15 @@ import com.newsman.newsman.R;
 import com.newsman.newsman.rest_connection.CompositeBuilder;
 import com.newsman.newsman.rest_connection.UpdateBuilder;
 import com.newsman.newsman.server_entities.Comment;
-import com.newsman.newsman.server_entities.CommentWithUsername;
 import com.newsman.newsman.auxiliary.HistoryList.HistoryList;
 import com.newsman.newsman.auxiliary.HistoryList.HistoryObject;
 import com.newsman.newsman.server_entities.News;
 import com.newsman.newsman.server_entities.Picture;
 import com.newsman.newsman.server_entities.SimpleNews;
-import com.newsman.newsman.server_entities.User;
 import com.newsman.newsman.fragments.comment_fragment.CommentsFragment;
 import com.newsman.newsman.fragments.CreateNewsFragment;
 import com.newsman.newsman.fragments.PicturesFragment;
 
-import java.util.ArrayList;
 import java.util.List;
 
 public class UpdateNewsActivity extends AppCompatActivity {
@@ -45,8 +44,7 @@ public class UpdateNewsActivity extends AppCompatActivity {
 
     private News news;
     private HistoryList<Picture> pictureHistoryList;
-    private List<Comment> commentList;
-    private boolean newsChanged = false;
+    private HistoryList<Comment> commentHistoryList;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -70,9 +68,20 @@ public class UpdateNewsActivity extends AppCompatActivity {
         switch (item.getItemId()) {
             case android.R.id.home:
                 return BackArrowHelper.backArrowClicked(this);
+            case R.id.action_save_news:
+                sendUpdateRequest();
+                return true;
             default:
                 return super.onOptionsItemSelected(item);
         }
+    }
+
+
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        MenuInflater inflater = getMenuInflater();
+        inflater.inflate(R.menu.save_news_menu, menu);
+        return true;
     }
 
     @Override
@@ -95,10 +104,10 @@ public class UpdateNewsActivity extends AppCompatActivity {
         BitmapCache.getInstance().loadPicturesInCache(this, pictures);
         pictureHistoryList = new HistoryList<>(PictureLoader.loadPictureListData(this, pictures));
         picturesFragment = PicturesFragment.newInstance(newsId, pictureHistoryList, false);
-        commentList= AppDatabase.getInstance(this).commentDao()
+        List<Comment> commentList = AppDatabase.getInstance(this).commentDao()
                 .getCommentsForNewsNonLive(newsId);
-        commentsFragment = CommentsFragment.newInstance(newsId, commentList, new DeleteComment());
-
+        commentHistoryList = new HistoryList<>(commentList);
+        commentsFragment = CommentsFragment.newInstance(newsId, commentHistoryList, new DeleteComment(), false);
         FragmentManager fragmentManager = getSupportFragmentManager();
         fragmentManager.beginTransaction()
                 .add(R.id.update_news_news_frame, createNewsFragment)
@@ -128,26 +137,14 @@ public class UpdateNewsActivity extends AppCompatActivity {
         return createNewsFragment.getNews();
     }
 
-    private void setFragmentData() {
-        AppDatabase db = AppDatabase.getInstance(this);
-        news = db.newsDao().getNewsByIdNonLive(newsId);
-        SimpleNews simpleNews = SimpleNews.getSimpleNews(news, this);
-        createNewsFragment.setNews(simpleNews);
-        List<Picture> pictures = db.pictureDao().getPicturesForNewsNonLive(newsId);
-        BitmapCache.getInstance().loadPicturesInCache(this, pictures);
-        pictureHistoryList = new HistoryList<>(pictures);
-        picturesFragment.setPictureList(pictureHistoryList);
-        commentList = db.commentDao().getCommentsForNewsNonLive(newsId);
-        commentsFragment.setCommentList(commentList);
-    }
-
     private void sendUpdateRequest() {
-        List<HistoryObject<Picture>> history = pictureHistoryList.getHistory();
-        UpdateBuilder ub = new CompositeBuilder();
+        List<HistoryObject<Picture>> pictureHistory = pictureHistoryList.getHistory();
+        List<HistoryObject<Comment>> commentHistory = commentHistoryList.getHistory();
+        UpdateBuilder ub = new CompositeBuilder(this);
         if(createNewsFragment.getUpdateStatus()) {
             ub.createNews(getNewsData());
         }
-        for(HistoryObject<Picture> h: history){
+        for(HistoryObject<Picture> h: pictureHistory){
             switch (h.getOp()){
                 case INSERT:
                     ub.addPicture(h.getObject());
@@ -157,6 +154,18 @@ public class UpdateNewsActivity extends AppCompatActivity {
                     break;
                 case DELETE:
                     ub.deletePicture(h.getObject());
+                    break;
+            }
+        }
+        for(HistoryObject<Comment> h: commentHistory) {
+            switch (h.getOp()) {
+                case INSERT:
+                    ub.addComment(h.getObject());
+                    break;
+                case DELETE:
+                    ub.deleteComment(h.getObject());
+                    break;
+                case UPDATE:
                     break;
             }
         }

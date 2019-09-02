@@ -1,5 +1,8 @@
 package com.newsman.newsman.new_rest.dtos;
 
+import android.graphics.Bitmap;
+
+import com.newsman.newsman.auxiliary.Constant;
 import com.newsman.newsman.auxiliary.DateAux;
 import com.newsman.newsman.server_entities.News;
 import com.newsman.newsman.server_entities.SimpleNews;
@@ -40,6 +43,35 @@ public class SimpleNewsDTO {
         this.lastModified = news.getLastModified().toString();
         this.lastModifiedUser = new UserDTO(news.getModifierId(),news.getModifierUsername());
         this.backgroundPicture = new PictureDTO(news.getBackgroundId(),"","",news.getId());
+    }
+
+    public static SimpleNews getSimpleNews(SimpleNewsDTO dto) {
+        Bitmap background = null;
+        int backgroundId = Constant.INVALID_PICTURE_ID;
+        if(dto.backgroundPicture != null)
+            backgroundId = dto.backgroundPicture.getId();
+        Date date = null;
+        try {
+            date = DateAux.getDate(dto.getLasModified());
+        } catch (ParseException e) {
+            e.printStackTrace();
+        }
+        int userId = Constant.USER_ID;
+        String username = "";
+        if(dto.lastModifiedUser != null) {
+            userId = dto.lastModifiedUser.getId();
+            username = dto.lastModifiedUser.getUsername();
+        }
+        return new SimpleNews(
+                dto.id,
+                dto.title,
+                dto.content,
+                date,
+                null,
+                dto.backgroundPicture.getId(),
+                userId,
+                username
+        );
     }
 
     public SimpleNews getSimpleNews(){
