@@ -26,6 +26,7 @@ public class BitmapConnector {
             Call<ResponseBody> resp = service.savePicture(pictureId, newsId, body);
             try {
                 retrofit2.Response rr2 = resp.execute();
+                String a = "asda";
             } catch (IOException e) {
                 e.printStackTrace();
             }

@@ -44,4 +44,7 @@ public abstract class CommentDao {
 
     @Query("DELETE FROM comment WHERE belongsToNewsId = :newsId")
     public abstract void deleteCommentsForNews(int newsId);
+
+    @Query("DELETE FROM comment")
+    public abstract void deleteAllComments();
 }

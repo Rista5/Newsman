@@ -20,6 +20,7 @@ import com.newsman.newsman.database.AppDatabase;
 import com.newsman.newsman.database.UserDao;
 import com.newsman.newsman.auxiliary.Constant;
 import com.newsman.newsman.fragments.comment_fragment.delete_strategy.HideDelete;
+import com.newsman.newsman.new_rest.NewsConnector;
 import com.newsman.newsman.picture_management.BitmapCache;
 import com.newsman.newsman.picture_management.BitmapObserver;
 import com.newsman.newsman.server_entities.Comment;
@@ -28,6 +29,7 @@ import com.newsman.newsman.server_entities.Picture;
 import com.newsman.newsman.R;
 import com.newsman.newsman.fragments.comment_fragment.CommentsFragment;
 import com.newsman.newsman.fragments.PicturesFragment;
+import com.newsman.newsman.thread_management.AppExecutors;
 import com.newsman.newsman.thread_management.SubscriptionService;
 
 import java.util.ArrayList;
@@ -58,7 +60,6 @@ public class DisplayNewsActivity extends AppCompatActivity {
         setUpViews();
         //TODO mozda treba da se skloni
         BackArrowHelper.displayBackArrow(this);
-
         overflow.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -70,6 +71,7 @@ public class DisplayNewsActivity extends AppCompatActivity {
         inflateCommentsFragment();
         subscribeToLiveData();
         getPictures();
+        updateNewsData();
     }
 
     @Override
@@ -165,6 +167,10 @@ public class DisplayNewsActivity extends AppCompatActivity {
         intent.setAction(action);
         intent.putExtras(bundle);
         mContext.startService(intent);
+    }
+
+    private void updateNewsData() {
+        AppExecutors.getInstance().getNetworkIO().execute(NewsConnector.loadNewsById(this, newsId));
     }
 
 }

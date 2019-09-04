@@ -48,6 +48,9 @@ public abstract class NewsDao {
     @Query("DELETE FROM news WHERE id = :newsId")
     public abstract void deleteNewsById(int newsId);
 
+    @Query("DELETE FROM news")
+    public abstract void deleteAllNews();
+
     @Query("SELECT subscribed FROM news WHERE id = :newsId")
     public abstract int getSubscriptionStatus(int newsId);
 
@@ -75,4 +78,5 @@ public abstract class NewsDao {
     public int[] getSubscribedNewsIds(){
         return getBySubscibeStatus(Constant.SUBSCRIBED);
     }
+
 }

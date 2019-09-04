@@ -6,7 +6,9 @@ import android.graphics.Bitmap;
 import com.newsman.newsman.auxiliary.Constant;
 import com.newsman.newsman.auxiliary.PictureData;
 import com.newsman.newsman.database.AppDatabase;
+import com.newsman.newsman.new_rest.dtos.CommentDTO;
 import com.newsman.newsman.new_rest.dtos.NewsDTO;
+import com.newsman.newsman.new_rest.dtos.PictureDTO;
 import com.newsman.newsman.new_rest.dtos.SimpleNewsDTO;
 import com.newsman.newsman.new_rest.retrofit_services.NewsService;
 import com.newsman.newsman.picture_management.BitmapCache;
@@ -48,8 +50,19 @@ public class NewsConnector {
             try{
                 Response<List<NewsDTO>> response = newsListCall.execute();
                 if(response.body() == null) return;
+                if(response.body().size() >0 ) {
+                    AppDatabase.getInstance(context).commentDao().deleteAllComments();
+                    AppDatabase.getInstance(context).pictureDao().deleteAllPictures();
+                    AppDatabase.getInstance(context).newsDao().deleteAllNews();
+                }
                 for(NewsDTO news: response.body()){
                     AppDatabase.getInstance(context).newsDao().insertNews(NewsDTO.getNews(news));
+                    for(CommentDTO comment: news.getComments()) {
+                        AppDatabase.getInstance(context).commentDao().insertComment(CommentDTO.getComment(comment));
+                    }
+                    for(PictureDTO picture: news.getPictures()) {
+                        AppDatabase.getInstance(context).pictureDao().insertPicture(PictureDTO.getPicture(picture));
+                    }
                 }
             }
             catch (IOException ex){
@@ -65,7 +78,14 @@ public class NewsConnector {
             try{
                 Response<NewsDTO> response = getCall.execute();
                 if(response.body()!= null){
-                    AppDatabase.getInstance(context).newsDao().insertNews(NewsDTO.getNews(response.body()));
+                    NewsDTO news = response.body();
+                    AppDatabase.getInstance(context).newsDao().updateNews(NewsDTO.getNews(news));
+                    for(CommentDTO comment: news.getComments()) {
+                        AppDatabase.getInstance(context).commentDao().updateComment(CommentDTO.getComment(comment));
+                    }
+                    for(PictureDTO picture: news.getPictures()) {
+                        AppDatabase.getInstance(context).pictureDao().updatePicture(PictureDTO.getPicture(picture));
+                    }
                 }
             }
             catch (IOException ex){

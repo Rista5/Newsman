@@ -63,5 +63,6 @@
     <string name="login_failed">"Login failed"</string>
     <string name="settings_ip_adr_hint">IP Addresse</string>
     <string name="action_save_news">Save news</string>
+    <string name="news_list_button_text">News list</string>
 
 </resources>

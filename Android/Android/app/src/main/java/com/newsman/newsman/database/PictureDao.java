@@ -96,6 +96,9 @@ public abstract class PictureDao {
     @Query("DELETE FROM picture WHERE belongsToNewsId = :newsId")
     public abstract void deletePicturesForNews(int newsId);
 
+    @Query("DELETE FROM picture")
+    public abstract void deleteAllPictures();
+
     public void deletePicturesForNewsWithData(Context context, int newsId) {
         List<Picture> pics = getPicturesForNewsNonLive(newsId);
         for(Picture p: pics) {
