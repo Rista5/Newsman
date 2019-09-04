@@ -2,6 +2,7 @@
 using ObjectModel.DTOs;
 using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 using System.Net;
 using System.Net.Http;
@@ -61,7 +62,19 @@ namespace API.Controllers
                 response.StatusCode = HttpStatusCode.UnsupportedMediaType;
                 return response;
             }
-            byte[] pic = await msg.Content.ReadAsByteArrayAsync();
+            //byte[] pic = await msg.Content.ReadAsByteArrayAsync();
+            var ms = new MemoryStream();
+            try
+            {
+                await msg.Content.CopyToAsync(ms);
+            }
+            catch(Exception ex)
+            {
+                string s = ex.Message;
+            }
+            ms.Seek(0, SeekOrigin.Begin);
+
+            var pic = ms.ToArray();
             Service.RawPictureService.PutPicture(picId, newsId, pic);
             response.StatusCode = HttpStatusCode.OK;
             return response;

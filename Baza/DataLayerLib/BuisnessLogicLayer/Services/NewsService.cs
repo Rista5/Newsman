@@ -90,7 +90,7 @@ namespace BuisnessLogicLayer.Services
             bool result = false;
             SimpleNewsDTO dataResult = newsData.UpdateNews(simpleDTO, userId);
 
-            if (simpleDTO.BackgroundPicture != null)
+            if (dataResult != null && simpleDTO.BackgroundPicture != null)
             {
                 //loader.SaveMedia(simpleDTO.BackgroundPicture.Id, simpleDTO.Id, simpleDTO.BackgroundPicture.GetPictureBytes());
                 dataResult.BackgroundPicture.PictureData = simpleDTO.BackgroundPicture.PictureData;

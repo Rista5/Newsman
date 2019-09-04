@@ -61,7 +61,11 @@ namespace BuisnessLogicLayer.Services
             PictureDTO resultData = pictureData.DeletePicture(id);
             bool result = false;
             if (resultData != null)
+            {
                 result = loader.DeleteMedia(resultData.Id, resultData.BelongsToNewsId);
+                MessageQueueManager manager = MessageQueueManager.Instance;
+                manager.PublishMessage(resultData.BelongsToNewsId, resultData.Id, resultData, MessageOperation.Delete);
+            }
             return result;
         }
 
