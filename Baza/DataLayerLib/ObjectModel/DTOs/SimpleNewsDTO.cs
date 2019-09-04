@@ -12,7 +12,7 @@ namespace ObjectModel.DTOs
         public int Id { get; set; }
         public string Title { get; set; }
         public string Content { get; set; }
-        public DateTime LasModified { get; set; }
+        public DateTime LastModified { get; set; }
         public UserDTO LastModifiedUser { get; set; }
         public PictureDTO BackgroundPicture { get; set; }
 
@@ -25,7 +25,7 @@ namespace ObjectModel.DTOs
             Id = news.Id;
             Title = news.Title;
             Content = news.Content;
-            LasModified = news.LastModified;
+            LastModified = news.LastModified;
             if (news.BackgroundPicture != null)
                 BackgroundPicture = new PictureDTO(news.BackgroundPicture);
             else BackgroundPicture = null;
@@ -36,7 +36,7 @@ namespace ObjectModel.DTOs
             return String.Format("Id: " + Id +
                 "\nTitle: " + Title +
                 "\nContetn: " + Content +
-                "\nLastModified: " + LasModified
+                "\nLastModified: " + LastModified
                 );
         }
     }

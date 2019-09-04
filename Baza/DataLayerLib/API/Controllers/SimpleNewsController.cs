@@ -16,5 +16,12 @@ namespace API.Controllers
         {
             return Service.NewsService.GetAllNewsSimple();
         }
+
+        [HttpPut]
+        [Route("api/SimpleNews/{userId}")]
+        public SimpleNewsDTO CreateNews([FromBody]SimpleNewsDTO news, int userId)
+        {
+            return Service.NewsService.CreateNews(news, userId);
+        }
     }
 }

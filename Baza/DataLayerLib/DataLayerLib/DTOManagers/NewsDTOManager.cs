@@ -199,6 +199,43 @@ namespace DataLayerLib.DTOManagers
             return result;
         }
 
+        public SimpleNewsDTO CreateNews(SimpleNewsDTO dto, int userId)
+        {
+            NewsDTO news= new NewsDTO(dto);
+            SimpleNewsDTO result = null;
+            ISession session = null;
+            try
+            {
+                session = DataLayer.GetSession();
+                News newNews = ExpandDTO(news);
+                newNews.LastModified = DateTime.Today;
+                User user = session.Load<User>(userId);
+                NewsModified modified = new NewsModified();
+                modified.News = newNews;
+                modified.User = user;
+                modified.ModificationDate = DateTime.Today;
+                modified.News = newNews;
+
+                ITransaction transaction = session.BeginTransaction();
+
+                session.SaveOrUpdate(newNews);
+                session.Save(modified);
+                session.Flush();
+                transaction.Commit();
+
+                result = new SimpleNewsDTO(newNews);
+
+                session.Close();
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine(ex.Message);
+                if (session != null)
+                    session.Close();
+            }
+            return result;
+        }
+
         public NewsDTO CreateNews(NewsDTO news, int userId)
         {
             NewsDTO result = null;
@@ -328,10 +365,10 @@ namespace DataLayerLib.DTOManagers
         public News ExpandDTO(NewsDTO newsDTO)
         {
             News news = new News();
-            news.LastModified = newsDTO.LasModified;
+            news.LastModified = newsDTO.LastModified;
             news.Content = newsDTO.Content;
             news.Title = newsDTO.Title;
-            if(newsDTO.BackgroundPicture.PictureData != null)
+            if(newsDTO.BackgroundPicture != null)
                 news.BackgroundPicture = ExpandBackgroundPicture(newsDTO.BackgroundPicture);
             foreach(PictureDTO picture in newsDTO.Pictures)
             {

@@ -24,6 +24,8 @@ namespace BuisnessLogicLayer.DAOInterfaces
 
         NewsDTO CreateNews(NewsDTO news, int userId);
 
+        SimpleNewsDTO CreateNews(SimpleNewsDTO news, int userId);
+
         SimpleNewsDTO UpdateNews(SimpleNewsDTO simpleDTO, int userId);
 
         NewsDTO DeleteNews(int newsId);

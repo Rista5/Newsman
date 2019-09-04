@@ -27,7 +27,8 @@ namespace ObjectModel.DTOs
 
         public void SetPictureBytes(byte[] data)
         {
-            PictureData = Encoding.Default.GetString(data);
+            if(data != null)
+                PictureData = Encoding.Default.GetString(data);
         }
 
         public byte[] GetPictureBytes()

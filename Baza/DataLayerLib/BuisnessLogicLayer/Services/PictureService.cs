@@ -50,8 +50,6 @@ namespace BuisnessLogicLayer.Services
             PictureDTO dataResult = pictureData.CreatePicture(pic);
             if (dataResult != null)
             {
-                //loader.SaveMedia(dataResult.Id, dataResult.BelongsToNewsId, dataResult.GetPictureBytes());
-
                 MessageQueueManager menager = MessageQueueManager.Instance;
                 menager.PublishMessage(dataResult.BelongsToNewsId, dataResult.Id, dataResult, MessageOperation.Insert);
             }

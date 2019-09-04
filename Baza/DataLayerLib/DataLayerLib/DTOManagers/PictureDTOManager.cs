@@ -107,6 +107,7 @@ namespace DataLayerLib.DTOManagers
                 }
 
                 session.Close();
+                result = new PictureDTO(picture);
             }
             catch (Exception ex)
             {

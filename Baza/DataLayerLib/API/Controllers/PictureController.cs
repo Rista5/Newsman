@@ -23,8 +23,8 @@ namespace API.Controllers
         }
 
         [HttpGet]
-        [Route("api/Picture/FromNews/{id}")]
-        public IEnumerable<PictureDTO> GetPictureByNews(int newsID)
+        [Route("api/Picture/FromNews/")]
+        public IEnumerable<PictureDTO> GetPictureByNews([FromUri] int newsID)
         {
             service = Service.PictureService;
             return service.GetPictureByNews(newsID);

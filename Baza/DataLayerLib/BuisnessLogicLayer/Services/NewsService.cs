@@ -43,6 +43,16 @@ namespace BuisnessLogicLayer.Services
             return newsData.GetNews(id);
         }
         
+        public SimpleNewsDTO CreateNews(SimpleNewsDTO dto, int userId)
+        {
+            SimpleNewsDTO result = newsData.CreateNews(dto, userId);
+            //if (dto.BackgroundPicture != null)
+            //{
+            //    //loader.SaveMedia(news.BackgroundPicture.Id, news.Id, news.BackgroundPicture.GetPictureBytes());
+            //    result.BackgroundPicture.PictureData = dto.BackgroundPicture.PictureData;
+            //}
+            return result;
+        }
 
         //This Shit needs testing
         public NewsDTO CreateNews(NewsDTO news, int userId)
