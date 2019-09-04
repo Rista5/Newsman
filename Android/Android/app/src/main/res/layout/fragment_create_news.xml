@@ -13,8 +13,8 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:adjustViewBounds="true"
-        android:minHeight="32dp"
-        android:maxHeight="256dp"
+        android:minHeight="@dimen/picture_min_height"
+        android:maxHeight="@dimen/picture_max_height"
         android:layout_below="@+id/create_new_news_title"
         tools:src="@drawable/mountain"/>
     <ImageView

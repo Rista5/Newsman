@@ -52,6 +52,8 @@ public class PicturesListAdapter extends RecyclerView.Adapter<PicturesListAdapte
     @Override
     public void onBindViewHolder(@NonNull NewsImageViewHolder newsImageViewHolder, int position) {
         Picture pictureItem = pictureList.get(position);
+        newsImageViewHolder.pictureId = pictureItem.getId();
+        newsImageViewHolder.newsId = pictureItem.getBelongsToNewsId();
         newsImageViewHolder.title.setText(pictureItem.getName());
         BitmapObserver observer = new BitmapObserver(newsImageViewHolder.imageView);
         Observable observable = BitmapCache.getInstance().getBitmapObservable(context, pictureItem.getId(), pictureItem.getBelongsToNewsId());
@@ -65,8 +67,6 @@ public class PicturesListAdapter extends RecyclerView.Adapter<PicturesListAdapte
 
     public void addPicture(Picture picture) {
         if(sendToRest){
-//            new RestConnector(new Put(new WritePicture(picture)), Constant.PICTURE_ROUTE)
-//                    .execute();
             Bitmap bmp = BitmapCache.getInstance().getBitmapObservable(context,
                     picture.getId(), picture.getBelongsToNewsId()).getBitmap();
             AppExecutors.getInstance().getNetworkIO()
@@ -80,8 +80,6 @@ public class PicturesListAdapter extends RecyclerView.Adapter<PicturesListAdapte
 
     public void updatePicture(int position, Picture picture) {
         if(sendToRest){
-//            new RestConnector(new Post(new WritePicture(picture)), Constant.PICTURE_ROUTE)
-//                    .execute();
             //TODO ovo nece bas da radi, slika se ne pribavlja lepo
             Bitmap bmp = BitmapCache.getInstance().getBitmapObservable(context,
                     picture.getId(), picture.getBelongsToNewsId()).getBitmap();
@@ -97,8 +95,6 @@ public class PicturesListAdapter extends RecyclerView.Adapter<PicturesListAdapte
     public void removePicture(int position) {
         if(sendToRest){
             Picture picture = pictureList.get(position);
-//            new RestConnector(new Delete(picture.getId()), Constant.PICTURE_ROUTE)
-//                    .execute();
             AppExecutors.getInstance().getNetworkIO()
                     .execute(PictureConnector.deletePicture(context, picture.getId()));
         } else {
@@ -119,6 +115,8 @@ public class PicturesListAdapter extends RecyclerView.Adapter<PicturesListAdapte
 
     public class NewsImageViewHolder extends RecyclerView.ViewHolder {
 
+        private int pictureId = Constant.INVALID_PICTURE_ID;
+        private int newsId = Constant.INVALID_NEWS_ID;
         private TextView title;
         private ImageView imageView;
         private ImageView removePicture;
@@ -139,12 +137,9 @@ public class PicturesListAdapter extends RecyclerView.Adapter<PicturesListAdapte
                 @Override
                 public void onClick(View v) {
                     Intent intent = new Intent(context, ImageDisplayActivity.class);
-
-                    Bitmap bmp = PictureConverter.getImageViewBitmap(imageView);
-                    byte[] data = PictureConverter.getBitmapBytes(bmp);
-
                     Bundle bundle = new Bundle();
-                    bundle.putByteArray(Constant.IMAGE_DISPLAY_KEY, data);
+                    bundle.putInt(Constant.IMAGE_DISPLAY_KEY, pictureId);
+                    bundle.putInt(Constant.NEWS_BUNDLE_KEY, newsId);
                     intent.putExtras(bundle);
                     context.startActivity(intent);
                 }

@@ -2,8 +2,10 @@ package com.newsman.newsman.picture_management;
 
 import android.content.Context;
 import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.util.LruCache;
 
+import com.newsman.newsman.R;
 import com.newsman.newsman.auxiliary.Constant;
 import com.newsman.newsman.new_rest.BitmapConnector;
 import com.newsman.newsman.new_rest.PictureConnector;
@@ -19,6 +21,7 @@ public class BitmapCache {
     private LruCache<Integer,BitmapObservable> cache;
     private static BitmapCache _instance = null;
     private static int NonValidIdentifiers = -1;
+    private static Bitmap defaultBitmap;
 
     public BitmapCache() {
         int maxSize = (int)Runtime.getRuntime().maxMemory();
@@ -28,6 +31,13 @@ public class BitmapCache {
               return bmp.getBitmap().getByteCount()/1024;
           }
         };
+    }
+
+    public static Bitmap getDefaultBitmap(Context context) {
+        if(defaultBitmap == null) {
+            defaultBitmap = BitmapFactory.decodeResource(context.getResources(), R.drawable.mountain);
+        }
+        return defaultBitmap;
     }
 
     public static BitmapCache getInstance()

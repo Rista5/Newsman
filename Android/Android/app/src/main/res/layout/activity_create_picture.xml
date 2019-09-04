@@ -19,26 +19,29 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:hint="@string/create_picture_name_hint"/>
-            <Button
-                android:id="@+id/create_picture_capture_button"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_below="@+id/create_picture_name"
-                android:text="@string/create_picture_capture_button"/>
-            <Button
-                android:id="@+id/create_picture_pick_from_gallery"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_below="@+id/create_picture_name"
-                android:layout_alignRight="@id/create_picture_name"
-                android:text="@string/create_picture_pick_from_gallery_button"/>
             <ImageView
                 android:id="@+id/create_picture_image_view"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
+                android:minHeight="@dimen/picture_min_height"
+                android:maxHeight="@dimen/picture_max_height"
                 android:adjustViewBounds="true"
-                android:layout_below="@+id/create_picture_capture_button"
+                android:layout_below="@+id/create_picture_name"
                 tools:srcCompat="@tools:sample/backgrounds/scenic" />
+            <ImageView
+                android:id="@+id/create_picture_pick_gallery"
+                android:layout_width="30dp"
+                android:layout_height="40dp"
+                android:src="@drawable/ic_gallery"
+                android:layout_alignTop="@+id/create_picture_image_view"
+                android:layout_alignRight="@+id/create_picture_image_view"/>
+            <ImageView
+                android:id="@+id/create_picture_capture_photo"
+                android:layout_width="30dp"
+                android:layout_height="40dp"
+                android:src="@drawable/ic_camera"
+                android:layout_alignTop="@+id/create_picture_image_view"
+                android:layout_toLeftOf="@+id/create_picture_pick_gallery"/>
 
             <ScrollView
                 android:id="@+id/create_picture_description_scroll"
@@ -52,19 +55,6 @@
                     android:hint="@string/create_picture_description_hint"
                     android:inputType="text|textMultiLine"/>
             </ScrollView>
-            <Button
-                android:id="@+id/create_picture_post_picture"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_below="@+id/create_picture_description_scroll"
-                android:text="@string/create_picture_post_button"/>
-            <Button
-                android:id="@+id/create_picture_cancel"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_below="@+id/create_picture_description_scroll"
-                android:layout_alignRight="@id/create_picture_name"
-                android:text="@string/create_picture_cancel_button"/>
         </RelativeLayout>
     </ScrollView>
 </LinearLayout>

@@ -23,18 +23,6 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_below="@+id/update_news_pictures_frame"/>
-        <Button
-            android:id="@+id/update_news_save"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_below="@+id/update_news_comments_frame"
-            android:text="Save"/>
-        <Button
-            android:id="@+id/update_news_cancel"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_below="@+id/update_news_comments_frame"
-            android:layout_alignParentRight="true"
-            android:text="cancel"/>
+
     </RelativeLayout>
 </ScrollView>

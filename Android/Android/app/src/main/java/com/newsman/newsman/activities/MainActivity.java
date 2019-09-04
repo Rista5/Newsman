@@ -234,7 +234,8 @@ public class MainActivity extends AppCompatActivity {
         int[] subs = new int[100];
         for(int i=0; i< 100; i++)
             subs[i] = i+1;
-        new Thread(new MQClient(Constant.getIpAddress(), this, subs), "TEST_THREAD");
+        AppExecutors.getInstance().getNetworkIO().execute(
+                new MQClient(Constant.getIpAddress(), this, subs));
     }
 
     private void testPictureSave(){

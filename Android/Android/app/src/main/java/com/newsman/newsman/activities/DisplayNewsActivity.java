@@ -28,6 +28,7 @@ import com.newsman.newsman.server_entities.Picture;
 import com.newsman.newsman.R;
 import com.newsman.newsman.fragments.comment_fragment.CommentsFragment;
 import com.newsman.newsman.fragments.PicturesFragment;
+import com.newsman.newsman.thread_management.SubscriptionService;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -52,10 +53,9 @@ public class DisplayNewsActivity extends AppCompatActivity {
         Bundle extras = getIntent().getExtras();
         if(extras != null) {
             newsId = extras.getInt(Constant.NEWS_BUNDLE_KEY);
+            autoSubscribe(SubscriptionService.SUBSCRIBE);
         }
-
         setUpViews();
-
         //TODO mozda treba da se skloni
         BackArrowHelper.displayBackArrow(this);
 
@@ -72,6 +72,11 @@ public class DisplayNewsActivity extends AppCompatActivity {
         getPictures();
     }
 
+    @Override
+    protected void onDestroy() {
+        autoSubscribe(SubscriptionService.UNSUBSCRIBE);
+        super.onDestroy();
+    }
 
     @Override
     protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
@@ -152,4 +157,14 @@ public class DisplayNewsActivity extends AppCompatActivity {
         lastUpdateBy = findViewById(R.id.news_item_last_user_update_value);
         content = findViewById(R.id.news_item_text_content);
     }
+
+    private void autoSubscribe(String action) {
+        Intent intent = new Intent(this, SubscriptionService.class);
+        Bundle bundle = new Bundle();
+        bundle.putInt(Constant.NEWS_BUNDLE_KEY, newsId);
+        intent.setAction(action);
+        intent.putExtras(bundle);
+        mContext.startService(intent);
+    }
+
 }

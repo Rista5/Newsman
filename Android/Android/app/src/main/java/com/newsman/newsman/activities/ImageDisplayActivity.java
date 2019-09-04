@@ -13,6 +13,8 @@ import com.newsman.newsman.auxiliary.Constant;
 import com.newsman.newsman.auxiliary.PictureConverter;
 import com.newsman.newsman.auxiliary.ZoomableImageView;
 import com.newsman.newsman.R;
+import com.newsman.newsman.picture_management.BitmapCache;
+import com.newsman.newsman.picture_management.BitmapObserver;
 
 public class ImageDisplayActivity extends AppCompatActivity {
 
@@ -24,22 +26,14 @@ public class ImageDisplayActivity extends AppCompatActivity {
         setContentView(R.layout.activity_image_display);
         zoomableImage = findViewById(R.id.image_display_image_view);
 
-//        ActionBar actionBar = getSupportActionBar();
-//        if (actionBar != null) {
-//            actionBar.setHomeButtonEnabled(true);
-//        }
         BackArrowHelper.displayBackArrow(this);
 
         Bundle extras = getIntent().getExtras();
         if(extras!=null) {
-            byte[] data = extras.getByteArray(Constant.IMAGE_DISPLAY_KEY);
-            try {
-                Bitmap bmp = PictureConverter.getBitmap(data);
-                zoomableImage.setImageBitmap(bmp);
-            }
-            catch (NullPointerException e){
-                e.printStackTrace();
-            }
+            int pictureId = extras.getInt(Constant.IMAGE_DISPLAY_KEY);
+            int newsId = extras.getInt(Constant.NEWS_BUNDLE_KEY);
+            BitmapCache.getInstance().getBitmapObservable(this, pictureId, newsId)
+                    .addObserver(new BitmapObserver(zoomableImage));
         }
     }
     @Override

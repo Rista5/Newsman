@@ -21,19 +21,6 @@
             android:layout_height="wrap_content"
             android:layout_below="@+id/create_news_news_frame"/>
 
-        <Button
-            android:id="@+id/create_news_post_news"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="@string/create_news_post_news_button"
-            android:layout_below="@+id/create_news_pictures_frame"/>
-        <Button
-            android:id="@+id/create_news_cancel"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="@string/create_news_cancel_button"
-            android:layout_toRightOf="@+id/create_news_post_news"
-            android:layout_below="@+id/create_news_pictures_frame"/>
     </RelativeLayout>
     </ScrollView>
 </layout>

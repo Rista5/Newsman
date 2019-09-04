@@ -2,6 +2,7 @@ package com.newsman.newsman.activities;
 
 import androidx.appcompat.app.AppCompatActivity;
 
+import android.os.AsyncTask;
 import android.os.Bundle;
 import android.view.MenuItem;
 import android.widget.EditText;
@@ -10,9 +11,12 @@ import android.widget.Toast;
 import com.newsman.newsman.R;
 import com.newsman.newsman.auxiliary.BackArrowHelper;
 import com.newsman.newsman.auxiliary.Constant;
+import com.newsman.newsman.auxiliary.LoginState;
 import com.newsman.newsman.new_rest.UserConnector;
 import com.newsman.newsman.server_entities.UserWithPassword;
 import com.newsman.newsman.thread_management.AppExecutors;
+
+import java.lang.ref.WeakReference;
 
 public class LoginActivity extends AppCompatActivity {
 
@@ -50,7 +54,7 @@ public class LoginActivity extends AppCompatActivity {
             if(validInput(username, password)){
                 UserWithPassword userWithPassword = new UserWithPassword(Constant.INVALID_USER_ID, username, password);
                 //TODO implement login
-                AppExecutors.getInstance().getNetworkIO().execute(UserConnector.loadUser(userWithPassword));
+                new LoginAsyncTask(this).execute(userWithPassword);
                 finish();
             } else {
                 Toast.makeText(this, R.string.login_invalid_toast, Toast.LENGTH_LONG).show();
@@ -61,5 +65,33 @@ public class LoginActivity extends AppCompatActivity {
     private boolean validInput(String username, String password){
         return username != null && !username.equals("")
                 && password != null && !password.equals("");
+    }
+
+    static class LoginAsyncTask extends AsyncTask<UserWithPassword, Void, Void> {
+
+        private WeakReference<LoginActivity> activityRefrence;
+
+        LoginAsyncTask(LoginActivity context) {
+            activityRefrence = new WeakReference<>(context);
+        }
+
+        @Override
+        protected Void doInBackground(UserWithPassword... userWithPasswords) {
+            if(userWithPasswords.length == 0) return null;
+            UserConnector.loadUser(userWithPasswords[0]).run();
+            return null;
+        }
+
+        @Override
+        protected void onPostExecute(Void aVoid) {
+            LoginActivity activity = activityRefrence.get();
+            if(activity == null || activity.isFinishing()) return;
+            if(LoginState.getInstance().getUser().getId() != Constant.INVALID_USER_ID){
+                Toast.makeText(activity, R.string.login_successful_toast, Toast.LENGTH_LONG).show();
+                activity.finish();
+            }
+            else
+                Toast.makeText(activity, R.string.create_account_fail_toast, Toast.LENGTH_LONG).show();
+        }
     }
 }

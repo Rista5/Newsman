@@ -2,6 +2,7 @@ package com.newsman.newsman.activities;
 
 import androidx.appcompat.app.AppCompatActivity;
 
+import android.os.AsyncTask;
 import android.os.Bundle;
 import android.view.MenuItem;
 import android.widget.EditText;
@@ -10,7 +11,11 @@ import android.widget.Toast;
 import com.newsman.newsman.R;
 import com.newsman.newsman.auxiliary.BackArrowHelper;
 import com.newsman.newsman.auxiliary.Constant;
+import com.newsman.newsman.auxiliary.LoginState;
+import com.newsman.newsman.new_rest.UserConnector;
 import com.newsman.newsman.server_entities.UserWithPassword;
+
+import java.lang.ref.WeakReference;
 
 public class CreateAccountActivity extends AppCompatActivity {
 
@@ -42,7 +47,7 @@ public class CreateAccountActivity extends AppCompatActivity {
         if(validInput(username, password, confirmPass)) {
             //TODO create account
             UserWithPassword user = new UserWithPassword(Constant.INVALID_USER_ID, username, password);
-
+            new CreateAccAsyncTask(this).execute(user);
         } else {
             Toast.makeText(this, R.string.create_account_invalid_toast, Toast.LENGTH_LONG).show();
         }
@@ -59,4 +64,33 @@ public class CreateAccountActivity extends AppCompatActivity {
         etConfirmPassword = findViewById(R.id.create_account_confirm_password);
     }
 
+    static class CreateAccAsyncTask extends AsyncTask<UserWithPassword, Void, Void> {
+
+        private WeakReference<CreateAccountActivity> activityReference;
+
+        CreateAccAsyncTask(CreateAccountActivity context) {
+            activityReference = new WeakReference<>(context);
+        }
+
+        @Override
+        protected Void doInBackground(UserWithPassword... userWithPasswords) {
+            if (userWithPasswords.length == 0) return null;
+            UserConnector.createUser(userWithPasswords[0]).run();
+            return null;
+        }
+
+        @Override
+        protected void onPostExecute(Void aVoid) {
+
+            CreateAccountActivity activity = activityReference.get();
+            if(activity == null || activity.isFinishing()) return;
+
+            if(LoginState.getInstance().getUser().getId() != Constant.INVALID_USER_ID){
+                Toast.makeText(activity, R.string.create_account_success_toast, Toast.LENGTH_LONG).show();
+                activity.finish();
+            }
+            else
+                Toast.makeText(activity, R.string.create_account_fail_toast, Toast.LENGTH_LONG).show();
+        }
+    }
 }

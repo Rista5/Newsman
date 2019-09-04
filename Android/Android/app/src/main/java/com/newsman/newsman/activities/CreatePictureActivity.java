@@ -7,6 +7,8 @@ import androidx.annotation.Nullable;
 import androidx.appcompat.app.ActionBar;
 import androidx.appcompat.app.AppCompatActivity;
 import android.os.Bundle;
+import android.view.Menu;
+import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
@@ -29,7 +31,6 @@ public class CreatePictureActivity extends AppCompatActivity {
 
     private EditText nameEditText, descriptionEditText;
     private ImageView pictureView;
-    private Button postButton, cancelButton, captureButton, pickGalleryButton;
     private Bitmap pictureBitmap;
     private int newsId = Constant.INVALID_NEWS_ID;
 
@@ -53,58 +54,50 @@ public class CreatePictureActivity extends AppCompatActivity {
         switch (item.getItemId()) {
             case android.R.id.home:
                 return BackArrowHelper.backArrowClicked(this);
+            case R.id.action_save_news:
+                createPicture();
+                return true;
             default:
                 return super.onOptionsItemSelected(item);
         }
+    }
+
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        MenuInflater inflater = getMenuInflater();
+        inflater.inflate(R.menu.save_news_menu, menu);
+        return true;
     }
 
     private void setViews() {
         nameEditText = findViewById(R.id.create_picture_name);
         descriptionEditText = findViewById(R.id.create_picture_description);
         pictureView = findViewById(R.id.create_picture_image_view);
-        postButton = findViewById(R.id.create_picture_post_picture);
-        cancelButton = findViewById(R.id.create_picture_cancel);
-        captureButton = findViewById(R.id.create_picture_capture_button);
-        pickGalleryButton = findViewById(R.id.create_picture_pick_from_gallery);
     }
 
     private void setAllButtonListeners() {
-        cancelButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                finish();
-            }
+        findViewById(R.id.create_picture_pick_gallery).setOnClickListener((view) -> {
+            pickPhotoFromGallery();
         });
-        postButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                if(!testInput()){
-                    Toast toast = new Toast(getApplicationContext());
-                    toast.setText(R.string.create_picture_validation_toast);
-                    toast.show();
-                } else {
-                    Intent data = new Intent();
+        findViewById(R.id.create_picture_capture_photo).setOnClickListener((view) -> {
+            captcurePhoto();
+        });
+    }
 
-                    Bundle bundle = getPictureBundle(createNewPicture());
-                    data.putExtras(bundle);
+    private void createPicture() {
+        if(!testInput()){
+            Toast toast = new Toast(getApplicationContext());
+            toast.setText(R.string.create_picture_validation_toast);
+            toast.show();
+        } else {
+            Intent data = new Intent();
 
-                    setResult(RESULT_OK, data);
-                    CreatePictureActivity.super.onBackPressed();
-                }
-            }
-        });
-        captureButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                captcurePhoto();
-            }
-        });
-        pickGalleryButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                pickPhotoFromGallery();
-            }
-        });
+            Bundle bundle = getPictureBundle(createNewPicture());
+            data.putExtras(bundle);
+
+            setResult(RESULT_OK, data);
+            CreatePictureActivity.super.onBackPressed();
+        }
     }
 
     private Bundle getPictureBundle(Picture picture) {
@@ -123,7 +116,7 @@ public class CreatePictureActivity extends AppCompatActivity {
     private void captcurePhoto() {
         PictureLoader.capturePhoto(this);
     }
-    //mozda pravi problem sa rezolucijama slike, pogledaj na netu
+
     private void pickPhotoFromGallery() {
         PictureLoader.loadPictureFromGallery(this);
     }

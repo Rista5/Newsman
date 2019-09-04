@@ -27,4 +27,6 @@
     <dimen name="settings_distance_vertical">24dp</dimen>
 
     <dimen name="icon_margin_right">24dp</dimen>
+    <dimen name="picture_min_height">32dp</dimen>
+    <dimen name="picture_max_height">274dp</dimen>
 </resources>

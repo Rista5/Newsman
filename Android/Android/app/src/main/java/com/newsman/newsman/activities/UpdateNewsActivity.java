@@ -40,7 +40,6 @@ public class UpdateNewsActivity extends AppCompatActivity {
     private PicturesFragment picturesFragment;
     private CommentsFragment commentsFragment;
 
-    private Button saveButton, cancelButton;
 
     private News news;
     private HistoryList<Picture> pictureHistoryList;
@@ -58,7 +57,6 @@ public class UpdateNewsActivity extends AppCompatActivity {
         if(extras != null) {
             newsId = extras.getInt(Constant.NEWS_BUNDLE_KEY);
             setFragments();
-            setUpViews();
         }
     }
 
@@ -114,23 +112,6 @@ public class UpdateNewsActivity extends AppCompatActivity {
                 .add(R.id.update_news_pictures_frame, picturesFragment)
                 .add(R.id.update_news_comments_frame, commentsFragment)
                 .commit();
-    }
-
-    private void setUpViews(){
-        saveButton = findViewById(R.id.update_news_save);
-        cancelButton = findViewById(R.id.update_news_cancel);
-        saveButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                sendUpdateRequest();
-            }
-        });
-        cancelButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                finish();
-            }
-        });
     }
 
     private SimpleNews getNewsData() {

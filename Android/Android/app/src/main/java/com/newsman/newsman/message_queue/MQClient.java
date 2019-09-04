@@ -32,6 +32,8 @@ public class MQClient implements Runnable {
     private Context context;
     private Connection connection;
     private Channel channel;
+    private String queue;
+    private String consumerTag;
     private int[] newsIds;
 
     public MQClient(String host, Context context, int[] newsIds){
@@ -43,25 +45,20 @@ public class MQClient implements Runnable {
 
     @Override
     public void run() {
+        startService();
+    }
+
+    public void startService() {
         try{
-//            while(!Thread.interrupted()){
-                try {
-                    connection = factory.newConnection();
-                    channel = connection.createChannel();
-                    channel.exchangeDeclare(EXCHANGE_NAME, EXCHAMGE_TYPE);
-                    AMQP.Queue.DeclareOk q = channel.queueDeclare();
-                    bindChannelTopic(channel, q.getQueue());
-                    channel.basicConsume(q.getQueue(),true,
-                            new NewsUpdateConsumer(channel, context));
-//                    while(!Thread.interrupted()){
-//                        Thread.sleep(5000);
-//                    }
-                } catch (IOException e) {
-                    e.printStackTrace();
-                } catch (TimeoutException e) {
-                    e.printStackTrace();
-                }
-//            }
+            connection = factory.newConnection();
+            channel = connection.createChannel();
+            channel.exchangeDeclare(EXCHANGE_NAME, EXCHAMGE_TYPE);
+            AMQP.Queue.DeclareOk q = channel.queueDeclare();
+            queue = q.getQueue();
+            bindChannelTopic();
+            consumerTag = channel.basicConsume(q.getQueue(),true,
+                    new NewsUpdateConsumer(channel, context));
+
         }catch (Exception e) {
             e.printStackTrace();
             if(connection != null && connection.isOpen()){
@@ -75,7 +72,29 @@ public class MQClient implements Runnable {
                 }
             }
         }
+    }
 
+    public void stopService() {
+        if(connection != null && connection.isOpen()){
+            try {
+                channel.close();
+                connection.close();
+            } catch (IOException ex) {
+                ex.printStackTrace();
+            } catch (TimeoutException ex) {
+                ex.printStackTrace();
+            }
+        }
+    }
+
+    public void subscribeToNews(int newsId) throws IOException {
+        String routeKey = getRoutingKey(newsId);
+        channel.queueBind(queue, EXCHANGE_NAME, routeKey);
+    }
+
+    public void unsubscribeFromNews(int newsId) throws IOException {
+        String routeKey = getRoutingKey(newsId);
+        channel.queueUnbind(queue, EXCHANGE_NAME, routeKey);
     }
 
     private void initConnFactory() {
@@ -86,10 +105,9 @@ public class MQClient implements Runnable {
         factory.setPassword("admin");
     }
 
-    private void bindChannelTopic(Channel channel, String queue) throws IOException {
+    private void bindChannelTopic() throws IOException {
         for(int i: newsIds) {
-            String routeKey = "News."+i+".#";
-            channel.queueBind(queue, EXCHANGE_NAME, routeKey);
+            subscribeToNews(i);
         }
         String newsInsert = "News.*."+ opInsert + ".NewsDTO.#";
         String newsDelete = "News.*."+ opDelete+ ".NewsDTO.#";
@@ -99,4 +117,7 @@ public class MQClient implements Runnable {
         channel.queueBind(queue, EXCHANGE_NAME, updateSimpleNews);
     }
 
+    private static String getRoutingKey(int newsId) {
+        return "News."+newsId+".#";
+    }
 }

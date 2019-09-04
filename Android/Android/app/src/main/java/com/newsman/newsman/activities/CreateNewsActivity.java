@@ -5,10 +5,14 @@ import android.graphics.Bitmap;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 import android.os.Bundle;
+import android.view.Menu;
+import android.view.MenuInflater;
+import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
 import android.widget.Toast;
 
+import com.newsman.newsman.auxiliary.BackArrowHelper;
 import com.newsman.newsman.auxiliary.Constant;
 import com.newsman.newsman.R;
 import com.newsman.newsman.auxiliary.LoginState;
@@ -33,7 +37,6 @@ public class CreateNewsActivity extends AppCompatActivity {
 
     private CreateNewsFragment createNewsFragment;
     private PicturesFragment picturesFragment;
-    private Button buttonPostNews, buttonCancel;
 
     private Bitmap backgroundPic;
 
@@ -44,7 +47,6 @@ public class CreateNewsActivity extends AppCompatActivity {
         setContentView(R.layout.activity_create_news);
 
         setFragments();
-        setUpViews();
     }
 
     @Override
@@ -58,33 +60,36 @@ public class CreateNewsActivity extends AppCompatActivity {
         super.onActivityResult(requestCode, resultCode, data);
     }
 
-    private void setUpViews() {
-        buttonPostNews = findViewById(R.id.create_news_post_news);
-        buttonPostNews.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                News news = createNews();
-                BitmapCache.getInstance().setBitmap(news.getBackgroundId(),news.getId(),backgroundPic);
-                if(!checkValidNews(news)) {
-                    displayToast();
-                } else {
-//                    new RestConnector(new PutAndGet(getApplicationContext(), new WriteNews(news, backgroundPic)), Constant.createNewsRoute())
-//                            .execute();
-//                    List<Picture> pictures = picturesFragment.getPictureList();
-                    AppExecutors.getInstance().getNetworkIO()
-                            .execute(NewsConnector.saveNews(getApplicationContext(), LoginState.getInstance().getUserId(), news, backgroundPic));
-                    finish();
-                }
-            }
-        });
-        buttonCancel = findViewById(R.id.create_news_cancel);
-        //TODO obrisati cancel button, nazad ide preko arrow
-        buttonCancel.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                finish();
-            }
-        });
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        MenuInflater inflater = getMenuInflater();
+        inflater.inflate(R.menu.save_news_menu, menu);
+        return true;
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        switch (item.getItemId()) {
+            case android.R.id.home:
+                return BackArrowHelper.backArrowClicked(this);
+            case R.id.action_save_news:
+                postNews();
+                return true;
+            default:
+                return super.onOptionsItemSelected(item);
+        }
+    }
+
+    private void postNews() {
+        News news = createNews();
+        BitmapCache.getInstance().setBitmap(news.getBackgroundId(),news.getId(),backgroundPic);
+        if(!checkValidNews(news)) {
+            displayToast();
+        } else {
+            AppExecutors.getInstance().getNetworkIO()
+                    .execute(NewsConnector.saveNews(getApplicationContext(), LoginState.getInstance().getUserId(), news, backgroundPic));
+            finish();
+        }
     }
 
     private void setFragments() {

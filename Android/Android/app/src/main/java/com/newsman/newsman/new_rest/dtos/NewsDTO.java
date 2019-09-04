@@ -1,5 +1,6 @@
 package com.newsman.newsman.new_rest.dtos;
 
+import com.newsman.newsman.auxiliary.Constant;
 import com.newsman.newsman.auxiliary.DateAux;
 import com.newsman.newsman.server_entities.Audio;
 import com.newsman.newsman.server_entities.Comment;
@@ -79,7 +80,10 @@ public class NewsDTO {
         }
         retVal.setModifierUsername(newsDTO.lastModifiedUser.getUsername());
         retVal.setModifierId(newsDTO.lastModifiedUser.getId());
-        retVal.setBackgroundId(newsDTO.backgroundPicture.getId());
+        if(newsDTO.backgroundPicture!= null)
+            retVal.setBackgroundId(newsDTO.backgroundPicture.getId());
+        else
+            retVal.setBackgroundId(Constant.INVALID_PICTURE_ID);
 
         List<Comment> commentList = new ArrayList<>();
         for(CommentDTO comment: newsDTO.comments){
