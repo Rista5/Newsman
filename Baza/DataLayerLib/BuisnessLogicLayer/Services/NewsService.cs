@@ -61,7 +61,6 @@ namespace BuisnessLogicLayer.Services
 
             if (news.BackgroundPicture != null)
             {
-                //loader.SaveMedia(news.BackgroundPicture.Id, news.Id, news.BackgroundPicture.GetPictureBytes());
                 dataResult.BackgroundPicture.PictureData = news.BackgroundPicture.PictureData;
             }
 
@@ -69,8 +68,6 @@ namespace BuisnessLogicLayer.Services
 
             for (int i = 0; i < news.Pictures.Count; i++)
             {
-                //loader.SaveMedia(news.Pictures[i].Id, news.Id, news.Pictures[i].GetPictureBytes());
-
                 PictureDTO dto = dataResult.Pictures[i];
                 dto.PictureData = news.Pictures[i].PictureData;
 
@@ -87,7 +84,6 @@ namespace BuisnessLogicLayer.Services
         
         public SimpleNewsDTO UpdateNews(SimpleNewsDTO simpleDTO, int userId)
         {
-            bool result = false;
             SimpleNewsDTO dataResult = newsData.UpdateNews(simpleDTO, userId);
 
             if (dataResult != null && simpleDTO.BackgroundPicture != null)
@@ -100,7 +96,6 @@ namespace BuisnessLogicLayer.Services
             {
                 MessageQueueManager manager = MessageQueueManager.Instance;
                 manager.PublishMessage(dataResult.Id, dataResult.Id, dataResult, MessageOperation.Update);
-                result = true;
             }
             return dataResult;
         }
