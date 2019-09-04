@@ -18,6 +18,8 @@ namespace BuisnessLogicLayer.DAOInterfaces
 
         NewsDTO GetNews(int newsId);
 
+        SimpleNewsDTO GetSimpleNewsById(int newsId);
+
         News GetFullNews(int newsId);
 
         NewsDTO CreateNews(NewsDTO news, int userId);
