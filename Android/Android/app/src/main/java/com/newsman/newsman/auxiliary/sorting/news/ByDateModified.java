@@ -8,7 +8,7 @@ import java.util.List;
 
 public class ByDateModified implements SimpleNewsSorting {
     @Override
-    public void Sort(List<SimpleNews> array) {
-        Collections.sort(array, (o1, o2) -> o1.getLastModified().compareTo(o2.getLastModified()));
+    public void sort(List<SimpleNews> array) {
+        Collections.sort(array, (o1, o2) -> -(o1.getLastModified().compareTo(o2.getLastModified())));
     }
 }

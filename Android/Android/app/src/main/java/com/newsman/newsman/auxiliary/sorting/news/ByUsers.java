@@ -8,7 +8,7 @@ import java.util.List;
 
 public class ByUsers implements SimpleNewsSorting {
     @Override
-    public void Sort(List<SimpleNews> list) {
+    public void sort(List<SimpleNews> list) {
         Collections.sort(list, (o1, o2) -> o1.getModifierUsername().compareToIgnoreCase(o2.getModifierUsername()));
     }
 }

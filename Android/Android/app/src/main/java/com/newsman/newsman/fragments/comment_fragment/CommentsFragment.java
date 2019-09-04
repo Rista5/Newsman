@@ -15,6 +15,7 @@ import android.widget.TextView;
 import com.newsman.newsman.auxiliary.Constant;
 import com.newsman.newsman.R;
 import com.newsman.newsman.auxiliary.DateAux;
+import com.newsman.newsman.auxiliary.LoginState;
 import com.newsman.newsman.fragments.comment_fragment.delete_strategy.DeleteStrategy;
 import com.newsman.newsman.new_rest.CommentConnector;
 import com.newsman.newsman.server_entities.Comment;
@@ -47,7 +48,9 @@ public class CommentsFragment extends Fragment implements CreateCommentFragment.
         View rootView = inflater.inflate(R.layout.fragment_comments, container, false);
         llComments = rootView.findViewById(R.id.news_item_comments_list);
         displayComments();
-        inflateCreateCommentFragment(getArguments().getInt(Constant.NEWS_BUNDLE_KEY));
+        if (getArguments() != null && LoginState.getInstance().getUserId() != Constant.INVALID_USER_ID) {
+            inflateCreateCommentFragment(getArguments().getInt(Constant.NEWS_BUNDLE_KEY));
+        }
         return rootView;
     }
 

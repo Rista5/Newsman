@@ -1,17 +1,13 @@
 package com.newsman.newsman.activities;
 
-import android.content.Context;
 import android.content.Intent;
 import android.graphics.Bitmap;
 import androidx.annotation.Nullable;
-import androidx.appcompat.app.ActionBar;
 import androidx.appcompat.app.AppCompatActivity;
 import android.os.Bundle;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
-import android.view.View;
-import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.Toast;
@@ -21,11 +17,9 @@ import com.newsman.newsman.auxiliary.Constant;
 import com.newsman.newsman.auxiliary.PictureConverter;
 import com.newsman.newsman.auxiliary.PictureLoader;
 import com.newsman.newsman.R;
+import com.newsman.newsman.auxiliary.manu_inflater.LoginMenuInflater;
 import com.newsman.newsman.picture_management.BitmapCache;
 import com.newsman.newsman.server_entities.Picture;
-
-import java.io.FileNotFoundException;
-import java.io.FileOutputStream;
 
 public class CreatePictureActivity extends AppCompatActivity {
 
@@ -58,6 +52,9 @@ public class CreatePictureActivity extends AppCompatActivity {
                 createPicture();
                 return true;
             default:
+                if(LoginMenuInflater.handleOnMenuItemClick(item, getApplicationContext())) {
+                    return true;
+                }
                 return super.onOptionsItemSelected(item);
         }
     }
@@ -65,6 +62,7 @@ public class CreatePictureActivity extends AppCompatActivity {
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         MenuInflater inflater = getMenuInflater();
+        LoginMenuInflater.inflateLogin(inflater,menu);
         inflater.inflate(R.menu.save_news_menu, menu);
         return true;
     }

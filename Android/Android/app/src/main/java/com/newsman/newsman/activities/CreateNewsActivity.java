@@ -8,21 +8,16 @@ import android.os.Bundle;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
-import android.view.View;
-import android.widget.Button;
 import android.widget.Toast;
 
 import com.newsman.newsman.auxiliary.BackArrowHelper;
 import com.newsman.newsman.auxiliary.Constant;
 import com.newsman.newsman.R;
 import com.newsman.newsman.auxiliary.LoginState;
-import com.newsman.newsman.auxiliary.PictureData;
 import com.newsman.newsman.auxiliary.TempObjectGenerator;
+import com.newsman.newsman.auxiliary.manu_inflater.LoginMenuInflater;
 import com.newsman.newsman.new_rest.NewsConnector;
 import com.newsman.newsman.picture_management.BitmapCache;
-import com.newsman.newsman.rest_connection.ConnectionStrategy.PutAndGet;
-import com.newsman.newsman.rest_connection.RestConnector;
-import com.newsman.newsman.rest_connection.WriteJson.WriteNews;
 import com.newsman.newsman.server_entities.News;
 import com.newsman.newsman.server_entities.Picture;
 import com.newsman.newsman.server_entities.SimpleNews;
@@ -63,6 +58,7 @@ public class CreateNewsActivity extends AppCompatActivity {
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         MenuInflater inflater = getMenuInflater();
+        LoginMenuInflater.inflateLogin(inflater,menu);
         inflater.inflate(R.menu.save_news_menu, menu);
         return true;
     }
@@ -76,6 +72,9 @@ public class CreateNewsActivity extends AppCompatActivity {
                 postNews();
                 return true;
             default:
+                if(LoginMenuInflater.handleOnMenuItemClick(item, getApplicationContext())) {
+                    return true;
+                }
                 return super.onOptionsItemSelected(item);
         }
     }

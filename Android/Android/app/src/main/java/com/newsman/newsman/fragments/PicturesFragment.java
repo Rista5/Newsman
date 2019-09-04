@@ -16,6 +16,7 @@ import android.view.ViewGroup;
 import android.widget.ImageView;
 
 import com.newsman.newsman.auxiliary.Constant;
+import com.newsman.newsman.auxiliary.LoginState;
 import com.newsman.newsman.auxiliary.PictureData;
 import com.newsman.newsman.auxiliary.PictureTransportLoader;
 import com.newsman.newsman.R;
@@ -63,16 +64,20 @@ public class PicturesFragment extends Fragment{
     }
 
     private void addButtonListener() {
-        addPicture.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                Intent intent = new Intent(getContext(), CreatePictureActivity.class);
-                Bundle bundle = new Bundle();
-                bundle.putInt(Constant.NEWS_BUNDLE_KEY, newsId);
-                intent.putExtras(bundle);
-                getActivity().startActivityForResult(intent, Constant.PICTURE_REQUEST_CODE);
-            }
-        });
+        if(LoginState.getInstance().getUserId() == Constant.INVALID_USER_ID) {
+            addPicture.setVisibility(View.INVISIBLE);
+        } else {
+            addPicture.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    Intent intent = new Intent(getContext(), CreatePictureActivity.class);
+                    Bundle bundle = new Bundle();
+                    bundle.putInt(Constant.NEWS_BUNDLE_KEY, newsId);
+                    intent.putExtras(bundle);
+                    getActivity().startActivityForResult(intent, Constant.PICTURE_REQUEST_CODE);
+                }
+            });
+        }
     }
 
     @Override

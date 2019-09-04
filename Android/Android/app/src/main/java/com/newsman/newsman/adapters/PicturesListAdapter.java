@@ -13,6 +13,7 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.newsman.newsman.auxiliary.Constant;
+import com.newsman.newsman.auxiliary.LoginState;
 import com.newsman.newsman.auxiliary.PictureConverter;
 import com.newsman.newsman.new_rest.PictureConnector;
 import com.newsman.newsman.picture_management.BitmapCache;
@@ -144,13 +145,17 @@ public class PicturesListAdapter extends RecyclerView.Adapter<PicturesListAdapte
                     context.startActivity(intent);
                 }
             });
-            removePicture.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    int pos = getAdapterPosition();
-                    adapter.removePicture(pos);
-                }
-            });
+            if(LoginState.getInstance().getUserId() == Constant.INVALID_USER_ID) {
+                removePicture.setVisibility(View.INVISIBLE);
+            } else {
+                removePicture.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        int pos = getAdapterPosition();
+                        adapter.removePicture(pos);
+                    }
+                });
+            }
         }
 
         public TextView getTitle() {

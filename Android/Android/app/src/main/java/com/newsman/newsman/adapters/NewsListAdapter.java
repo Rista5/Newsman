@@ -14,6 +14,7 @@ import com.newsman.newsman.auxiliary.Constant;
 import com.newsman.newsman.auxiliary.DateAux;
 import com.newsman.newsman.auxiliary.PopUpMenuController;
 import com.newsman.newsman.R;
+import com.newsman.newsman.auxiliary.sorting.news.SimpleNewsSorting;
 import com.newsman.newsman.picture_management.BitmapCache;
 import com.newsman.newsman.picture_management.BitmapObserver;
 import com.newsman.newsman.server_entities.SimpleNews;
@@ -26,10 +27,12 @@ public class NewsListAdapter extends RecyclerView.Adapter<NewsListAdapter.NewsIt
 
     private Context mContext;
     private List<SimpleNews> newsList;
+    private SimpleNewsSorting sortStrategy;
 
-    public NewsListAdapter(Context context, List<SimpleNews> newsList) {
+    public NewsListAdapter(Context context, List<SimpleNews> newsList, SimpleNewsSorting sortStrategy) {
         this.mContext = context;
         this.newsList = newsList;
+        this.sortStrategy = sortStrategy;
     }
     @NonNull
     @Override
@@ -68,10 +71,19 @@ public class NewsListAdapter extends RecyclerView.Adapter<NewsListAdapter.NewsIt
         return newsList.size();
     }
 
+    public void sortList() {
+        sortStrategy.sort(newsList);
+        this.notifyDataSetChanged();
+    }
+
     public void setNewsList(List<SimpleNews> news) {
         newsList.clear();
         newsList.addAll(news);
         notifyDataSetChanged();
+    }
+
+    public void setSortStrategy(SimpleNewsSorting sortStrategy) {
+        this.sortStrategy = sortStrategy;
     }
 
     public class NewsItemViewHolder extends RecyclerView.ViewHolder {

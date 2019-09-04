@@ -8,10 +8,9 @@ import android.os.Bundle;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
-import android.view.View;
-import android.widget.Button;
 
 import com.newsman.newsman.auxiliary.BackArrowHelper;
+import com.newsman.newsman.auxiliary.manu_inflater.LoginMenuInflater;
 import com.newsman.newsman.fragments.comment_fragment.delete_strategy.DeleteComment;
 import com.newsman.newsman.picture_management.BitmapCache;
 import com.newsman.newsman.thread_management.AppExecutors;
@@ -70,6 +69,9 @@ public class UpdateNewsActivity extends AppCompatActivity {
                 sendUpdateRequest();
                 return true;
             default:
+                if(LoginMenuInflater.handleOnMenuItemClick(item, getApplicationContext())) {
+                    return true;
+                }
                 return super.onOptionsItemSelected(item);
         }
     }
@@ -78,6 +80,7 @@ public class UpdateNewsActivity extends AppCompatActivity {
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         MenuInflater inflater = getMenuInflater();
+        LoginMenuInflater.inflateLogin(inflater,menu);
         inflater.inflate(R.menu.save_news_menu, menu);
         return true;
     }

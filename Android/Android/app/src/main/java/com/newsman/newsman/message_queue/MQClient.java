@@ -88,11 +88,13 @@ public class MQClient implements Runnable {
     }
 
     public void subscribeToNews(int newsId) throws IOException {
+        if(channel == null) return;
         String routeKey = getRoutingKey(newsId);
         channel.queueBind(queue, EXCHANGE_NAME, routeKey);
     }
 
     public void unsubscribeFromNews(int newsId) throws IOException {
+        if(channel == null) return;
         String routeKey = getRoutingKey(newsId);
         channel.queueUnbind(queue, EXCHANGE_NAME, routeKey);
     }

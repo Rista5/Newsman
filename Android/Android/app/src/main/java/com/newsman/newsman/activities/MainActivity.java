@@ -1,41 +1,29 @@
 package com.newsman.newsman.activities;
 
-import android.annotation.SuppressLint;
-import androidx.lifecycle.LiveData;
-import androidx.lifecycle.Observer;
-import android.content.Context;
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.os.Handler;
 import android.os.Looper;
-import android.os.Message;
-import android.provider.MediaStore;
-import androidx.annotation.Nullable;
+
 import androidx.appcompat.app.AppCompatActivity;
 import android.os.Bundle;
 import android.util.Log;
+import android.view.Menu;
+import android.view.MenuInflater;
+import android.view.MenuItem;
 import android.view.View;
-import android.widget.Button;
-import android.widget.ImageView;
 
 import com.google.gson.FieldNamingPolicy;
 import com.google.gson.GsonBuilder;
+import com.newsman.newsman.auxiliary.manu_inflater.LoginMenuInflater;
 import com.newsman.newsman.message_queue.MQClient;
-import com.newsman.newsman.new_rest.BitmapConnector;
 import com.newsman.newsman.new_rest.NewsConnector;
-import com.newsman.newsman.new_rest.PictureConnector;
 import com.newsman.newsman.new_rest.dtos.PictureDTO;
 import com.newsman.newsman.new_rest.retrofit_services.PictureService;
 import com.newsman.newsman.server_entities.Comment;
 import com.newsman.newsman.thread_management.AppExecutors;
 import com.newsman.newsman.auxiliary.Constant;
-import com.newsman.newsman.auxiliary.PictureLoader;
-import com.newsman.newsman.database.AppDatabase;
 import com.newsman.newsman.R;
-import com.newsman.newsman.rest_connection.ConnectionStrategy.Get;
-import com.newsman.newsman.rest_connection.ReadJson.ReadComposite;
-import com.newsman.newsman.rest_connection.ReadJson.ReadNews;
-import com.newsman.newsman.rest_connection.RestConnector;
 import com.newsman.newsman.server_entities.News;
 import com.newsman.newsman.server_entities.Picture;
 import com.newsman.newsman.thread_management.SubscriptionService;
@@ -58,6 +46,20 @@ public class MainActivity extends AppCompatActivity {
         setContentView(R.layout.activity_main);
 
         setUpViews();
+    }
+
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        MenuInflater inflater = getMenuInflater();
+        LoginMenuInflater.inflateLogin(inflater,menu);
+        return true;
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        if(LoginMenuInflater.handleOnMenuItemClick(item, this))
+            return true;
+        return super.onOptionsItemSelected(item);
     }
 
     private void setUpViews() {

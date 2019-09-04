@@ -9,6 +9,9 @@ import androidx.annotation.Nullable;
 import androidx.fragment.app.FragmentManager;
 import androidx.appcompat.app.AppCompatActivity;
 import android.os.Bundle;
+import android.view.Menu;
+import android.view.MenuInflater;
+import android.view.MenuItem;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.TextView;
@@ -16,8 +19,8 @@ import android.widget.TextView;
 import com.newsman.newsman.auxiliary.BackArrowHelper;
 import com.newsman.newsman.auxiliary.PictureLoader;
 import com.newsman.newsman.auxiliary.PopUpMenuController;
+import com.newsman.newsman.auxiliary.manu_inflater.LoginMenuInflater;
 import com.newsman.newsman.database.AppDatabase;
-import com.newsman.newsman.database.UserDao;
 import com.newsman.newsman.auxiliary.Constant;
 import com.newsman.newsman.fragments.comment_fragment.delete_strategy.HideDelete;
 import com.newsman.newsman.new_rest.NewsConnector;
@@ -89,6 +92,20 @@ public class DisplayNewsActivity extends AppCompatActivity {
         super.onActivityResult(requestCode, resultCode, data);
     }
 
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        MenuInflater inflater = getMenuInflater();
+        LoginMenuInflater.inflateLogin(inflater,menu);
+        return true;
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        if(LoginMenuInflater.handleOnMenuItemClick(item, getApplicationContext())) {
+            return true;
+        }
+        return super.onOptionsItemSelected(item);
+    }
 
     private void subscribeToLiveData() {
         final LifecycleOwner mOwner = this;
