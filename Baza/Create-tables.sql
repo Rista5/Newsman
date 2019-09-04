@@ -4,7 +4,7 @@ CREATE TABLE News(
 Id_news         int(32) NOT NULL AUTO_INCREMENT,
 Title         varchar(40),
 Content         varchar(1000),
-Last_modified         date,
+Last_modified         datetime,
 Background_picture int(32),
 PRIMARY KEY (Id_news)
 );
@@ -23,7 +23,7 @@ Id_comment         int(32) NOT NULL AUTO_INCREMENT,
 Content         varchar(200),
 Id_news         int(32) NOT NULL,
 Id_user         int(32) NOT NULL,
-Post_date         date,
+Post_date         datetime,
 PRIMARY KEY(Id_comment)
 );
 
@@ -59,7 +59,7 @@ CREATE TABLE Modified(
 Id_modified		int(32) NOT NULL AUTO_INCREMENT,
 Id_user         int(32) NOT NULL,
 Id_news         int(32) NOT NULL,
-Modified_date         date,
+Modified_date         datetime,
 PRIMARY KEY(Id_modified)
 );
 

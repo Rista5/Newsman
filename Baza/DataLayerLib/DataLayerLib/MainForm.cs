@@ -248,15 +248,7 @@ namespace DataLayerLib
 
         private void btnCreateNews_Click(object sender, EventArgs e)
         {
-            List<UserDTO> users = new DTOManagers.UserDTOManager().GetAllUsers();
-            CreateNewsForm form = new CreateNewsForm(users);
-            if(form.ShowDialog() == DialogResult.OK)
-            {
-                if(new DTOManagers.NewsDTOManager().CreateNews(form.Title,form.Content,form.User_ID) != null)
-                    MessageBox.Show("Uspesno kreirana vest");
-                else
-                    MessageBox.Show("Greska");
-            }
+            MessageBox.Show("This service was discontinued. Mrzelo me da stavim");
         }
 
         private void btnUpdateNews_Click(object sender, EventArgs e)
