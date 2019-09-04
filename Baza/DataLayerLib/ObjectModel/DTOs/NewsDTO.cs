@@ -31,12 +31,13 @@ namespace ObjectModel.DTOs
             Title = news.Title;
             Content = news.Content;
             LastModified = news.LastModified;
-            //var newestDate = news.Modifications.Max(x => x.ModificationDate);
-            //LastModifiedUser = news.Modifications.First(x => x.ModificationDate == newestDate).Id;
-            LastModifiedUser = new UserDTO() {
-                Id = 0,
-                Username = "John Doe"
-            };
+            var newestdate = news.Modifications.Max(x => x.ModificationDate);
+            User modifier = news.Modifications.First(x => x.ModificationDate == newestdate).User;
+            LastModifiedUser = new UserDTO(modifier);
+            //LastModifiedUser = new UserDTO() {
+            //    Id = 0,
+            //    Username = "John Doe"
+            //};
 
             if (news.BackgroundPicture != null)
                 BackgroundPicture = new PictureDTO(news.BackgroundPicture);

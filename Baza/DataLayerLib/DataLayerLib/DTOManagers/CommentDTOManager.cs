@@ -81,40 +81,6 @@ namespace DataLayerLib.DTOManagers
             return result;
         }
 
-        public CommentDTO CreateComment(int userId, int newsId, string content)
-        {
-            CommentDTO result = null;
-            ISession session = null;
-            try
-            {
-                Comment comment = new Comment();
-                comment.Content = content;
-                comment.PostDate = DateTime.Today;
-
-                session = DataLayer.GetSession();
-                User creator = session.Load<User>(userId);
-                News belongsTo = session.Load<News>(newsId);
-                comment.CreatedBy = creator;
-                comment.BelongsTo = belongsTo;
-                session.Save(comment);
-                session.Flush();
-
-                //MessageQueueManager menager = MessageQueueManager.Instance;
-                //menager.PublishMessage(comment.BelongsTo.Id, comment.Id, new CommentDTO(comment), MessageOperation.Insert);
-
-                result = new CommentDTO(comment);
-
-                session.Close();
-            }
-            catch (Exception ex)
-            {
-                Console.WriteLine(ex.Message);
-                if (session != null)
-                    session.Close();
-            }
-            return result;
-        }
-
         public CommentDTO CreateComment(CommentDTO commentDTO)
         {
             CommentDTO result = null;
@@ -123,7 +89,7 @@ namespace DataLayerLib.DTOManagers
             {
                 Comment comment = new Comment();
                 comment.Content = commentDTO.Content;
-                comment.PostDate = DateTime.Today;
+                comment.PostDate = DateTime.Now;
 
                 session = DataLayer.GetSession();
                 User creator = session.QueryOver<User>()
@@ -135,9 +101,6 @@ namespace DataLayerLib.DTOManagers
 
                 session.Save(comment);
                 session.Flush();
-
-                //MessageQueueManager menager = MessageQueueManager.Instance;
-                //menager.PublishMessage(comment.BelongsTo.Id, comment.Id, new CommentDTO(comment), MessageOperation.Insert);
 
                 result = new CommentDTO(comment);
 

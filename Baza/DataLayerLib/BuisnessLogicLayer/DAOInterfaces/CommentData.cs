@@ -15,8 +15,6 @@ namespace BuisnessLogicLayer.DAOInterfaces
 
         CommentDTO GetComment(int commentId);
 
-        CommentDTO CreateComment(int userId, int newsId, string content);
-
         CommentDTO CreateComment(CommentDTO commentDTO);
 
         CommentDTO UpdateComment(int commntId, string content);

@@ -50,7 +50,7 @@ namespace BuisnessLogicLayer.Services
         
         public CommentDTO CreateComment(CommentDTO value)
         {
-            CommentDTO dataResult = commentDataAccess.CreateComment(value.CreatedBy.Id, value.BelongsToNewsId, value.Content);
+            CommentDTO dataResult = commentDataAccess.CreateComment(value);
             if(dataResult != null)
             {
                 MessageQueueManager menager = MessageQueueManager.Instance;
