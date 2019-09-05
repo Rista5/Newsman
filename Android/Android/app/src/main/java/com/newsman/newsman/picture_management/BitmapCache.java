@@ -12,11 +12,14 @@ import com.newsman.newsman.thread_management.AppExecutors;
 
 import java.util.List;
 
+import javax.inject.Inject;
+
 public class BitmapCache {
     private LruCache<Integer,BitmapObservable> cache;
     private static BitmapCache _instance = null;
     private static int NonValidIdentifiers = -1;
     private static Bitmap defaultBitmap;
+    private BitmapRestConnection restConnection;
 
     public BitmapCache() {
         int maxSize = (int)Runtime.getRuntime().maxMemory();
@@ -26,6 +29,12 @@ public class BitmapCache {
               return bmp.getBitmap().getByteCount()/1024;
           }
         };
+    }
+
+    @Inject
+    public BitmapCache(BitmapRestConnection restConnection){
+        this();
+        this.restConnection = restConnection;
     }
 
     public static Bitmap getDefaultBitmap(Context context) {
@@ -38,7 +47,7 @@ public class BitmapCache {
     public static BitmapCache getInstance()
     {
         if(_instance == null)
-            _instance = new BitmapCache();
+            _instance = DaggerBitmapCacheComponent.create().createBitmapCache();
         return _instance;
     }
 
@@ -97,17 +106,13 @@ public class BitmapCache {
     private void getBitmapFromRest(Context context, int picId, int newsId) {
         if(picId<=0)
             return;
-        AppExecutors.getInstance().getNetworkIO().execute(
-                BitmapConnector.loadBitmap(newsId, picId)
-        );
+        restConnection.getBitmap(picId,newsId);
 //        new RestConnector(new GetBitmap(picId, newsId, context), Constant.getRawPictureRoute(picId,newsId))
 //                .execute();
     }
 
-    private void putBitmapToRest(int pictureId, int newsId, Bitmap bmp){
-//        new RestConnector(new PutBitmap(bmp), Constant.getRawPictureRoute(picId,newsId))
-//                .execute();
-        AppExecutors.getInstance().getNetworkIO().execute(BitmapConnector.saveBitmap(newsId, pictureId, bmp));
+    private void putBitmapToRest(int picId, int newsId,Bitmap bitmap){
+        restConnection.putBitmap(picId,newsId,bitmap);
     }
 
     public void putBitmapsCreateNews(List<Integer> oldId, List<Integer> newId, int newsId){
@@ -117,7 +122,7 @@ public class BitmapCache {
             bmp.setNewsId(newsId);
             cache.remove(oldId.get(i));
             cache.put(newId.get(i),bmp);
-            this.putBitmapToRest(newId.get(i),newsId,bmp.getBitmap());
+            putBitmapToRest(newId.get(i),newsId,bmp.getBitmap());
         }
     }
 
