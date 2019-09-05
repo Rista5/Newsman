@@ -7,13 +7,13 @@ import androidx.room.TypeConverters;
 import android.content.Context;
 import android.util.Log;
 
-import com.newsman.newsman.auxiliary.DateConverter;
-import com.newsman.newsman.server_entities.Comment;
-import com.newsman.newsman.server_entities.News;
-import com.newsman.newsman.server_entities.Picture;
-import com.newsman.newsman.server_entities.User;
+import com.newsman.newsman.auxiliary.date_helpers.DateConverter;
+import com.newsman.newsman.model.db_entities.Comment;
+import com.newsman.newsman.model.db_entities.News;
+import com.newsman.newsman.model.db_entities.Picture;
+import com.newsman.newsman.model.db_entities.User;
 
-@Database(entities = {News.class, User.class, Comment.class, Picture.class}, version = 12, exportSchema = false)
+@Database(entities = {News.class, Comment.class, Picture.class}, version = 14, exportSchema = false)
 @TypeConverters(DateConverter.class)
 public abstract class AppDatabase extends RoomDatabase {
 
@@ -40,7 +40,6 @@ public abstract class AppDatabase extends RoomDatabase {
     }
 
     public abstract NewsDao newsDao();
-    public abstract UserDao userDao();
     public abstract CommentDao commentDao();
     public abstract PictureDao pictureDao();
 }

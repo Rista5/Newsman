@@ -2,12 +2,14 @@ package com.newsman.newsman.message_queue.update_objects;
 
 import android.content.Context;
 
-import com.newsman.newsman.auxiliary.PictureLoader;
+import com.google.gson.Gson;
+import com.newsman.newsman.auxiliary.picture_helpers.PictureLoader;
 import com.newsman.newsman.database.AppDatabase;
 import com.newsman.newsman.message_queue.MQClient;
 import com.newsman.newsman.message_queue.MessageInfo;
-import com.newsman.newsman.server_entities.News;
-import com.newsman.newsman.server_entities.SimpleNews;
+import com.newsman.newsman.model.db_entities.News;
+import com.newsman.newsman.model.db_entities.SimpleNews;
+import com.newsman.newsman.model.dtos.SimpleNewsDTO;
 
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -16,10 +18,10 @@ public class UpdateSimpleNews extends DBUpdate {
 
     private SimpleNews news;
 
-    UpdateSimpleNews(MessageInfo info, Context context) throws JSONException {
+    UpdateSimpleNews(MessageInfo info, Context context) {
         super(info, context);
-        if(info.getJsonObject() != null) {
-            news = parseSimpleNews(info.getJsonObject());
+        if(info.getJsonString() != null) {
+            news = parseSimpleNews(info.getJsonString());
         }
     }
 
@@ -47,7 +49,7 @@ public class UpdateSimpleNews extends DBUpdate {
         }
     }
 
-    private SimpleNews parseSimpleNews(JSONObject json) throws JSONException {
-        return JSONParser.parseSimpleNews(json);
+    private SimpleNews parseSimpleNews(String jsonString) {
+        return SimpleNewsDTO.getSimpleNews(GsonFactory.newIstance().fromJson(jsonString, SimpleNewsDTO.class));
     }
 }

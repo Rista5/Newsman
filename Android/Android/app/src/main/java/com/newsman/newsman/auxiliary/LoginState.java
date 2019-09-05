@@ -1,6 +1,6 @@
 package com.newsman.newsman.auxiliary;
 
-import com.newsman.newsman.server_entities.UserWithPassword;
+import com.newsman.newsman.model.db_entities.UserWithPassword;
 
 public class LoginState {
     private LoginState(){

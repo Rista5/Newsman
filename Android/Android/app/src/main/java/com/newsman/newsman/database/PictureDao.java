@@ -15,8 +15,8 @@ import android.graphics.Bitmap;
 
 import androidx.annotation.Nullable;
 
-import com.newsman.newsman.auxiliary.PictureLoader;
-import com.newsman.newsman.server_entities.Picture;
+import com.newsman.newsman.auxiliary.picture_helpers.PictureLoader;
+import com.newsman.newsman.model.db_entities.Picture;
 
 import java.util.List;
 

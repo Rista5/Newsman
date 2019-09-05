@@ -12,9 +12,8 @@ import com.newsman.newsman.R;
 import com.newsman.newsman.auxiliary.BackArrowHelper;
 import com.newsman.newsman.auxiliary.Constant;
 import com.newsman.newsman.auxiliary.LoginState;
-import com.newsman.newsman.new_rest.UserConnector;
-import com.newsman.newsman.server_entities.UserWithPassword;
-import com.newsman.newsman.thread_management.AppExecutors;
+import com.newsman.newsman.rest_connection.rest_connectors.UserConnector;
+import com.newsman.newsman.model.db_entities.UserWithPassword;
 
 import java.lang.ref.WeakReference;
 
@@ -85,7 +84,7 @@ public class LoginActivity extends AppCompatActivity {
         @Override
         protected void onPostExecute(Void aVoid) {
             LoginActivity activity = activityRefrence.get();
-            if(activity == null || activity.isFinishing()) return;
+//            if(activity == null || activity.isFinishing()) return;
             if(LoginState.getInstance().getUser().getId() != Constant.INVALID_USER_ID){
                 Toast.makeText(activity, R.string.login_successful_toast, Toast.LENGTH_LONG).show();
                 activity.finish();

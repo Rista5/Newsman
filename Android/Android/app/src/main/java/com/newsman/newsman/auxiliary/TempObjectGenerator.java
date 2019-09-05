@@ -1,7 +1,7 @@
 package com.newsman.newsman.auxiliary;
 
 import com.newsman.newsman.picture_management.BitmapCache;
-import com.newsman.newsman.server_entities.SimpleNews;
+import com.newsman.newsman.model.db_entities.SimpleNews;
 
 import java.util.Date;
 

@@ -1,8 +1,5 @@
 package com.newsman.newsman.activities;
 
-import android.graphics.Bitmap;
-
-import androidx.appcompat.app.ActionBar;
 import androidx.appcompat.app.AppCompatActivity;
 import android.os.Bundle;
 
@@ -10,7 +7,6 @@ import android.view.MenuItem;
 
 import com.newsman.newsman.auxiliary.BackArrowHelper;
 import com.newsman.newsman.auxiliary.Constant;
-import com.newsman.newsman.auxiliary.PictureConverter;
 import com.newsman.newsman.auxiliary.ZoomableImageView;
 import com.newsman.newsman.R;
 import com.newsman.newsman.picture_management.BitmapCache;

@@ -14,15 +14,10 @@ import android.widget.TextView;
 
 import com.newsman.newsman.auxiliary.Constant;
 import com.newsman.newsman.auxiliary.LoginState;
-import com.newsman.newsman.auxiliary.PictureConverter;
-import com.newsman.newsman.new_rest.PictureConnector;
+import com.newsman.newsman.rest_connection.rest_connectors.PictureConnector;
 import com.newsman.newsman.picture_management.BitmapCache;
 import com.newsman.newsman.picture_management.BitmapObserver;
-import com.newsman.newsman.rest_connection.ConnectionStrategy.Delete;
-import com.newsman.newsman.rest_connection.ConnectionStrategy.Post;
-import com.newsman.newsman.rest_connection.RestConnector;
-import com.newsman.newsman.rest_connection.WriteJson.WritePicture;
-import com.newsman.newsman.server_entities.Picture;
+import com.newsman.newsman.model.db_entities.Picture;
 import com.newsman.newsman.R;
 import com.newsman.newsman.activities.ImageDisplayActivity;
 import com.newsman.newsman.thread_management.AppExecutors;

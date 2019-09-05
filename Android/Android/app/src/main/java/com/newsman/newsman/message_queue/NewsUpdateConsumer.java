@@ -31,17 +31,11 @@ public class NewsUpdateConsumer extends DefaultConsumer {
         String routingKey = envelope.getRoutingKey();
         // route: News.1.Update.Picture.1
         String[] routes = routingKey.split("\\.");
-        try {
-            JSONObject jsonObject = null;
-            String data = new String(body);
-            if(!data.equals(""))
-                jsonObject = new JSONObject(data);
-            MessageInfo info = new MessageInfo(Integer.parseInt(routes[1]),
-                    Integer.parseInt(routes[4]), routes[2], jsonObject);
-            DBUpdate updateDB = DBUpdateFactory.createInstance(routes[3], info, context);
-            updateDB.update();
-        } catch (JSONException e) {
-            e.printStackTrace();
-        }
+        String data = new String(body);
+        if(data.equals("")) return;
+        MessageInfo info = new MessageInfo(Integer.parseInt(routes[1]),
+                Integer.parseInt(routes[4]), routes[2], data);
+        DBUpdate updateDB = DBUpdateFactory.createInstance(routes[3], info, context);
+        updateDB.update();
     }
 }

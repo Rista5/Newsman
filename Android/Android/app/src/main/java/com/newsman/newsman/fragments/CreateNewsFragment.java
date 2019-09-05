@@ -13,11 +13,11 @@ import android.view.ViewGroup;
 import android.widget.EditText;
 import android.widget.ImageView;
 
-import com.newsman.newsman.auxiliary.PictureLoader;
+import com.newsman.newsman.auxiliary.picture_helpers.PictureLoader;
 import com.newsman.newsman.R;
 import com.newsman.newsman.picture_management.BitmapCache;
 import com.newsman.newsman.picture_management.BitmapOneTimeObserver;
-import com.newsman.newsman.server_entities.SimpleNews;
+import com.newsman.newsman.model.db_entities.SimpleNews;
 
 public class CreateNewsFragment extends Fragment {
     private EditText title;

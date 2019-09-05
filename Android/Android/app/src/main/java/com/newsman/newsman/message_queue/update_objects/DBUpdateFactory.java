@@ -7,11 +7,8 @@ import com.newsman.newsman.message_queue.MessageInfo;
 import org.json.JSONException;
 
 public class DBUpdateFactory {
-    public static DBUpdate createInstance(String type, MessageInfo info,
-                                          Context context) throws JSONException {
+    public static DBUpdate createInstance(String type, MessageInfo info, Context context) {
         switch (type) {
-            case "UserDTO":
-                return new UpdateUser(info, context);
             case "NewsDTO":
                 return new UpdateNews(info, context);
             case "CommentDTO":
@@ -21,7 +18,7 @@ public class DBUpdateFactory {
             case "SimpleNewsDTO":
                 return new UpdateSimpleNews(info, context);
             case "PictureUpdateObject":
-                return new UpdatePictureRaw(info,context);
+                return new UpdatePictureBitmap(info,context);
         }
         return new NullUpdate(info, context);
     }

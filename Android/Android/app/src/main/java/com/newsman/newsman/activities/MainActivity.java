@@ -15,17 +15,17 @@ import android.view.View;
 
 import com.google.gson.FieldNamingPolicy;
 import com.google.gson.GsonBuilder;
-import com.newsman.newsman.auxiliary.manu_inflater.LoginMenuInflater;
+import com.newsman.newsman.auxiliary.manu_helpers.LoginMenuInflater;
 import com.newsman.newsman.message_queue.MQClient;
-import com.newsman.newsman.new_rest.NewsConnector;
-import com.newsman.newsman.new_rest.dtos.PictureDTO;
-import com.newsman.newsman.new_rest.retrofit_services.PictureService;
-import com.newsman.newsman.server_entities.Comment;
+import com.newsman.newsman.rest_connection.rest_connectors.NewsConnector;
+import com.newsman.newsman.model.dtos.PictureDTO;
+import com.newsman.newsman.rest_connection.retrofit_services.PictureService;
+import com.newsman.newsman.model.db_entities.Comment;
 import com.newsman.newsman.thread_management.AppExecutors;
 import com.newsman.newsman.auxiliary.Constant;
 import com.newsman.newsman.R;
-import com.newsman.newsman.server_entities.News;
-import com.newsman.newsman.server_entities.Picture;
+import com.newsman.newsman.model.db_entities.News;
+import com.newsman.newsman.model.db_entities.Picture;
 import com.newsman.newsman.thread_management.SubscriptionService;
 
 import java.util.ArrayList;

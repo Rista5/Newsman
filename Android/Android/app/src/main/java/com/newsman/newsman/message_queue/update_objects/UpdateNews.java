@@ -2,15 +2,18 @@ package com.newsman.newsman.message_queue.update_objects;
 
 import android.content.Context;
 
+import com.google.gson.Gson;
 import com.newsman.newsman.auxiliary.Constant;
-import com.newsman.newsman.auxiliary.DateAux;
+import com.newsman.newsman.auxiliary.date_helpers.DateAux;
 import com.newsman.newsman.database.AppDatabase;
 import com.newsman.newsman.message_queue.MQClient;
 import com.newsman.newsman.message_queue.MessageInfo;
-import com.newsman.newsman.server_entities.Comment;
-import com.newsman.newsman.server_entities.News;
-import com.newsman.newsman.server_entities.Picture;
-import com.newsman.newsman.server_entities.User;
+import com.newsman.newsman.model.db_entities.Comment;
+import com.newsman.newsman.model.db_entities.News;
+import com.newsman.newsman.model.db_entities.Picture;
+import com.newsman.newsman.model.db_entities.User;
+import com.newsman.newsman.model.dtos.CommentDTO;
+import com.newsman.newsman.model.dtos.NewsDTO;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -22,13 +25,11 @@ import java.util.List;
 public class UpdateNews extends DBUpdate {
 
     private News news;
-    private List<DBUpdate> updateComments;
-    private List<DBUpdate> updatePictures;
 
-    UpdateNews(MessageInfo info, Context context) throws JSONException {
+    UpdateNews(MessageInfo info, Context context) {
         super(info, context);
-        if(info.getJsonObject() != null){
-            news = parseNews(info.getJsonObject());
+        if(info.getJsonString() != null){
+            news = parseNews(info.getJsonString());
         }
     }
 
@@ -55,47 +56,15 @@ public class UpdateNews extends DBUpdate {
     }
 
     private void updateSubobjects(){
-        for(DBUpdate updateComment : updateComments){
-            updateComment.update();
+        for(Comment updateComment : news.getComments()){
+            AppDatabase.getInstance(mContext).commentDao().insertComment(updateComment);
         }
-        for(DBUpdate updatePicture : updatePictures) {
-            updatePicture.update();
+        for(Picture updatePicture : news.getPictures()) {
+            AppDatabase.getInstance(mContext).pictureDao().insertPicture(updatePicture);
         }
     }
 
-    private News parseNews(JSONObject json) throws JSONException {
-        int id = json.getInt("Id");
-        String title = json.getString("Title");
-        String content = json.getString("Content");
-        String lastModified = json.getString("LasModified");
-        User user = JSONParser.parseUser(json.getJSONObject("LastModifiedUser"));
-        JSONArray commentsJson = json.getJSONArray("Comments");
-        updateComments = new ArrayList<>(commentsJson.length());
-        for(int i=0; i<commentsJson.length(); i++) {
-            JSONObject commJson = commentsJson.getJSONObject(i);
-            MessageInfo info = new MessageInfo(messageInfo.getNewsId(), commJson.getInt("Id"),
-                    messageInfo.getOperation(), commJson);
-            updateComments.add(new UpdateComment(info, mContext));
-        }
-        JSONArray picturesArray = json.getJSONArray("Pictures");
-        updatePictures = new ArrayList<>(picturesArray.length());
-        for(int i=0; i<picturesArray.length(); i++) {
-            JSONObject picJson = picturesArray.getJSONObject(i);
-            MessageInfo info = new MessageInfo(messageInfo.getNewsId(), picJson.getInt("Id"),
-                    messageInfo.getOperation(), picJson);
-            updatePictures.add(new UpdatePicture(info, mContext));
-        }
-        List<Comment> comments = new ArrayList<>();
-        List<Picture> pictures = new ArrayList<>();
-        // pozadina se ponasa kao klasicna slika prilikom update-a
-        int backId = Constant.INVALID_PICTURE_ID;
-        JSONObject pictureJson = json.getJSONObject("BackgroundPicture");
-        if(pictureJson!=null && pictureJson.getInt("Id") != Constant.INVALID_PICTURE_ID) {
-            backId = pictureJson.getInt("Id");
-            MessageInfo info = new MessageInfo(messageInfo.getNewsId(), backId,
-                    messageInfo.getOperation(), pictureJson);
-            updatePictures.add(new UpdatePicture(info, mContext));
-        }
-        return new News(id,title,content,comments, DateAux.parseDate(lastModified), pictures, backId, user.getId(), user.getUsername());
+    private News parseNews(String jsonString) {
+        return NewsDTO.getNews(GsonFactory.newIstance().fromJson(jsonString, NewsDTO.class));
     }
 }

@@ -12,8 +12,8 @@ import com.newsman.newsman.R;
 import com.newsman.newsman.auxiliary.BackArrowHelper;
 import com.newsman.newsman.auxiliary.Constant;
 import com.newsman.newsman.auxiliary.LoginState;
-import com.newsman.newsman.new_rest.UserConnector;
-import com.newsman.newsman.server_entities.UserWithPassword;
+import com.newsman.newsman.rest_connection.rest_connectors.UserConnector;
+import com.newsman.newsman.model.db_entities.UserWithPassword;
 
 import java.lang.ref.WeakReference;
 

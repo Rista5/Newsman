@@ -6,13 +6,8 @@ import android.graphics.BitmapFactory;
 import android.util.LruCache;
 
 import com.newsman.newsman.R;
-import com.newsman.newsman.auxiliary.Constant;
-import com.newsman.newsman.new_rest.BitmapConnector;
-import com.newsman.newsman.new_rest.PictureConnector;
-import com.newsman.newsman.rest_connection.ConnectionStrategy.GetBitmap;
-import com.newsman.newsman.rest_connection.ConnectionStrategy.PutBitmap;
-import com.newsman.newsman.rest_connection.RestConnector;
-import com.newsman.newsman.server_entities.Picture;
+import com.newsman.newsman.rest_connection.rest_connectors.BitmapConnector;
+import com.newsman.newsman.model.db_entities.Picture;
 import com.newsman.newsman.thread_management.AppExecutors;
 
 import java.util.List;

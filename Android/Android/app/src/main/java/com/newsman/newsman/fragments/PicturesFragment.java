@@ -5,8 +5,6 @@ import android.os.Bundle;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
-import androidx.loader.app.LoaderManager;
-import androidx.loader.content.Loader;
 import androidx.recyclerview.widget.DefaultItemAnimator;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
@@ -17,10 +15,8 @@ import android.widget.ImageView;
 
 import com.newsman.newsman.auxiliary.Constant;
 import com.newsman.newsman.auxiliary.LoginState;
-import com.newsman.newsman.auxiliary.PictureData;
-import com.newsman.newsman.auxiliary.PictureTransportLoader;
 import com.newsman.newsman.R;
-import com.newsman.newsman.server_entities.Picture;
+import com.newsman.newsman.model.db_entities.Picture;
 import com.newsman.newsman.activities.CreatePictureActivity;
 import com.newsman.newsman.adapters.PicturesListAdapter;
 

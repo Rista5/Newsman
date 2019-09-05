@@ -1,6 +1,6 @@
 package com.newsman.newsman.auxiliary.sorting.news;
 
-import com.newsman.newsman.server_entities.SimpleNews;
+import com.newsman.newsman.model.db_entities.SimpleNews;
 
 import java.util.List;
 

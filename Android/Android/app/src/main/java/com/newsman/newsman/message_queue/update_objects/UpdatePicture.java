@@ -2,23 +2,23 @@ package com.newsman.newsman.message_queue.update_objects;
 
 import android.content.Context;
 
+import com.google.gson.Gson;
 import com.newsman.newsman.database.AppDatabase;
 import com.newsman.newsman.message_queue.MQClient;
 import com.newsman.newsman.message_queue.MessageInfo;
-import com.newsman.newsman.picture_management.BitmapCache;
-import com.newsman.newsman.server_entities.Picture;
+import com.newsman.newsman.model.db_entities.Picture;
+import com.newsman.newsman.model.dtos.PictureDTO;
 
 import org.json.JSONException;
-import org.json.JSONObject;
 
 class UpdatePicture extends DBUpdate {
 
-    protected Picture picture;
+    private Picture picture;
 
-    UpdatePicture(MessageInfo info, Context context) throws JSONException {
+    UpdatePicture(MessageInfo info, Context context) {
         super(info, context);
-        if(info.getJsonObject() != null) {
-            picture = parsePicture(info.getJsonObject());
+        if(info.getJsonString() != null) {
+            picture = parsePicture(info.getJsonString());
         }
     }
 
@@ -32,7 +32,6 @@ class UpdatePicture extends DBUpdate {
             case MQClient.opUpdate:
                 AppDatabase.getInstance(mContext).pictureDao()
                         .updatePictureWithLoader(mContext, picture);
-//                BitmapCache.getInstance().updateBitmap(picture.getId(),picture.getBelongsToNewsId());
                 break;
             case MQClient.opDelete:
                 AppDatabase.getInstance(mContext).pictureDao()
@@ -41,7 +40,7 @@ class UpdatePicture extends DBUpdate {
         }
     }
 
-    protected Picture parsePicture(JSONObject json) throws JSONException {
-        return JSONParser.parsePicture(json);
+    private Picture parsePicture(String jsonString) {
+        return PictureDTO.getPicture(GsonFactory.newIstance().fromJson(jsonString, PictureDTO.class));
     }
 }

@@ -14,11 +14,11 @@ import android.widget.TextView;
 
 import com.newsman.newsman.auxiliary.Constant;
 import com.newsman.newsman.R;
-import com.newsman.newsman.auxiliary.DateAux;
+import com.newsman.newsman.auxiliary.date_helpers.DateAux;
 import com.newsman.newsman.auxiliary.LoginState;
 import com.newsman.newsman.fragments.comment_fragment.delete_strategy.DeleteStrategy;
-import com.newsman.newsman.new_rest.CommentConnector;
-import com.newsman.newsman.server_entities.Comment;
+import com.newsman.newsman.rest_connection.rest_connectors.CommentConnector;
+import com.newsman.newsman.model.db_entities.Comment;
 import com.newsman.newsman.thread_management.AppExecutors;
 
 import java.util.List;

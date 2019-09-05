@@ -14,9 +14,7 @@ import android.widget.Toast;
 import com.newsman.newsman.auxiliary.Constant;
 import com.newsman.newsman.R;
 import com.newsman.newsman.auxiliary.LoginState;
-import com.newsman.newsman.new_rest.CommentConnector;
-import com.newsman.newsman.server_entities.Comment;
-import com.newsman.newsman.thread_management.AppExecutors;
+import com.newsman.newsman.model.db_entities.Comment;
 
 import java.util.Date;
 

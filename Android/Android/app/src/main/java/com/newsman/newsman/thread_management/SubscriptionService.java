@@ -52,14 +52,10 @@ public class SubscriptionService extends IntentService {
     }
 
     public void startClient() {
-//        int[] newsIds = AppDatabase.getInstance(getApplicationContext())
-//                .newsDao().getSubscribedNewsIds();
-//        MQClientThread.startNewInstance(Constant.getIpAddress(), getApplicationContext(), newsIds);
         ClientSingleton.getClient(getApplicationContext()).startService();
     }
 
     public void stopClient() {
-//        MQClientThread.deleteThread();
         ClientSingleton.removeClient();
     }
 
@@ -68,8 +64,6 @@ public class SubscriptionService extends IntentService {
             displayToast(R.string.subscribe_error);
             return;
         }
-//        AppDatabase.getInstance(getApplicationContext()).newsDao().subscribeToNews(id);
-//        startClient();
         try {
             ClientSingleton.getClient(getApplicationContext()).subscribeToNews(newsId);
             displayToast(R.string.action_subscribe_to_news);
@@ -83,8 +77,6 @@ public class SubscriptionService extends IntentService {
             displayToast(R.string.subscribe_error);
             return;
         }
-//        AppDatabase.getInstance(getApplicationContext()).newsDao().unsubscribeFromNews(id);
-//        startClient();
         try {
             ClientSingleton.getClient(getApplicationContext()).unsubscribeFromNews(newsId);
             displayToast(R.string.action_unsubscribe_from_news);

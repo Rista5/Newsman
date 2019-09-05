@@ -14,12 +14,12 @@ import android.widget.Toast;
 
 import com.newsman.newsman.auxiliary.BackArrowHelper;
 import com.newsman.newsman.auxiliary.Constant;
-import com.newsman.newsman.auxiliary.PictureConverter;
-import com.newsman.newsman.auxiliary.PictureLoader;
+import com.newsman.newsman.auxiliary.picture_helpers.PictureConverter;
+import com.newsman.newsman.auxiliary.picture_helpers.PictureLoader;
 import com.newsman.newsman.R;
-import com.newsman.newsman.auxiliary.manu_inflater.LoginMenuInflater;
+import com.newsman.newsman.auxiliary.manu_helpers.LoginMenuInflater;
 import com.newsman.newsman.picture_management.BitmapCache;
-import com.newsman.newsman.server_entities.Picture;
+import com.newsman.newsman.model.db_entities.Picture;
 
 public class CreatePictureActivity extends AppCompatActivity {
 

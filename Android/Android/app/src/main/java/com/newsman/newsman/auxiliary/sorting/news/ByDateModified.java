@@ -1,9 +1,8 @@
 package com.newsman.newsman.auxiliary.sorting.news;
 
-import com.newsman.newsman.server_entities.SimpleNews;
+import com.newsman.newsman.model.db_entities.SimpleNews;
 
 import java.util.Collections;
-import java.util.Comparator;
 import java.util.List;
 
 public class ByDateModified implements SimpleNewsSorting {

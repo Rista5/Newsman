@@ -10,7 +10,7 @@ import androidx.room.Transaction;
 import androidx.room.Update;
 
 import com.newsman.newsman.auxiliary.Constant;
-import com.newsman.newsman.server_entities.News;
+import com.newsman.newsman.model.db_entities.News;
 
 import java.util.List;
 

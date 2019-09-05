@@ -2,9 +2,9 @@ package com.newsman.newsman.rest_connection;
 
 import android.content.Context;
 
-import com.newsman.newsman.server_entities.Comment;
-import com.newsman.newsman.server_entities.Picture;
-import com.newsman.newsman.server_entities.SimpleNews;
+import com.newsman.newsman.model.db_entities.Comment;
+import com.newsman.newsman.model.db_entities.Picture;
+import com.newsman.newsman.model.db_entities.SimpleNews;
 
 public abstract class UpdateBuilder {
 

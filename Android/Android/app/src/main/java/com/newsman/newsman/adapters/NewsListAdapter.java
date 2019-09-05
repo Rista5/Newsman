@@ -11,13 +11,13 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.newsman.newsman.auxiliary.Constant;
-import com.newsman.newsman.auxiliary.DateAux;
-import com.newsman.newsman.auxiliary.PopUpMenuController;
+import com.newsman.newsman.auxiliary.date_helpers.DateAux;
+import com.newsman.newsman.auxiliary.manu_helpers.PopUpMenuController;
 import com.newsman.newsman.R;
 import com.newsman.newsman.auxiliary.sorting.news.SimpleNewsSorting;
 import com.newsman.newsman.picture_management.BitmapCache;
 import com.newsman.newsman.picture_management.BitmapObserver;
-import com.newsman.newsman.server_entities.SimpleNews;
+import com.newsman.newsman.model.db_entities.SimpleNews;
 import com.newsman.newsman.activities.DisplayNewsActivity;
 
 import java.util.List;

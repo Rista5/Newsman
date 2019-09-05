@@ -6,13 +6,14 @@ public class MessageInfo {
     private int newsId;
     private int objectId;
     private String operation;
-    private JSONObject jsonObject;
+    private String jsonString;
+//    private JSONObject jsonObject;
 
-    public MessageInfo(int newsId, int objectId, String operation, JSONObject jsonObject){
+    public MessageInfo(int newsId, int objectId, String operation, String jsonString){
         this.newsId = newsId;
         this.objectId = objectId;
         this.operation = operation;
-        this.jsonObject = jsonObject;
+        this.jsonString = jsonString;
     }
 
     public int getNewsId() {
@@ -27,7 +28,7 @@ public class MessageInfo {
         return operation;
     }
 
-    public JSONObject getJsonObject() {
-        return jsonObject;
+    public String getJsonString() {
+        return jsonString;
     }
 }

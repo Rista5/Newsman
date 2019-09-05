@@ -8,7 +8,7 @@ import androidx.room.OnConflictStrategy;
 import androidx.room.Query;
 import androidx.room.Update;
 
-import com.newsman.newsman.server_entities.Comment;
+import com.newsman.newsman.model.db_entities.Comment;
 
 import java.util.List;
 

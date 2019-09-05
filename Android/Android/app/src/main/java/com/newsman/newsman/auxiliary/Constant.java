@@ -1,6 +1,6 @@
 package com.newsman.newsman.auxiliary;
 
-import com.newsman.newsman.server_entities.UserWithPassword;
+import com.newsman.newsman.model.db_entities.UserWithPassword;
 
 public class Constant {
     private static String IP_ADDRESS = "192.168.1.7";

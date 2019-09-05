@@ -17,14 +17,14 @@ import android.view.MenuItem;
 
 import com.newsman.newsman.auxiliary.Constant;
 import com.newsman.newsman.auxiliary.LoginState;
-import com.newsman.newsman.auxiliary.manu_inflater.LoginMenuInflater;
+import com.newsman.newsman.auxiliary.manu_helpers.LoginMenuInflater;
 import com.newsman.newsman.auxiliary.sorting.news.ByDateModified;
 import com.newsman.newsman.auxiliary.sorting.news.ByTitle;
 import com.newsman.newsman.auxiliary.sorting.news.ByUsers;
 import com.newsman.newsman.database.AppDatabase;
-import com.newsman.newsman.server_entities.News;
+import com.newsman.newsman.model.db_entities.News;
 import com.newsman.newsman.R;
-import com.newsman.newsman.server_entities.SimpleNews;
+import com.newsman.newsman.model.db_entities.SimpleNews;
 import com.newsman.newsman.adapters.NewsListAdapter;
 
 import java.util.ArrayList;
