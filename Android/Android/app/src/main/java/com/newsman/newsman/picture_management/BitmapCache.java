@@ -6,6 +6,8 @@ import android.graphics.BitmapFactory;
 import android.util.LruCache;
 
 import com.newsman.newsman.R;
+import com.newsman.newsman.picture_management.ConnectionDI.BitmapRestConnection;
+import com.newsman.newsman.picture_management.ConnectionDI.DaggerBitmapCacheComponent;
 import com.newsman.newsman.rest_connection.rest_connectors.BitmapConnector;
 import com.newsman.newsman.model.db_entities.Picture;
 import com.newsman.newsman.thread_management.AppExecutors;

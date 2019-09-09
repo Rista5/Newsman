@@ -23,6 +23,7 @@ public class SettingsActivity extends AppCompatActivity {
 
         BackArrowHelper.displayBackArrow(this);
         setUpViews();
+        setBtnClickListener();
     }
 
     @Override
@@ -42,7 +43,7 @@ public class SettingsActivity extends AppCompatActivity {
 
     private void setBtnClickListener() {
         findViewById(R.id.settings_set_ip_adr_btn).setOnClickListener(v -> {
-            int validDots = 3;
+            int validDots = 4;
             int minLen = 7;
             int maxLen = 15;
             String ip = etIpAddresse.getText().toString();
@@ -52,6 +53,7 @@ public class SettingsActivity extends AppCompatActivity {
                 Intent intent = new Intent(this, SubscriptionService.class);
                 intent.setAction(SubscriptionService.START);
                 startService(intent);
+                finish();
             }
         });
     }
