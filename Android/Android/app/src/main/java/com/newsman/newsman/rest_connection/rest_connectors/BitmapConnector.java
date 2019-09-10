@@ -46,4 +46,21 @@ public class BitmapConnector {
             }
         };
     }
+
+    public static Runnable loadBitmap(final int newsId, final int pictureId,
+                                      final int reqWidth, int reqHeight) {
+        return () ->{
+            Retrofit retrofit = RetrofitFactory.createInstance();
+            BitmapService service = retrofit.create(BitmapService.class);
+            Call<ResponseBody> resp = service.getPictureData(pictureId, newsId);
+            try {
+                retrofit2.Response<ResponseBody> res = resp.execute();
+                if (res.body() == null) return;
+                Bitmap bmp = PictureConverter.getBitmap(res.body().bytes(), reqWidth, reqHeight);
+                BitmapCache.getInstance().setBitmap(pictureId, newsId, bmp);
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+        };
+    }
 }

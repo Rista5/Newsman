@@ -51,12 +51,11 @@ public class NewsListAdapter extends RecyclerView.Adapter<NewsListAdapter.NewsIt
         newsItemViewHolder.dateModified.setText(DateAux.formatDate(news.getLastModified()));
         newsItemViewHolder.userModifier.setText(news.getModifierUsername());
         newsItemViewHolder.content.setText(news.getContent());
-        if(news.getBackgroundId() != Constant.INVALID_PICTURE_ID) {
-            BitmapObserver observer = new BitmapObserver(newsItemViewHolder.background);
-            Observable observable = BitmapCache.getInstance().getBitmapObservable(mContext, news.getBackgroundId(), news.getId());
-            observable.addObserver(observer);
-        }
-//            newsItemViewHolder.background.setImageBitmap(news.getBackgroundPicture());
+        BitmapObserver observer = new BitmapObserver(newsItemViewHolder.background);
+        BitmapCache.getInstance()
+                .getBitmapObservable(mContext, news.getBackgroundId(), news.getId())
+                .addObserver(observer);
+
 
         newsItemViewHolder.overflow.setOnClickListener(new View.OnClickListener() {
             @Override

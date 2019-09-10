@@ -6,6 +6,9 @@ import android.graphics.BitmapFactory;
 import android.util.LruCache;
 
 import com.newsman.newsman.R;
+import com.newsman.newsman.auxiliary.picture_helpers.PictureConverter;
+import com.newsman.newsman.picture_management.ConnectionDI.BitmapRestConnection;
+import com.newsman.newsman.picture_management.ConnectionDI.DaggerBitmapCacheComponent;
 import com.newsman.newsman.rest_connection.rest_connectors.BitmapConnector;
 import com.newsman.newsman.model.db_entities.Picture;
 import com.newsman.newsman.thread_management.AppExecutors;
@@ -40,6 +43,8 @@ public class BitmapCache {
     public static Bitmap getDefaultBitmap(Context context) {
         if(defaultBitmap == null) {
             defaultBitmap = BitmapFactory.decodeResource(context.getResources(), R.drawable.mountain);
+//            defaultBitmap = PictureConverter
+//                    .loadResource(context.getResources(), R.drawable.mountain, reqWidth, reqHeight);
         }
         return defaultBitmap;
     }
@@ -107,23 +112,10 @@ public class BitmapCache {
         if(picId<=0)
             return;
         restConnection.getBitmap(picId,newsId);
-//        new RestConnector(new GetBitmap(picId, newsId, context), Constant.getRawPictureRoute(picId,newsId))
-//                .execute();
     }
 
     private void putBitmapToRest(int picId, int newsId,Bitmap bitmap){
         restConnection.putBitmap(picId,newsId,bitmap);
-    }
-
-    public void putBitmapsCreateNews(List<Integer> oldId, List<Integer> newId, int newsId){
-        //TODO background image se ne salje. Why is that?
-        for(int i=0;i<oldId.size();i++){
-            BitmapObservable bmp = cache.get(oldId.get(i));
-            bmp.setNewsId(newsId);
-            cache.remove(oldId.get(i));
-            cache.put(newId.get(i),bmp);
-            putBitmapToRest(newId.get(i),newsId,bmp.getBitmap());
-        }
     }
 
     public void loadPicturesInCache(Context context, List<Picture> pictureList){

@@ -7,6 +7,9 @@ import java.util.Observable;
 import java.util.Observer;
 
 public class BitmapObserver implements Observer {
+
+//    final int MAX_WIDTH = 40;
+//    final int MAX_HEIGHT = 30;
     private ImageView imageView;
 
     public BitmapObserver(ImageView imageView)
@@ -19,7 +22,6 @@ public class BitmapObserver implements Observer {
         if (arg instanceof Bitmap) {
             this.imageView.setImageBitmap((Bitmap) arg);
         } else {
-            //mozda pravi problem, treba da resetuje view i da se koristi jedna slika
             imageView.setImageBitmap(BitmapCache.getDefaultBitmap(imageView.getContext()));
         }
     }

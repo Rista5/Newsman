@@ -105,7 +105,6 @@ public class CreatePictureActivity extends AppCompatActivity {
         bundle.putString("Description", picture.getDescription());
         bundle.putInt("BelongsToNewsId", picture.getBelongsToNewsId());
 
-        //TODO REVIEW if this is correct
         BitmapCache.getInstance().setBitmap(picture.getId(),picture.getBelongsToNewsId(),
                 PictureConverter.getImageViewBitmap(pictureView));
         return bundle;
@@ -129,9 +128,6 @@ public class CreatePictureActivity extends AppCompatActivity {
         int id = BitmapCache.getNonValidIdentifier();
         String name = nameEditText.getText().toString();
         String description = descriptionEditText.getText().toString();
-        //TODO ovde bitmap ne treba da se koristi
-        // mozda moze da se upotrebi
-//        BitmapCache.getInstance().setBitmap(id, newsId, pictureBitmap);
         return new Picture(id, name, description, newsId, pictureBitmap);
     }
 

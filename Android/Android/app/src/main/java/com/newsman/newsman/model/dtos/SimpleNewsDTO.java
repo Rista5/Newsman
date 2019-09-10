@@ -3,6 +3,7 @@ package com.newsman.newsman.model.dtos;
 import android.graphics.Bitmap;
 
 import com.newsman.newsman.auxiliary.Constant;
+import com.newsman.newsman.auxiliary.LoginState;
 import com.newsman.newsman.auxiliary.date_helpers.DateAux;
 import com.newsman.newsman.model.db_entities.News;
 import com.newsman.newsman.model.db_entities.SimpleNews;
@@ -56,7 +57,7 @@ public class SimpleNewsDTO {
         } catch (ParseException e) {
             e.printStackTrace();
         }
-        int userId = Constant.USER_ID;
+        int userId = LoginState.getInstance().getUserId();
         String username = "";
         if(dto.lastModifiedUser != null) {
             userId = dto.lastModifiedUser.getId();

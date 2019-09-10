@@ -6,20 +6,30 @@
     android:layout_height="match_parent"
     tools:context=".activities.MainActivity">
 
+
+    <ImageView
+        android:id="@+id/main_activity_logo"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:adjustViewBounds="true"
+        android:minHeight="32dp"
+        android:src="@drawable/mountain"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
     <Button
         android:id="@+id/lounch_news_list"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginStart="8dp"
         android:layout_marginLeft="8dp"
-        android:layout_marginTop="8dp"
         android:layout_marginEnd="8dp"
         android:layout_marginRight="8dp"
         android:text="@string/news_list_button_text"
-        app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
+        app:layout_constraintTop_toBottomOf="@+id/main_activity_logo" />
 
     <Button
         android:id="@+id/lounch_login_activity"
@@ -38,5 +48,14 @@
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/lounch_login_activity" />
+
+    <Button
+        android:id="@+id/test_buton"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Test picture load"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/lounch_create_account" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>

@@ -109,7 +109,6 @@ public class CommentsFragment extends Fragment implements CreateCommentFragment.
         }
     }
 
-    //TODO proveri da li se cuva commentId u listeneru
     private void setDeleteButton(int position, ImageView view){
         deleteStrategy.setDelete(position, view, this);
     }

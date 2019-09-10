@@ -45,7 +45,6 @@ public class CreateAccountActivity extends AppCompatActivity {
         String password = etPassword.getText().toString();
         String confirmPass = etConfirmPassword.getText().toString();
         if(validInput(username, password, confirmPass)) {
-            //TODO create account
             UserWithPassword user = new UserWithPassword(Constant.INVALID_USER_ID, username, password);
             new CreateAccAsyncTask(this).execute(user);
         } else {

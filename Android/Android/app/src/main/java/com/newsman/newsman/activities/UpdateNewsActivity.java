@@ -48,7 +48,6 @@ public class UpdateNewsActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_update_news);
-        // TODO verovatno je najbolje da se posalje vest umesto id, ali za sad nek ide iz db
 
         BackArrowHelper.displayBackArrow(this);
 

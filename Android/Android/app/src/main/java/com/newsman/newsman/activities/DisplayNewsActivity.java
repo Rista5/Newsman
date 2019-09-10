@@ -17,6 +17,7 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.newsman.newsman.auxiliary.BackArrowHelper;
+import com.newsman.newsman.auxiliary.date_helpers.DateAux;
 import com.newsman.newsman.auxiliary.picture_helpers.PictureLoader;
 import com.newsman.newsman.auxiliary.manu_helpers.PopUpMenuController;
 import com.newsman.newsman.auxiliary.manu_helpers.LoginMenuInflater;
@@ -61,7 +62,6 @@ public class DisplayNewsActivity extends AppCompatActivity {
             autoSubscribe(SubscriptionService.SUBSCRIBE);
         }
         setUpViews();
-        //TODO mozda treba da se skloni
         BackArrowHelper.displayBackArrow(this);
         overflow.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -115,11 +115,12 @@ public class DisplayNewsActivity extends AppCompatActivity {
             public void onChanged(@Nullable News news) {
                 if(news == null) return;
                 title.setText(news.getTitle());
-                postDate.setText(news.getLastModified().toString());
+                postDate.setText(DateAux.formatDate(news.getLastModified()));
+                lastUpdateBy.setText(news.getModifierUsername());
                 content.setText(news.getContent());
-                //TODO razmisli da li moze ovo bolje
-                Observable o = BitmapCache.getInstance().getBitmapObservable(getApplicationContext(), news.getBackgroundId(), news.getId());
-                o.addObserver(new BitmapObserver(background));
+                BitmapCache.getInstance()
+                        .getBitmapObservable(getApplicationContext(), news.getBackgroundId(), news.getId())
+                        .addObserver(new BitmapObserver(background));
             }
         });
         LiveData<List<Comment>> liveComments =

@@ -26,7 +26,7 @@ public class HistoryList<T> implements List<T>, History<T> {
     @Override
     public void updatedElement(T oldE, T newE) {
         boolean found = false;
-        for(HistoryObject h: history)
+        for(HistoryObject<T> h: history)
             if (h.getObject().equals(oldE)) {
                 h.setObject(newE);
                 found = true;
@@ -41,7 +41,7 @@ public class HistoryList<T> implements List<T>, History<T> {
         boolean found = false;
         Iterator<HistoryObject<T>> i = history.listIterator();
         while(i.hasNext() && !found) {
-            HistoryObject o = i.next();
+            HistoryObject<T> o = i.next();
             if(o.getObject().equals(e)){
                 i.remove();
                 found = true;
@@ -165,7 +165,7 @@ public class HistoryList<T> implements List<T>, History<T> {
 
     @NonNull
     @Override
-    public Iterator iterator() {
+    public Iterator<T> iterator() {
         return list.iterator();
     }
 

@@ -104,8 +104,6 @@ public class NewsConnector {
                 Response<NewsDTO> response = putCall.execute();
                 if(response.body() == null) return;
                 News newsResult = NewsDTO.getNews(response.body());
-//                News db = new News();
-//                SimpleNews.populateNews(db, newsResult);
                 AppDatabase.getInstance(context).newsDao().insertNews(newsResult);
                 AppExecutors.getInstance().getNetworkIO()
                         .execute(BitmapConnector.saveBitmap(newsResult.getId(), newsResult.getBackgroundId(), background));
@@ -135,14 +133,14 @@ public class NewsConnector {
 
     public static Runnable saveNews(Context context, final int userId, final SimpleNews news){
         return () -> {
-          Retrofit retrofit = RetrofitFactory.createInstance();
-          Call<SimpleNewsDTO> postCall = retrofit
-                  .create(NewsService.class)
-                  .postNews(userId,new SimpleNewsDTO(news));
+            Retrofit retrofit = RetrofitFactory.createInstance();
+            Call<SimpleNewsDTO> postCall = retrofit
+                    .create(NewsService.class)
+                    .postNews(userId,new SimpleNewsDTO(news));
             try {
                 Response<SimpleNewsDTO> response = postCall.execute();
                 SimpleNewsDTO dto = response.body();
-                if(dto!=null){
+                if(dto != null){
                     SimpleNews simpleNews = SimpleNewsDTO.getSimpleNews(dto);
                     News updatedNews = new News();
                     SimpleNews.populateNews(updatedNews, simpleNews);
@@ -150,10 +148,6 @@ public class NewsConnector {
                     if(news.getBackgroundId() != Constant.INVALID_PICTURE_ID) {
                         AppExecutors.getInstance().getNetworkIO().execute(BitmapConnector
                                 .saveBitmap(simpleNews.getId(), simpleNews.getBackgroundId(), news.getBackgroundPicture()));
-                    }
-                    if(simpleNews.getBackgroundId() > 0) {
-                        AppExecutors.getInstance().getNetworkIO().execute(BitmapConnector
-                                .loadBitmap(simpleNews.getId(), simpleNews.getBackgroundId()));
                     }
                 }
             } catch (IOException e) {

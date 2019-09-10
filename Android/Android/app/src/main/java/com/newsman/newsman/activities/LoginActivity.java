@@ -52,7 +52,6 @@ public class LoginActivity extends AppCompatActivity {
             String password = etPassword.getText().toString();
             if(validInput(username, password)){
                 UserWithPassword userWithPassword = new UserWithPassword(Constant.INVALID_USER_ID, username, password);
-                //TODO implement login
                 new LoginAsyncTask(this).execute(userWithPassword);
                 finish();
             } else {

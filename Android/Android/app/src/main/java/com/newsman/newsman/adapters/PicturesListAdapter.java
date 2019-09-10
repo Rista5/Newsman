@@ -76,7 +76,6 @@ public class PicturesListAdapter extends RecyclerView.Adapter<PicturesListAdapte
 
     public void updatePicture(int position, Picture picture) {
         if(sendToRest){
-            //TODO ovo nece bas da radi, slika se ne pribavlja lepo
             Bitmap bmp = BitmapCache.getInstance().getBitmapObservable(context,
                     picture.getId(), picture.getBelongsToNewsId()).getBitmap();
             AppExecutors.getInstance().getNetworkIO()

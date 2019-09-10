@@ -50,11 +50,9 @@ public class CreateNewsFragment extends Fragment {
     private void setViewsContent(){
         title.setText(news.getTitle());
         content.setText(news.getContent());
-//        backgroundImage.setImageBitmap(news.getBackgroundPicture());
-//        BitmapObserver observer = new BitmapObserver(backgroundImage);
-//        BitmapCache.getInstance().loadBitmap(getContext(), news.getBackgroundId(), news.getId()).addObserver(observer);
         BitmapOneTimeObserver consumer = new BitmapOneTimeObserver(backgroundImage);
-        BitmapCache.getInstance().getBitmapObservable(getContext(),news.getBackgroundId(),news.getId()).addObserver(consumer);
+        BitmapCache.getInstance().getBitmapObservable(getContext(),news.getBackgroundId(),news.getId())
+                .addObserver(consumer);
     }
 
     public void setNews(SimpleNews news) {
