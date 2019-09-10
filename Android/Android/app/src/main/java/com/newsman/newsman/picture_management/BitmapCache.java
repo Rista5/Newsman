@@ -43,8 +43,6 @@ public class BitmapCache {
     public static Bitmap getDefaultBitmap(Context context) {
         if(defaultBitmap == null) {
             defaultBitmap = BitmapFactory.decodeResource(context.getResources(), R.drawable.mountain);
-//            defaultBitmap = PictureConverter
-//                    .loadResource(context.getResources(), R.drawable.mountain, reqWidth, reqHeight);
         }
         return defaultBitmap;
     }

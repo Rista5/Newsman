@@ -31,7 +31,7 @@ public class BitmapConnector {
         };
     }
 
-    public static Runnable loadBitmap(final int newsId, final int pictureId) {
+    public static Runnable loadBitmap(final int pictureId, final int newsId) {
         return () ->{
             Retrofit retrofit = RetrofitFactory.createInstance();
             BitmapService service = retrofit.create(BitmapService.class);

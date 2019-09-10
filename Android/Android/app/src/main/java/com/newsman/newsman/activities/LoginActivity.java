@@ -53,7 +53,7 @@ public class LoginActivity extends AppCompatActivity {
             if(validInput(username, password)){
                 UserWithPassword userWithPassword = new UserWithPassword(Constant.INVALID_USER_ID, username, password);
                 new LoginAsyncTask(this).execute(userWithPassword);
-                finish();
+                //finish();
             } else {
                 Toast.makeText(this, R.string.login_invalid_toast, Toast.LENGTH_LONG).show();
             }

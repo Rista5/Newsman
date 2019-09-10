@@ -29,6 +29,7 @@ public class LoginMenuInflater {
     public static boolean handleOnMenuItemClick(MenuItem item, Context context){
         if(item.getItemId() == R.id.action_login){
             Intent intent = new Intent(context, LoginActivity.class);
+            intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
             context.startActivity(intent);
             return true;
         } else if(item.getItemId() == R.id.action_settings){
@@ -38,6 +39,7 @@ public class LoginMenuInflater {
         } else if(item.getItemId() == R.id.action_logout){
             LoginState.logout();
             Intent intent = new Intent(context, SettingsActivity.class);
+            intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
             context.startActivity(intent);
             return true;
         } else {
