@@ -27,7 +27,7 @@ namespace BuisnessLogicLayer.Services
             if (res)
             {
                 MessageQueueManager manager = MessageQueueManager.Instance;
-                manager.PublishMessage(newsId, pictureId, new PictureUpdateObject(pictureId, newsId), MessageOperation.RawPictureUpdate);
+                manager.PublishMessage(newsId, pictureId, new PictureUpdateObject(pictureId, newsId), MessageOperation.Update);
             }
             return res;
         }

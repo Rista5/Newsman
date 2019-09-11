@@ -206,11 +206,12 @@ namespace DataLayerLib.DTOManagers
                 modified.User = user;
                 modified.ModificationDate = DateTime.Now;
                 modified.News = newNews;
+                newNews.Modifications.Add(modified);
 
                 ITransaction transaction = session.BeginTransaction();
 
                 session.SaveOrUpdate(newNews);
-                session.Save(modified);
+                // session.Save(modified);
                 session.Flush();
                 transaction.Commit();
 

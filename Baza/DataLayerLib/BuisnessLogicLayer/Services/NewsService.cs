@@ -59,10 +59,10 @@ namespace BuisnessLogicLayer.Services
         {
             NewsDTO dataResult = newsData.CreateNews(news, userId);
 
-            if (news.BackgroundPicture != null)
-            {
-                dataResult.BackgroundPicture.PictureData = news.BackgroundPicture.PictureData;
-            }
+            //if (news.BackgroundPicture != null)
+            //{
+            //    dataResult.BackgroundPicture.PictureData = news.BackgroundPicture.PictureData;
+            //}
 
             //TODO ovo uopste ne izgleda dobro, ne znam kako bi bolje mogle da se ucitavaju slike
 
