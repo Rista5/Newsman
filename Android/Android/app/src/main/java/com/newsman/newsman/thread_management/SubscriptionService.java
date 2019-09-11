@@ -1,6 +1,7 @@
 package com.newsman.newsman.thread_management;
 
 import android.app.IntentService;
+import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 import android.widget.Toast;
@@ -20,8 +21,16 @@ public class SubscriptionService extends IntentService {
 
     public static final String SUBSCRIBE = "subscribe";
     public static final String UNSUBSCRIBE = "unsubscribe";
+    public static final String TEMP_SUBSCRIBE = "temp_subscribe";
+    public static final String TEMP_UNSUBSCRIBE = "temp_upsubscribe";
     public static final String START = "start";
     public static final String STOP = "stop";
+
+    public static void startClient(Context context) {
+        Intent startMQClient = new Intent(context, SubscriptionService.class);
+        startMQClient.setAction(SubscriptionService.START);
+        context.startService(startMQClient);
+    }
 
     public SubscriptionService() {
         super("SubscriptionService");
@@ -40,6 +49,12 @@ public class SubscriptionService extends IntentService {
             case UNSUBSCRIBE:
                 unsubscribeFromNews(getNewsId(intent));
                 break;
+            case TEMP_SUBSCRIBE:
+                tempSubscribe(getNewsId(intent));
+                break;
+            case TEMP_UNSUBSCRIBE:
+                tempUnsubscribe(getNewsId(intent));
+                break;
             case START:
                 startClient();
                 break;
@@ -52,7 +67,8 @@ public class SubscriptionService extends IntentService {
     }
 
     public void startClient() {
-        ClientSingleton.getClient(getApplicationContext()).startService();
+        int[] ids = AppDatabase.getInstance(getApplicationContext()).newsDao().getSubscribedNewsIds();
+        ClientSingleton.getClient(getApplicationContext()).startService(ids);
     }
 
     public void stopClient() {
@@ -66,6 +82,7 @@ public class SubscriptionService extends IntentService {
         }
         try {
             ClientSingleton.getClient(getApplicationContext()).subscribeToNews(newsId);
+            AppDatabase.getInstance(getApplicationContext()).newsDao().subscribeToNews(newsId);
             displayToast(R.string.action_subscribe_to_news);
         } catch (IOException e) {
             e.printStackTrace();
@@ -79,7 +96,32 @@ public class SubscriptionService extends IntentService {
         }
         try {
             ClientSingleton.getClient(getApplicationContext()).unsubscribeFromNews(newsId);
+            AppDatabase.getInstance(getApplicationContext()).newsDao().unsubscribeFromNews(newsId);
             displayToast(R.string.action_unsubscribe_from_news);
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
+
+    private void tempSubscribe(int newsId) {
+        if(newsId <= 0){
+            displayToast(R.string.subscribe_error);
+            return;
+        }
+        try {
+            ClientSingleton.getClient(getApplicationContext()).subscribeTempNews(newsId);
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
+
+    private void tempUnsubscribe(int newsId) {
+        if(newsId <= 0){
+            displayToast(R.string.subscribe_error);
+            return;
+        }
+        try {
+            ClientSingleton.getClient(getApplicationContext()).unsubscribeFromTempNews(newsId);
         } catch (IOException e) {
             e.printStackTrace();
         }

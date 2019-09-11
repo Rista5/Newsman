@@ -2,6 +2,7 @@ package com.newsman.newsman.message_queue;
 
 import android.content.Context;
 
+import com.newsman.newsman.auxiliary.notification.NotificationHelper;
 import com.newsman.newsman.message_queue.update_objects.DBUpdate;
 import com.newsman.newsman.message_queue.update_objects.DBUpdateFactory;
 import com.rabbitmq.client.AMQP;
@@ -37,5 +38,56 @@ public class NewsUpdateConsumer extends DefaultConsumer {
                 Integer.parseInt(routes[4]), routes[2], data);
         DBUpdate updateDB = DBUpdateFactory.createInstance(routes[3], info, context);
         updateDB.update();
+        NotificationHelper.newsUpdateNotification(
+                context,
+                Integer.parseInt(routes[1]),
+                getNotificationText(routes[2], routes[3]),
+                shouldStartActivity(routes[2], routes[3])
+        );
     }
+
+    private String getNotificationText(String operation, String object) {
+        String result = "";
+        switch(operation) {
+            case MQClient.opInsert:
+                if(object.equals("NewsDTO") || object.equals("SimpleNewsDTO"))
+                    result = "New news";
+                else
+                    result = "News updated";
+                break;
+            case MQClient.opUpdate:
+                result = "News updated";
+                break;
+            case MQClient.opDelete:
+                if(object.equals("NewsDTO"))
+                    result = "News deleted";
+                else
+                    result = "News updated";
+                break;
+                default:
+                    result = "Newsman";
+                    break;
+        }
+        return result;
+    }
+
+    private boolean shouldStartActivity(String operation, String object) {
+        boolean result = false;
+        switch (operation){
+            case MQClient.opInsert:
+                result = true;
+                break;
+            case MQClient.opUpdate:
+                result = true;
+                break;
+            case MQClient.opDelete:
+                result = !object.equals("NewsDTO") && !object.equals("SimpleNewsDTO");
+                break;
+            default:
+                result = false;
+                break;
+        }
+        return result;
+    }
+
 }

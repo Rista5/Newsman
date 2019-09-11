@@ -62,7 +62,7 @@ public class DisplayNewsActivity extends AppCompatActivity {
         Bundle extras = getIntent().getExtras();
         if(extras != null) {
             newsId = extras.getInt(Constant.NEWS_BUNDLE_KEY);
-            autoSubscribe(SubscriptionService.SUBSCRIBE);
+            autoSubscribe(SubscriptionService.TEMP_SUBSCRIBE);
         }
         setUpViews();
         BackArrowHelper.displayBackArrow(this);
@@ -88,7 +88,7 @@ public class DisplayNewsActivity extends AppCompatActivity {
 
     @Override
     protected void onDestroy() {
-        autoSubscribe(SubscriptionService.UNSUBSCRIBE);
+        autoSubscribe(SubscriptionService.TEMP_UNSUBSCRIBE);
         backgroundObserver.removeObserver();
         super.onDestroy();
     }

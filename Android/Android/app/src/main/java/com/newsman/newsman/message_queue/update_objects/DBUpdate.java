@@ -8,7 +8,7 @@ import org.json.JSONException;
 
 public abstract class DBUpdate {
 
-    Context mContext;
+    protected Context mContext;
     protected MessageInfo messageInfo;
 
 

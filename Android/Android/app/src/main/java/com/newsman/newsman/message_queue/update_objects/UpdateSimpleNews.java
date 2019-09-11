@@ -32,11 +32,9 @@ public class UpdateSimpleNews extends DBUpdate {
         switch (messageInfo.getOperation()) {
             case MQClient.opInsert:
                 AppDatabase.getInstance(mContext).newsDao().insertNews(news);
-                PictureLoader.savePictureData(mContext, this.news.getBackgroundId(), this.news.getBackgroundPicture());
                 break;
             case MQClient.opUpdate:
                 AppDatabase.getInstance(mContext).newsDao().updateNews(news);
-                PictureLoader.savePictureData(mContext, this.news.getBackgroundId(), this.news.getBackgroundPicture());
                 break;
             case MQClient.opDelete:
                 AppDatabase.getInstance(mContext).newsDao()

@@ -16,6 +16,7 @@ import com.newsman.newsman.model.db_entities.News;
 import com.newsman.newsman.model.db_entities.Picture;
 import com.newsman.newsman.model.db_entities.SimpleNews;
 import com.newsman.newsman.thread_management.AppExecutors;
+import com.newsman.newsman.thread_management.SubscriptionService;
 
 import java.io.IOException;
 import java.util.ArrayList;
@@ -50,7 +51,9 @@ public class NewsConnector {
             try{
                 Response<List<NewsDTO>> response = newsListCall.execute();
                 if(response.body() == null) return;
+                int[] subs = null;
                 if(response.body().size() >0 ) {
+                    subs = AppDatabase.getInstance(context).newsDao().getSubscribedNewsIds();
                     AppDatabase.getInstance(context).commentDao().deleteAllComments();
                     AppDatabase.getInstance(context).pictureDao().deleteAllPictures();
                     AppDatabase.getInstance(context).newsDao().deleteAllNews();
@@ -64,10 +67,16 @@ public class NewsConnector {
                         AppDatabase.getInstance(context).pictureDao().insertPicture(PictureDTO.getPicture(picture));
                     }
                 }
+                if(subs != null && subs.length>0) {
+                    for(int i: subs){
+                        AppDatabase.getInstance(context).newsDao().subscribeToNews(i);
+                    }
+                }
             }
             catch (IOException ex){
                 ex.printStackTrace();
             }
+            SubscriptionService.startClient(context);
         };
     }
 

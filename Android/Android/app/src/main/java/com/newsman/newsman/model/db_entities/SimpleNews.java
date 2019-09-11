@@ -41,6 +41,8 @@ public class SimpleNews {
         news.setLastModified(simpleNews.getLastModified());
         news.setBackgroundId(simpleNews.getBackgroundId());
         news.setSubscribed(simpleNews.subscribed);
+        news.setModifierId(simpleNews.getModifierId());
+        news.setModifierUsername(simpleNews.getModifierUsername());
     }
 
     public static SimpleNews getSimpleNews(News news, Context context) {

@@ -77,4 +77,6 @@
     <string name="pref_ip_key">ip_address</string>
     <string name="pref_ip_title">Ip address</string>
 
+    <string name="notification_channel_name">News channel</string>
+
 </resources>

@@ -87,10 +87,6 @@ public class MainActivity extends AppCompatActivity {
                 AppExecutors.getInstance().getNetworkIO()
                         .execute(NewsConnector.loadAllNews(getApplicationContext()));
 
-                Intent startMQClient = new Intent(getApplicationContext(), SubscriptionService.class);
-                startMQClient.setAction(SubscriptionService.START);
-                startService(startMQClient);
-
                 Intent intent = new Intent(getApplicationContext(), NewsListActivity.class);
                 startActivity(intent);
             }

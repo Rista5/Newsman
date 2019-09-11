@@ -12,8 +12,7 @@ public class ClientSingleton {
 
     public static MQClient getClient(Context context) {
         if(client == null) {
-            int[] ids = AppDatabase.getInstance(context).newsDao().getSubscribedNewsIds();
-            client = new MQClient(Constant.getIpAddress(),context, ids);
+            client = new MQClient(Constant.getIpAddress(),context);
         }
         return client;
     }
