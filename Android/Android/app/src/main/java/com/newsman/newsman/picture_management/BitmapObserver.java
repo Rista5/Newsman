@@ -11,10 +11,12 @@ public class BitmapObserver implements Observer {
 //    final int MAX_WIDTH = 40;
 //    final int MAX_HEIGHT = 30;
     private ImageView imageView;
+    private BitmapObservable observable;
 
-    public BitmapObserver(ImageView imageView)
-    {
+    public BitmapObserver(BitmapObservable observable, ImageView imageView) {
         this.imageView = imageView;
+        this.observable = observable;
+        observable.addObserver(this);
     }
 
     @Override
@@ -24,5 +26,11 @@ public class BitmapObserver implements Observer {
         } else {
             imageView.setImageBitmap(BitmapCache.getDefaultBitmap(imageView.getContext()));
         }
+    }
+
+
+    public void removeObserver() {
+        imageView = null;
+        observable.deleteObserver(this);
     }
 }

@@ -81,23 +81,11 @@ public class HistoryList<T> implements List<T>, History<T> {
     @Override
     public boolean addAll(Collection<? extends T>  c) {
         return list.addAll(c);
-//        boolean res = list.addAll(c);
-//        if(res)
-//            for(T e: c){
-//                insertedElement(e);
-//            }
-//        return res;
     }
 
     @Override
     public boolean addAll(int index, Collection<? extends T> c) {
         return list.addAll(index, c);
-//        boolean res =  list.addAll(index, c);
-//        if(res)
-//            for(T e: c){
-//                insertedElement(e);
-//            }
-//        return res;
     }
 
     @Override
@@ -120,22 +108,11 @@ public class HistoryList<T> implements List<T>, History<T> {
     @Override
     public boolean removeAll(Collection c) {
         return list.removeAll(c);
-//        boolean res = list.removeAll(c);
-//        if(res)
-//            for(Object o: c) {
-//                T e = (T) o;
-//                if(e != null){
-//                    deletedElement(e);
-//                }
-//            }
-//        return res;
     }
 
     @Override
     public T set(int index, T element) {
         T res = list.set(index, element);
-//        if(res != null)
-//            deletedElement(res);
         updatedElement(res, element);
         return res;
     }

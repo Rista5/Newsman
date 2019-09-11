@@ -1,12 +1,14 @@
 package com.newsman.newsman.activities;
 
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.graphics.Bitmap;
 import android.os.Handler;
 import android.os.Looper;
 
 import androidx.appcompat.app.AppCompatActivity;
 import android.os.Bundle;
+import android.preference.PreferenceManager;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuInflater;
@@ -20,6 +22,7 @@ import com.google.gson.GsonBuilder;
 import com.newsman.newsman.auxiliary.manu_helpers.LoginMenuInflater;
 import com.newsman.newsman.message_queue.MQClient;
 import com.newsman.newsman.picture_management.BitmapCache;
+import com.newsman.newsman.picture_management.BitmapObservable;
 import com.newsman.newsman.picture_management.BitmapObserver;
 import com.newsman.newsman.rest_connection.rest_connectors.BitmapConnector;
 import com.newsman.newsman.rest_connection.rest_connectors.NewsConnector;
@@ -46,6 +49,7 @@ import retrofit2.converter.gson.GsonConverterFactory;
 public class MainActivity extends AppCompatActivity {
 
     private ImageView background;
+    private BitmapObserver backgroundObserver;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -53,6 +57,13 @@ public class MainActivity extends AppCompatActivity {
         setContentView(R.layout.activity_main);
 
         setUpViews();
+        setIpAddress();
+    }
+
+    @Override
+    protected void onResume() {
+        invalidateOptionsMenu();
+        super.onResume();
     }
 
     @Override
@@ -101,9 +112,23 @@ public class MainActivity extends AppCompatActivity {
             AppExecutors.getInstance().getNetworkIO().execute(
                     BitmapConnector.loadBitmap(newsId, pictureId, reqWidth, reqheight)
             );
-            BitmapCache.getInstance().getBitmapObservable(this, pictureId, newsId)
-                    .addObserver( new BitmapObserver(background));
+
+            BitmapObservable o =  BitmapCache.getInstance().getBitmapObservable(this, pictureId, newsId);
+            backgroundObserver = new BitmapObserver(o, background);
         });
+    }
+
+    @Override
+    protected void onDestroy() {
+        if(backgroundObserver != null)
+            backgroundObserver.removeObserver();
+        super.onDestroy();
+    }
+
+    private void setIpAddress(){
+        SharedPreferences preferences = PreferenceManager.getDefaultSharedPreferences(this);
+        String ip = preferences.getString(getString(R.string.pref_ip_key), getString(R.string.pref_ip));
+        Constant.setIpAddress(ip);
     }
 
     private News genNews() {

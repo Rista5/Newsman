@@ -9,7 +9,10 @@ import java.util.Observer;
 
 public class BitmapObservable extends Observable {
     private Bitmap bitmap;
-    private int newsId;
+
+    public BitmapObservable(Bitmap bitmap) {
+        this.bitmap = bitmap;
+    }
 
     public Bitmap getBitmap() {
         return bitmap;
@@ -25,14 +28,6 @@ public class BitmapObservable extends Observable {
             }
         });
 
-    }
-
-    public void setNewsId(int newsId){
-        this.newsId = newsId;
-    }
-
-    public int getNewsId(){
-        return this.newsId;
     }
 
     @Override

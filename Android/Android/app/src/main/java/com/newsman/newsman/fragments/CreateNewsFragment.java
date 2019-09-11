@@ -65,11 +65,8 @@ public class CreateNewsFragment extends Fragment {
         String newsContent = content.getText().toString();
         int backId = news.getBackgroundId();
         Bitmap background = null;
-        if(updated) {
-            background = ((BitmapDrawable)backgroundImage.getDrawable()).getBitmap();
-        }
-        else
-            background = news.getBackgroundPicture();
+        background = ((BitmapDrawable)backgroundImage.getDrawable()).getBitmap();
+
 
         return new SimpleNews(news.getId(), newsTitle, newsContent,
                 news.getLastModified(), background, backId, news.getModifierId(), news.getModifierUsername());

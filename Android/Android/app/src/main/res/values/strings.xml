@@ -13,9 +13,9 @@
     <string name="create_news_cancel_button">Cancel</string>
     <string name="create_news_toast_message">News must have at least title and content to be created!</string>
 
-    <string name="action_subscribe_to_news">Subscribe to news</string>
+    <string name="action_subscribe_to_news">Subscribed to news</string>
     <string name="action_create_new_news">Create news</string>
-    <string name="action_unsubscribe_from_news">Unsubscribe from news</string>
+    <string name="action_unsubscribe_from_news">Unsubscribed from news</string>
     <string name="subscribe_error">News not found error</string>
     <string name="action_update_news">Update news</string>
     <string name="action_delete_news">Delete news</string>
@@ -51,8 +51,8 @@
     <string name="confirm_password_placeholder">Confirm password</string>
     <string name="create_account_btn">Create account</string>
     <string name="login_invalid_toast">"Invalid username or password!"</string>
-    <string name="create_account_invalid_toast">"Invalid username or password!\n
-        Password and confirm password must match"</string>
+    <string name="create_account_invalid_toast">Invalid username or password!\n
+        Password and confirm password must match</string>
     <string name="create_comment_invalid_comment_toast">Comment must have some text!</string>
     <string name="create_account_success_toast">Account successfully created</string>
     <string name="create_account_fail_toast">Already exists user with that username!</string>
@@ -68,9 +68,13 @@
     <string name="invalid_username">Not a valid username</string>
     <string name="invalid_password">Password must be >5 characters</string>
     <string name="login_failed">"Login failed"</string>
-    <string name="settings_ip_adr_hint">IP Addresse</string>
+    <string name="settings_ip_adr_hint">IP Address</string>
     <string name="action_save_news">Save news</string>
     <string name="news_list_button_text">News list</string>
-    <string name="set_ip_addresse_btn">Set IP addresse</string>
+    <string name="set_ip_address_btn">Set IP address</string>
+
+    <string name="pref_ip">192.168.1.7</string>
+    <string name="pref_ip_key">ip_address</string>
+    <string name="pref_ip_title">Ip address</string>
 
 </resources>

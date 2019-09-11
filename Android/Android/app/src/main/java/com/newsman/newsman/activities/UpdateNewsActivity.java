@@ -101,7 +101,7 @@ public class UpdateNewsActivity extends AppCompatActivity {
                 .newInstance(SimpleNews.getSimpleNews(news, this));
         List<Picture> pictures = AppDatabase.getInstance(this).pictureDao()
                 .getPicturesForNewsNonLive(newsId);
-        BitmapCache.getInstance().loadPicturesInCache(this, pictures);
+//        BitmapCache.getInstance().loadPicturesInCache(this, pictures);
         pictureHistoryList = new HistoryList<>(PictureLoader.loadPictureListData(this, pictures));
         picturesFragment = PicturesFragment.newInstance(newsId, pictureHistoryList, false);
         List<Comment> commentList = AppDatabase.getInstance(this).commentDao()

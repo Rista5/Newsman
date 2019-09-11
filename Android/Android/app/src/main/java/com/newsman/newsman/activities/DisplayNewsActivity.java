@@ -24,6 +24,7 @@ import com.newsman.newsman.auxiliary.manu_helpers.LoginMenuInflater;
 import com.newsman.newsman.database.AppDatabase;
 import com.newsman.newsman.auxiliary.Constant;
 import com.newsman.newsman.fragments.comment_fragment.delete_strategy.HideDelete;
+import com.newsman.newsman.picture_management.BitmapObservable;
 import com.newsman.newsman.rest_connection.rest_connectors.NewsConnector;
 import com.newsman.newsman.picture_management.BitmapCache;
 import com.newsman.newsman.picture_management.BitmapObserver;
@@ -50,6 +51,8 @@ public class DisplayNewsActivity extends AppCompatActivity {
 
     private CommentsFragment commentsFragment;
     private PicturesFragment picturesFragment;
+
+    private BitmapObserver backgroundObserver;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -78,8 +81,15 @@ public class DisplayNewsActivity extends AppCompatActivity {
     }
 
     @Override
+    protected void onResume() {
+        invalidateOptionsMenu();
+        super.onResume();
+    }
+
+    @Override
     protected void onDestroy() {
         autoSubscribe(SubscriptionService.UNSUBSCRIBE);
+        backgroundObserver.removeObserver();
         super.onDestroy();
     }
 
@@ -108,7 +118,6 @@ public class DisplayNewsActivity extends AppCompatActivity {
     }
 
     private void subscribeToLiveData() {
-        final LifecycleOwner mOwner = this;
         LiveData<News> liveNews = AppDatabase.getInstance(this).newsDao().getNewsById(newsId);
         liveNews.observe(this, new Observer<News>() {
             @Override
@@ -118,9 +127,9 @@ public class DisplayNewsActivity extends AppCompatActivity {
                 postDate.setText(DateAux.formatDate(news.getLastModified()));
                 lastUpdateBy.setText(news.getModifierUsername());
                 content.setText(news.getContent());
-                BitmapCache.getInstance()
-                        .getBitmapObservable(getApplicationContext(), news.getBackgroundId(), news.getId())
-                        .addObserver(new BitmapObserver(background));
+                BitmapObservable observable = BitmapCache.getInstance()
+                        .getBitmapObservable(getApplicationContext(), news.getBackgroundId(), news.getId());
+                backgroundObserver = new BitmapObserver(observable, background);
             }
         });
         LiveData<List<Comment>> liveComments =
@@ -146,7 +155,7 @@ public class DisplayNewsActivity extends AppCompatActivity {
             @Override
             public void onChanged(@Nullable List<Picture> pictures) {
                 if(pictures == null)return;
-                BitmapCache.getInstance().loadPicturesInCache(getApplicationContext(), pictures);
+//                BitmapCache.getInstance().loadPicturesInCache(getApplicationContext(), pictures);
                 picturesFragment.setPictureList(PictureLoader.loadPictureListData(mContext, pictures));
             }
         });

@@ -47,7 +47,7 @@ public class BitmapConnector {
         };
     }
 
-    public static Runnable loadBitmap(final int newsId, final int pictureId,
+    public static Runnable loadBitmap(final int pictureId, final int newsId,
                                       final int reqWidth, int reqHeight) {
         return () ->{
             Retrofit retrofit = RetrofitFactory.createInstance();
