@@ -135,6 +135,30 @@ namespace DataLayerLib.DTOManagers
             return result;
         }
 
+        public SimpleNewsDTO GetSimpleNewsById(int newsId)
+        {
+            ISession session = null;
+            SimpleNewsDTO result = null;
+            try
+            {
+                session = DataLayer.GetSession();
+                News news = session.Load<News>(newsId);
+                result = new SimpleNewsDTO(news);
+                var newestDate = news.Modifications.Max(x => x.ModificationDate);
+                int LastModifiedUser = news.Modifications.First(x => x.ModificationDate == newestDate).Id;
+                result.LastModifiedUser = new UserDTO(session.Load<User>(LastModifiedUser));
+
+                session.Close();
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine(ex.Message);
+                if (session != null)
+                    session.Close();
+            }
+            return result;
+        }
+
         public News GetFullNews(int newsId)
         {
             ISession session = null;

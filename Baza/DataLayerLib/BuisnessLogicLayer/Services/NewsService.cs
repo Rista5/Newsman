@@ -42,6 +42,11 @@ namespace BuisnessLogicLayer.Services
         {
             return newsData.GetNews(id);
         }
+
+        public SimpleNewsDTO GetSimpleNewsById(int id)
+        {
+            return newsData.GetSimpleNewsById(id);
+        }
         
         public SimpleNewsDTO CreateNews(SimpleNewsDTO dto, int userId)
         {
