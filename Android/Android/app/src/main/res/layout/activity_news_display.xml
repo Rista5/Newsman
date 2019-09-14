@@ -5,82 +5,97 @@
     android:orientation="vertical"
     xmlns:android="http://schemas.android.com/apk/res/android">
 
-    <ImageView
-        android:id="@+id/news_item_img"
+    <ScrollView
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:adjustViewBounds="true"
-        android:minHeight="32dp"
-        android:src="@drawable/mountain" />
+        android:layout_height="wrap_content">
+<!--        android:layout_below="@+id/news_item_img">-->
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:orientation="vertical">
+            <ImageView
+                android:id="@+id/news_item_img"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:adjustViewBounds="true"
+                android:src="@drawable/mountain"
+                android:minHeight="@dimen/minNewsItemHeight"
+                android:maxHeight="@dimen/newsItemMaxHeight"/>
 
-    <TextView
-        android:id="@+id/news_item_title"
-        style="@style/TitleStyle"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_alignLeft="@+id/news_item_img"
-        android:layout_alignTop="@+id/news_item_img"
-        android:textAlignment="center"
-        android:text="Fake title" />
+            <TextView
+                android:id="@+id/news_item_title"
+                style="@style/TitleStyle"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_alignLeft="@+id/news_item_img"
+                android:layout_alignTop="@+id/news_item_img"
+                android:textAlignment="center"
+                android:text="Fake title" />
 
-    <ImageView
-        android:id="@+id/news_item_overflow_list"
-        android:layout_width="@dimen/ic_news_card_overflow_width"
-        android:layout_height="@dimen/ic_news_card_overflow_height"
-        android:layout_alignRight="@+id/news_item_img"
-        android:layout_alignBottom="@id/news_item_img"
-        android:src="@drawable/ic_action_more_vert"/>
+            <ImageView
+                android:id="@+id/news_item_overflow_list"
+                android:layout_width="@dimen/icon_width"
+                android:layout_height="@dimen/icon_height"
+                android:layout_alignRight="@+id/news_item_img"
+                android:layout_alignBottom="@id/news_item_img"
+                android:src="@drawable/ic_action_more_vert"/>
 
-    <TextView
-        android:id="@+id/news_item_post_date"
-        style="@style/InfoStyle"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_below="@+id/news_item_img"
-        android:text="@string/news_card_date" />
+            <TextView
+                android:id="@+id/news_item_post_date"
+                style="@style/InfoStyle"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/news_card_date"
+                android:layout_below="@+id/news_item_img"/>
 
-    <TextView
-        android:id="@+id/news_item_post_date_value"
-        style="@style/TextStyle"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_below="@+id/news_item_img"
-        android:layout_toRightOf="@+id/news_item_post_date"
-        tools:text="some date" />
+            <TextView
+                android:id="@+id/news_item_post_date_value"
+                style="@style/TextStyle"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_toRightOf="@+id/news_item_post_date"
+                tools:text="some date"
+                android:layout_below="@+id/news_item_img"/>
 
-    <TextView
-        android:id="@+id/news_item_last_user_update"
-        style="@style/InfoStyle"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_below="@+id/news_item_post_date"
-        android:text="@string/news_card_news_updating_user" />
+            <TextView
+                android:id="@+id/news_item_last_user_update"
+                style="@style/InfoStyle"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_below="@+id/news_item_post_date"
+                android:text="@string/news_card_news_updating_user" />
 
-    <TextView
-        android:id="@+id/news_item_post_last_user_update_value"
-        style="@style/TextStyle"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_below="@+id/news_item_post_date"
-        android:layout_toRightOf="@+id/news_item_last_user_update"
-        tools:text="some date" />
+            <TextView
+                android:id="@+id/news_item_last_user_update_value"
+                style="@style/TextStyle"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_below="@+id/news_item_post_date"
+                android:layout_toRightOf="@+id/news_item_last_user_update"
+                tools:text="some date" />
 
-    <TextView
-        android:id="@+id/news_item_text_content"
-        style="@style/TextStyle"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_below="@+id/news_item_post_last_user_update_value"
-        android:text="This is some text, aslkdjwiefjas dklfjakldfjalkdjal skdjalskdjlkcxvklasdasdasd...." />
+            <TextView
+                android:id="@+id/news_item_text_content"
+                style="@style/TextStyle"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_below="@+id/news_item_last_user_update_value"
+                android:text="This is some text, aslkdjwiefjas dklfjakldfjalkdjal skdjalskdjlkcxvklasdasdasd...." />
 
-    <android.support.v7.widget.RecyclerView
-        android:id="@+id/rv_news_pictures"
-        android:padding="4dp"
-        android:scrollbars="horizontal"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_below="@+id/news_item_text_content">
+            <FrameLayout
+                android:id="@+id/news_item_pictures_fragment"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_below="@+id/news_item_text_content"/>
 
-    </android.support.v7.widget.RecyclerView>
+            <FrameLayout
+                android:id="@+id/news_item_comments_fragment"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_below="@+id/news_item_pictures_fragment"/>
+
+        </RelativeLayout>
+    </ScrollView>
+
 
 </RelativeLayout>

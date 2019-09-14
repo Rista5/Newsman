@@ -1,5 +1,20 @@
 <?xml version="1.0" encoding="utf-8"?>
-<menu xmlns:android="http://schemas.android.com/apk/res/android">
-    <item android:id="@+id/action_create_new_news"
-        android:title="@string/action_create_new_news"></item>
+<menu xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
+    <item
+        android:id="@+id/action_create_new_news"
+        app:showAsAction="always"
+        android:icon="@drawable/ic_add"
+        android:title="@string/action_create_new_news" />
+    <item android:id="@+id/action_sort"
+        android:title="@string/action_sort">
+        <menu>
+            <item android:id="@+id/action_sort_by_date"
+                android:title="@string/action_sort_by_date"/>
+            <item android:id="@+id/action_sort_by_title"
+                android:title="@string/action_sort_by_title"/>
+            <item android:id="@+id/action_sort_by_user"
+                android:title="@string/action_sort_by_user"/>
+        </menu>
+    </item>
 </menu>

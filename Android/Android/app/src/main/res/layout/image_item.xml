@@ -1,18 +1,37 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout
-    xmlns:android="http://schemas.android.com/apk/res/android" android:layout_width="match_parent"
-    android:layout_height="match_parent"
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    xmlns:tools="http://schemas.android.com/tools"
     android:orientation="vertical">
 
-    <TextView
-        android:id="@+id/image_item_title"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        style="@style/InfoStyle"
-        android:text="Image name"/>
     <ImageView
         android:id="@+id/image_item_image"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:src="@drawable/mountain"/>
-</LinearLayout>
+        android:layout_gravity="center"
+        android:adjustViewBounds="true"
+        android:src="@drawable/mountain"
+        android:minHeight="@dimen/minNewsItemHeight"
+        android:maxHeight="@dimen/newsItemMaxHeight"
+        android:layout_centerHorizontal="true"/>
+
+    <TextView
+        android:id="@+id/image_item_title"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center"
+        android:layout_marginBottom="8dp"
+        tools:text="Image name"
+        style="@style/PictureName"
+        android:layout_centerHorizontal="true"/>
+    <ImageView
+        android:id="@+id/image_item_remove"
+        android:layout_width="@dimen/icon_width"
+        android:layout_height="@dimen/icon_height"
+        android:src="@drawable/ic_remove"
+        android:layout_marginRight="16dp"
+        android:layout_alignParentRight="true"
+        android:layout_marginEnd="16dp"
+        android:layout_alignParentEnd="true" />
+</RelativeLayout>

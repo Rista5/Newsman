@@ -2,32 +2,39 @@ package com.newsman.newsman.adapters;
 
 import android.content.Context;
 import android.content.Intent;
-import android.support.annotation.NonNull;
-import android.support.v7.widget.RecyclerView;
+import androidx.annotation.NonNull;
+import androidx.recyclerview.widget.RecyclerView;
 import android.view.LayoutInflater;
-import android.view.MenuInflater;
-import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
-import android.widget.PopupMenu;
 import android.widget.TextView;
-import android.widget.Toast;
 
-import com.newsman.newsman.Entities.NewsItem;
+import com.newsman.newsman.auxiliary.Constant;
+import com.newsman.newsman.auxiliary.date_helpers.DateAux;
+import com.newsman.newsman.auxiliary.manu_helpers.PopUpMenuController;
 import com.newsman.newsman.R;
-import com.newsman.newsman.activities.NewsDisplayActivity;
+import com.newsman.newsman.auxiliary.sorting.news.SimpleNewsSorting;
+import com.newsman.newsman.database.AppDatabase;
+import com.newsman.newsman.picture_management.BitmapCache;
+import com.newsman.newsman.picture_management.BitmapObservable;
+import com.newsman.newsman.picture_management.BitmapObserver;
+import com.newsman.newsman.model.db_entities.SimpleNews;
+import com.newsman.newsman.activities.DisplayNewsActivity;
 
 import java.util.List;
+import java.util.Observable;
 
 public class NewsListAdapter extends RecyclerView.Adapter<NewsListAdapter.NewsItemViewHolder> {
 
     private Context mContext;
-    private List<NewsItem> newsItemList;
+    private List<SimpleNews> newsList;
+    private SimpleNewsSorting sortStrategy;
 
-    public NewsListAdapter(Context context, List<NewsItem> newsItemList) {
+    public NewsListAdapter(Context context, List<SimpleNews> newsList, SimpleNewsSorting sortStrategy) {
         this.mContext = context;
-        this.newsItemList = newsItemList;
+        this.newsList = newsList;
+        this.sortStrategy = sortStrategy;
     }
     @NonNull
     @Override
@@ -39,54 +46,75 @@ public class NewsListAdapter extends RecyclerView.Adapter<NewsListAdapter.NewsIt
 
     @Override
     public void onBindViewHolder(@NonNull final NewsItemViewHolder newsItemViewHolder, int position) {
-        NewsItem newsItem = newsItemList.get(position);
-        newsItemViewHolder.title.setText(newsItem.getTitle());
-        newsItemViewHolder.dateModified.setText(newsItem.getLastModified().toString());
-        newsItemViewHolder.userModifier.setText(newsItem.getUserModifier());
-        newsItemViewHolder.content.setText(newsItem.getContent());
+        String USER_MODIFIER = "USER_MODIFIER_NOT_FOUND";
+        SimpleNews news = newsList.get(position);
+        final int newsId = news.getId();
+        newsItemViewHolder.title.setText(news.getTitle());
+        newsItemViewHolder.dateModified.setText(DateAux.formatDate(news.getLastModified()));
+        newsItemViewHolder.userModifier.setText(news.getModifierUsername());
+        newsItemViewHolder.content.setText(news.getContent());
+        BitmapObservable observable = BitmapCache.getInstance()
+                .getBitmapObservable(mContext, news.getBackgroundId(), news.getId());
+        newsItemViewHolder.observer = new BitmapObserver(observable, newsItemViewHolder.background);
+
 
         newsItemViewHolder.overflow.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                showPopupMenu(view);
+                int sub = AppDatabase.getInstance(mContext).newsDao().getSubscriptionStatus(newsId);
+                PopUpMenuController.showMenu(mContext, view, newsId,sub);
             }
         });
     }
 
     @Override
+    public void onViewRecycled(@NonNull NewsItemViewHolder holder) {
+        holder.observer.removeObserver();
+        super.onViewRecycled(holder);
+    }
+
+    @Override
     public int getItemCount() {
-        return newsItemList.size();
+        return newsList.size();
     }
 
-    private void showPopupMenu(View view) {
-        // menu inflation
-        PopupMenu popup = new PopupMenu(mContext, view);
-        MenuInflater inflater = popup.getMenuInflater();
-        inflater.inflate(R.menu.news_list_item_menu, popup.getMenu());
-        popup.setOnMenuItemClickListener(new MenuItemClickListener());
-        popup.show();
+    public void sortList() {
+        sortStrategy.sort(newsList);
+        this.notifyDataSetChanged();
     }
 
+    public void setNewsList(List<SimpleNews> news) {
+        newsList.clear();
+        newsList.addAll(news);
+        notifyDataSetChanged();
+    }
 
+    public void setSortStrategy(SimpleNewsSorting sortStrategy) {
+        this.sortStrategy = sortStrategy;
+    }
 
     public class NewsItemViewHolder extends RecyclerView.ViewHolder {
         private TextView title, dateModified, userModifier, content;
-        private ImageView backgroud, overflow;
+        private ImageView background, overflow;
+        private BitmapObserver observer;
 
 
-        public NewsItemViewHolder(@NonNull View itemView, final Context context) {
+        NewsItemViewHolder(@NonNull View itemView, final Context context) {
             super(itemView);
-            title = (TextView) itemView.findViewById(R.id.news_item_title);
-            dateModified = (TextView) itemView.findViewById(R.id.news_item_post_date_value);
-            userModifier = (TextView) itemView.findViewById(R.id.news_item_post_last_user_update_value);
-            content = (TextView) itemView.findViewById(R.id.news_item_text_content);
-            backgroud = (ImageView) itemView.findViewById(R.id.news_item_img);
-            overflow =  (ImageView) itemView.findViewById(R.id.news_item_overflow_list);
+            title = itemView.findViewById(R.id.news_item_title);
+            dateModified = itemView.findViewById(R.id.news_item_post_date_value);
+            userModifier = itemView.findViewById(R.id.news_item_post_last_user_update_value);
+            content = itemView.findViewById(R.id.news_item_text_content);
+            background = itemView.findViewById(R.id.news_item_img);
+            overflow = itemView.findViewById(R.id.news_item_overflow_list);
 
             itemView.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    Intent intent = new Intent(context, NewsDisplayActivity.class);
+                    int positionInList = getAdapterPosition();
+                    if(positionInList == -1) return;
+                    Intent intent = new Intent(context, DisplayNewsActivity.class);
+                    intent.putExtra(Constant.NEWS_BUNDLE_KEY, newsList.get(positionInList).getId());
                     context.startActivity(intent);
                 }
             });
@@ -132,28 +160,14 @@ public class NewsListAdapter extends RecyclerView.Adapter<NewsListAdapter.NewsIt
             this.overflow = overflow;
         }
 
-        public ImageView getBackgroud() {
-            return backgroud;
+        public ImageView getBackground() {
+            return background;
         }
 
-        public void setBackgroud(ImageView backgroud) {
-            this.backgroud = backgroud;
+        public void setBackground(ImageView background) {
+            this.background = background;
         }
-    }
 
-    class MenuItemClickListener implements PopupMenu.OnMenuItemClickListener {
 
-        public MenuItemClickListener() {}
-
-        @Override
-        public boolean onMenuItemClick(MenuItem item) {
-            switch (item.getItemId()) {
-                case R.id.action_subscribe_to_news:
-                    Toast.makeText(mContext, "Successfuly subscribed to news!", Toast.LENGTH_SHORT).show();
-                    return true;
-                default:
-            }
-            return false;
-        }
     }
 }
