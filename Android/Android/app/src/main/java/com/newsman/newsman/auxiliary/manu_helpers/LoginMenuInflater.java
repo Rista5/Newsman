@@ -34,6 +34,7 @@ public class LoginMenuInflater {
             return true;
         } else if(item.getItemId() == R.id.action_settings){
             Intent intent = new Intent(context, SettingsActivity.class);
+            intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
             context.startActivity(intent);
             return true;
         } else if(item.getItemId() == R.id.action_logout){

@@ -27,7 +27,9 @@ public class CreateAccountActivity extends AppCompatActivity {
 
         BackArrowHelper.displayBackArrow(this);
         setUpViews();
-        setCreateAccountListener();
+        findViewById(R.id.login_request_btn).setOnClickListener(view -> {
+            setCreateAccountListener();
+        });
     }
 
     @Override
