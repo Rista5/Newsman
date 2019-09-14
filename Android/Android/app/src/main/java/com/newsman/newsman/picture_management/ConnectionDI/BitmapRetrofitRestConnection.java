@@ -9,8 +9,7 @@ public class BitmapRetrofitRestConnection implements BitmapRestConnection {
     @Override
     public void getBitmap(int pictureId, int newsId) {
         AppExecutors.getInstance().getNetworkIO().execute(
-            BitmapConnector.loadBitmap(pictureId, newsId)
-    );
+            BitmapConnector.loadBitmap(pictureId, newsId));
     }
 
     @Override

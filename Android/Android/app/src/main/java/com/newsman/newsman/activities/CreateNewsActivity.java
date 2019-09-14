@@ -106,8 +106,7 @@ public class CreateNewsActivity extends AppCompatActivity {
     }
 
     private void displayToast() {
-        Toast toast = Toast.makeText(this, R.string.create_news_toast_message, Toast.LENGTH_SHORT);
-        toast.show();
+        Toast.makeText(this, R.string.create_news_toast_message, Toast.LENGTH_LONG).show();
     }
 
     private News createNews() {

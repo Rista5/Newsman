@@ -16,6 +16,7 @@ import com.newsman.newsman.model.db_entities.News;
 import com.newsman.newsman.model.db_entities.Picture;
 import com.newsman.newsman.model.db_entities.SimpleNews;
 import com.newsman.newsman.thread_management.AppExecutors;
+import com.newsman.newsman.thread_management.SubscriptionService;
 
 import java.io.IOException;
 import java.util.ArrayList;
@@ -50,7 +51,9 @@ public class NewsConnector {
             try{
                 Response<List<NewsDTO>> response = newsListCall.execute();
                 if(response.body() == null) return;
+                int[] subs = null;
                 if(response.body().size() >0 ) {
+                    subs = AppDatabase.getInstance(context).newsDao().getSubscribedNewsIds();
                     AppDatabase.getInstance(context).commentDao().deleteAllComments();
                     AppDatabase.getInstance(context).pictureDao().deleteAllPictures();
                     AppDatabase.getInstance(context).newsDao().deleteAllNews();
@@ -64,10 +67,16 @@ public class NewsConnector {
                         AppDatabase.getInstance(context).pictureDao().insertPicture(PictureDTO.getPicture(picture));
                     }
                 }
+                if(subs != null && subs.length>0) {
+                    for(int i: subs){
+                        AppDatabase.getInstance(context).newsDao().subscribeToNews(i);
+                    }
+                }
             }
             catch (IOException ex){
                 ex.printStackTrace();
             }
+            SubscriptionService.startClient(context);
         };
     }
 
@@ -104,8 +113,6 @@ public class NewsConnector {
                 Response<NewsDTO> response = putCall.execute();
                 if(response.body() == null) return;
                 News newsResult = NewsDTO.getNews(response.body());
-//                News db = new News();
-//                SimpleNews.populateNews(db, newsResult);
                 AppDatabase.getInstance(context).newsDao().insertNews(newsResult);
                 AppExecutors.getInstance().getNetworkIO()
                         .execute(BitmapConnector.saveBitmap(newsResult.getId(), newsResult.getBackgroundId(), background));
@@ -135,14 +142,14 @@ public class NewsConnector {
 
     public static Runnable saveNews(Context context, final int userId, final SimpleNews news){
         return () -> {
-          Retrofit retrofit = RetrofitFactory.createInstance();
-          Call<SimpleNewsDTO> postCall = retrofit
-                  .create(NewsService.class)
-                  .postNews(userId,new SimpleNewsDTO(news));
+            Retrofit retrofit = RetrofitFactory.createInstance();
+            Call<SimpleNewsDTO> postCall = retrofit
+                    .create(NewsService.class)
+                    .postNews(userId,new SimpleNewsDTO(news));
             try {
                 Response<SimpleNewsDTO> response = postCall.execute();
                 SimpleNewsDTO dto = response.body();
-                if(dto!=null){
+                if(dto != null){
                     SimpleNews simpleNews = SimpleNewsDTO.getSimpleNews(dto);
                     News updatedNews = new News();
                     SimpleNews.populateNews(updatedNews, simpleNews);
@@ -150,10 +157,6 @@ public class NewsConnector {
                     if(news.getBackgroundId() != Constant.INVALID_PICTURE_ID) {
                         AppExecutors.getInstance().getNetworkIO().execute(BitmapConnector
                                 .saveBitmap(simpleNews.getId(), simpleNews.getBackgroundId(), news.getBackgroundPicture()));
-                    }
-                    if(simpleNews.getBackgroundId() > 0) {
-                        AppExecutors.getInstance().getNetworkIO().execute(BitmapConnector
-                                .loadBitmap(simpleNews.getId(), simpleNews.getBackgroundId()));
                     }
                 }
             } catch (IOException e) {

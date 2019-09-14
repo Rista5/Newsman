@@ -39,7 +39,7 @@ public class LoginMenuInflater {
             return true;
         } else if(item.getItemId() == R.id.action_logout){
             LoginState.logout();
-            Intent intent = new Intent(context, SettingsActivity.class);
+            Intent intent = new Intent(context, LoginActivity.class);
             intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
             context.startActivity(intent);
             return true;

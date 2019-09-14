@@ -8,7 +8,7 @@ import java.util.Date;
 public class TempObjectGenerator {
     public static SimpleNews genInvalidSimpleNews() {
         return new SimpleNews(Constant.INVALID_NEWS_ID, "", "", new Date(),
-                null, BitmapCache.getNonValidIdentifier(), Constant.USER_ID,
-                Constant.getThisUser().getUsername());
+                null, BitmapCache.getNonValidIdentifier(),
+                LoginState.getInstance().getUserId(), LoginState.getInstance().getUser().getUsername());
     }
 }

@@ -41,15 +41,17 @@ public class SimpleNews {
         news.setLastModified(simpleNews.getLastModified());
         news.setBackgroundId(simpleNews.getBackgroundId());
         news.setSubscribed(simpleNews.subscribed);
+        news.setModifierId(simpleNews.getModifierId());
+        news.setModifierUsername(simpleNews.getModifierUsername());
     }
 
     public static SimpleNews getSimpleNews(News news, Context context) {
-        Bitmap background;
-        if(news.getBackgroundId() != Constant.INVALID_PICTURE_ID){
-            background = PictureLoader.loadPictureData(context, news.getBackgroundId());
-        } else {
-            background = BitmapFactory.decodeResource(context.getResources(), R.drawable.mountain);
-        }
+        Bitmap background = null;
+//        if(news.getBackgroundId() != Constant.INVALID_PICTURE_ID){
+//            background = PictureLoader.loadPictureData(context, news.getBackgroundId());
+//        } else {
+//            background = BitmapFactory.decodeResource(context.getResources(), R.drawable.mountain);
+//        }
         SimpleNews result = new SimpleNews(
                 news.getId(),
                 news.getTitle(),

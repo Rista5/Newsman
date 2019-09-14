@@ -17,12 +17,14 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.newsman.newsman.auxiliary.BackArrowHelper;
+import com.newsman.newsman.auxiliary.date_helpers.DateAux;
 import com.newsman.newsman.auxiliary.picture_helpers.PictureLoader;
 import com.newsman.newsman.auxiliary.manu_helpers.PopUpMenuController;
 import com.newsman.newsman.auxiliary.manu_helpers.LoginMenuInflater;
 import com.newsman.newsman.database.AppDatabase;
 import com.newsman.newsman.auxiliary.Constant;
 import com.newsman.newsman.fragments.comment_fragment.delete_strategy.HideDelete;
+import com.newsman.newsman.picture_management.BitmapObservable;
 import com.newsman.newsman.rest_connection.rest_connectors.NewsConnector;
 import com.newsman.newsman.picture_management.BitmapCache;
 import com.newsman.newsman.picture_management.BitmapObserver;
@@ -50,6 +52,8 @@ public class DisplayNewsActivity extends AppCompatActivity {
     private CommentsFragment commentsFragment;
     private PicturesFragment picturesFragment;
 
+    private BitmapObserver backgroundObserver;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -58,10 +62,9 @@ public class DisplayNewsActivity extends AppCompatActivity {
         Bundle extras = getIntent().getExtras();
         if(extras != null) {
             newsId = extras.getInt(Constant.NEWS_BUNDLE_KEY);
-            autoSubscribe(SubscriptionService.SUBSCRIBE);
+            autoSubscribe(SubscriptionService.TEMP_SUBSCRIBE);
         }
         setUpViews();
-        //TODO mozda treba da se skloni
         BackArrowHelper.displayBackArrow(this);
         overflow.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -78,8 +81,15 @@ public class DisplayNewsActivity extends AppCompatActivity {
     }
 
     @Override
+    protected void onResume() {
+        invalidateOptionsMenu();
+        super.onResume();
+    }
+
+    @Override
     protected void onDestroy() {
-        autoSubscribe(SubscriptionService.UNSUBSCRIBE);
+        autoSubscribe(SubscriptionService.TEMP_UNSUBSCRIBE);
+        backgroundObserver.removeObserver();
         super.onDestroy();
     }
 
@@ -108,18 +118,18 @@ public class DisplayNewsActivity extends AppCompatActivity {
     }
 
     private void subscribeToLiveData() {
-        final LifecycleOwner mOwner = this;
         LiveData<News> liveNews = AppDatabase.getInstance(this).newsDao().getNewsById(newsId);
         liveNews.observe(this, new Observer<News>() {
             @Override
             public void onChanged(@Nullable News news) {
                 if(news == null) return;
                 title.setText(news.getTitle());
-                postDate.setText(news.getLastModified().toString());
+                postDate.setText(DateAux.formatDate(news.getLastModified()));
+                lastUpdateBy.setText(news.getModifierUsername());
                 content.setText(news.getContent());
-                //TODO razmisli da li moze ovo bolje
-                Observable o = BitmapCache.getInstance().getBitmapObservable(getApplicationContext(), news.getBackgroundId(), news.getId());
-                o.addObserver(new BitmapObserver(background));
+                BitmapObservable observable = BitmapCache.getInstance()
+                        .getBitmapObservable(getApplicationContext(), news.getBackgroundId(), news.getId());
+                backgroundObserver = new BitmapObserver(observable, background);
             }
         });
         LiveData<List<Comment>> liveComments =
@@ -145,7 +155,7 @@ public class DisplayNewsActivity extends AppCompatActivity {
             @Override
             public void onChanged(@Nullable List<Picture> pictures) {
                 if(pictures == null)return;
-                BitmapCache.getInstance().loadPicturesInCache(getApplicationContext(), pictures);
+//                BitmapCache.getInstance().loadPicturesInCache(getApplicationContext(), pictures);
                 picturesFragment.setPictureList(PictureLoader.loadPictureListData(mContext, pictures));
             }
         });

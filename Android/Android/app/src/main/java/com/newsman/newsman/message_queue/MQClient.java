@@ -15,9 +15,11 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.io.IOException;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.concurrent.TimeoutException;
 
-public class MQClient implements Runnable {
+public class MQClient {
 
     public final static String opInsert = "Insert";
     public final static String opUpdate = "Update";
@@ -34,28 +36,25 @@ public class MQClient implements Runnable {
     private Channel channel;
     private String queue;
     private String consumerTag;
-    private int[] newsIds;
+    private List<Integer> newsIds;
+    private List<Integer> tempSubscription;
 
-    public MQClient(String host, Context context, int[] newsIds){
+    public MQClient(String host, Context context){
         this.host = host;
         this.context = context;
-        this.newsIds = newsIds;
+        this.newsIds = new ArrayList<>();
+        this.tempSubscription = new ArrayList<>();
         initConnFactory();
     }
 
-    @Override
-    public void run() {
-        startService();
-    }
-
-    public void startService() {
+    public void startService(int[] newsIds) {
         try{
             connection = factory.newConnection();
             channel = connection.createChannel();
             channel.exchangeDeclare(EXCHANGE_NAME, EXCHAMGE_TYPE);
             AMQP.Queue.DeclareOk q = channel.queueDeclare();
             queue = q.getQueue();
-            bindChannelTopic();
+            bindChannelTopic(newsIds);
             consumerTag = channel.basicConsume(q.getQueue(),true,
                     new NewsUpdateConsumer(channel, context));
 
@@ -88,13 +87,37 @@ public class MQClient implements Runnable {
     }
 
     public void subscribeToNews(int newsId) throws IOException {
-        if(channel == null) return;
+        if(channel == null || !channel.isOpen())
+            return;
+        newsIds.add(newsId);
         String routeKey = getRoutingKey(newsId);
         channel.queueBind(queue, EXCHANGE_NAME, routeKey);
     }
 
     public void unsubscribeFromNews(int newsId) throws IOException {
-        if(channel == null) return;
+        if(channel == null || !channel.isOpen())
+            return;
+        newsIds.remove(Integer.valueOf(newsId));
+        String routeKey = getRoutingKey(newsId);
+        channel.queueUnbind(queue, EXCHANGE_NAME, routeKey);
+    }
+
+    public void subscribeTempNews(int newsId) throws IOException {
+        if(channel == null || !channel.isOpen())
+            return;
+        if(!tempSubscription.contains(newsId))
+            tempSubscription.add(newsId);
+        if(newsIds.contains(newsId)) return;
+        String routeKey = getRoutingKey(newsId);
+        channel.queueBind(queue, EXCHANGE_NAME, routeKey);
+    }
+
+    public void unsubscribeFromTempNews(int newsId) throws IOException {
+        if(channel == null || !channel.isOpen())
+            return;
+        if(tempSubscription.contains(newsId))
+            tempSubscription.remove(Integer.valueOf(newsId));
+        if(newsIds.contains(newsId)) return;
         String routeKey = getRoutingKey(newsId);
         channel.queueUnbind(queue, EXCHANGE_NAME, routeKey);
     }
@@ -107,7 +130,7 @@ public class MQClient implements Runnable {
         factory.setPassword("admin");
     }
 
-    private void bindChannelTopic() throws IOException {
+    private void bindChannelTopic(int[] newsIds) throws IOException {
         for(int i: newsIds) {
             subscribeToNews(i);
         }

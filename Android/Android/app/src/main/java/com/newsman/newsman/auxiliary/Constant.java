@@ -15,10 +15,6 @@ public class Constant {
     public static final String COMMENT_ROUTE = "/Comment/";
     public static final String PICTURE_ROUTE = "/Picture/";
     public static final String RAW_PICTURE_ROUTE = "/Picture/Raw/";
-    public static String createNewsRoute() {
-        return NEWS_ROUTE + USER_ID;
-    }
-    public static String updateNewsRoute() { return NEWS_ROUTE + USER_ID; }
 
     public static final String IMAGE_DISPLAY_KEY = "image_display_key";
 
@@ -57,16 +53,5 @@ public class Constant {
         String route = Constant.RAW_PICTURE_ROUTE + "?picId="+picId+"&newsId="+newsId;
         return route;
     }
-
     public static final String PICTURE_TRASPORT = "file.png";
-
-    //TODO remove later
-    // only temorarly
-    public static int USER_ID = 3;
-    public static UserWithPassword getThisUser() {
-        UserWithPassword uswp = new UserWithPassword();
-        uswp.setUsername("test");
-        uswp.setPassword("test");
-        return uswp;
-    }
 }

@@ -10,17 +10,18 @@ import com.newsman.newsman.auxiliary.Constant;
 import com.newsman.newsman.auxiliary.ZoomableImageView;
 import com.newsman.newsman.R;
 import com.newsman.newsman.picture_management.BitmapCache;
+import com.newsman.newsman.picture_management.BitmapObservable;
 import com.newsman.newsman.picture_management.BitmapObserver;
 
 public class ImageDisplayActivity extends AppCompatActivity {
 
-    private ZoomableImageView zoomableImage;
+    private BitmapObserver imageObserver;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_image_display);
-        zoomableImage = findViewById(R.id.image_display_image_view);
+        ZoomableImageView zoomableImage = findViewById(R.id.image_display_image_view);
 
         BackArrowHelper.displayBackArrow(this);
 
@@ -28,10 +29,17 @@ public class ImageDisplayActivity extends AppCompatActivity {
         if(extras!=null) {
             int pictureId = extras.getInt(Constant.IMAGE_DISPLAY_KEY);
             int newsId = extras.getInt(Constant.NEWS_BUNDLE_KEY);
-            BitmapCache.getInstance().getBitmapObservable(this, pictureId, newsId)
-                    .addObserver(new BitmapObserver(zoomableImage));
+            BitmapObservable o = BitmapCache.getInstance().getBitmapObservable(this, pictureId, newsId);
+            imageObserver = new BitmapObserver(o, zoomableImage);
         }
     }
+
+    @Override
+    protected void onDestroy() {
+        imageObserver.removeObserver();
+        super.onDestroy();
+    }
+
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         switch (item.getItemId()) {

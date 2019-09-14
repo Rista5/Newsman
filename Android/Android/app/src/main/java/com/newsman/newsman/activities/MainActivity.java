@@ -1,22 +1,30 @@
 package com.newsman.newsman.activities;
 
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.graphics.Bitmap;
 import android.os.Handler;
 import android.os.Looper;
 
 import androidx.appcompat.app.AppCompatActivity;
 import android.os.Bundle;
+import android.preference.PreferenceManager;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.Button;
+import android.widget.ImageView;
 
 import com.google.gson.FieldNamingPolicy;
 import com.google.gson.GsonBuilder;
 import com.newsman.newsman.auxiliary.manu_helpers.LoginMenuInflater;
 import com.newsman.newsman.message_queue.MQClient;
+import com.newsman.newsman.picture_management.BitmapCache;
+import com.newsman.newsman.picture_management.BitmapObservable;
+import com.newsman.newsman.picture_management.BitmapObserver;
+import com.newsman.newsman.rest_connection.rest_connectors.BitmapConnector;
 import com.newsman.newsman.rest_connection.rest_connectors.NewsConnector;
 import com.newsman.newsman.model.dtos.PictureDTO;
 import com.newsman.newsman.rest_connection.retrofit_services.PictureService;
@@ -40,12 +48,22 @@ import retrofit2.converter.gson.GsonConverterFactory;
 
 public class MainActivity extends AppCompatActivity {
 
+    private ImageView background;
+    private BitmapObserver backgroundObserver;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
         setUpViews();
+        setIpAddress();
+    }
+
+    @Override
+    protected void onResume() {
+        invalidateOptionsMenu();
+        super.onResume();
     }
 
     @Override
@@ -69,10 +87,6 @@ public class MainActivity extends AppCompatActivity {
                 AppExecutors.getInstance().getNetworkIO()
                         .execute(NewsConnector.loadAllNews(getApplicationContext()));
 
-                Intent startMQClient = new Intent(getApplicationContext(), SubscriptionService.class);
-                startMQClient.setAction(SubscriptionService.START);
-                startService(startMQClient);
-
                 Intent intent = new Intent(getApplicationContext(), NewsListActivity.class);
                 startActivity(intent);
             }
@@ -85,66 +99,32 @@ public class MainActivity extends AppCompatActivity {
             Intent intent = new Intent(getApplicationContext(), CreateAccountActivity.class);
             startActivity(intent);
         });
-    }
+        background = findViewById(R.id.main_activity_logo);
+        findViewById(R.id.test_buton).setOnClickListener(view -> {
+            int reqWidth = background.getMeasuredWidth();
+            int reqheight = background.getMeasuredHeight();
+            int pictureId = 85;
+            int newsId =  22;
+            AppExecutors.getInstance().getNetworkIO().execute(
+                    BitmapConnector.loadBitmap(newsId, pictureId, reqWidth, reqheight)
+            );
 
-    private void startService(){
-        Intent intent = new Intent(this, SubscriptionService.class);
-        intent.setAction("Action");
-        startService(intent);
-    }
-
-    private void sendMessage() {
-        Intent intent = new Intent(this, SubscriptionService.class);
-        intent.setAction("Message");
-        startService(intent);
-    }
-
-    private void logNews() {
-        Intent intent = new Intent(this, LoginActivity.class);
-        startActivity(intent);
-    }
-
-
-    private Picture generateTestPicture(Bitmap bmp) {
-        Picture p = new Picture();
-        p.setId(Constant.INVALID_PICTURE_ID);
-        p.setName(Integer.toString((int)new Date().getTime())+".PNG");
-        p.setDescription("Nova fotka");
-        p.setBelongsToNewsId(6);
-        p.setPictureData(bmp);
-        return p;
-    }
-
-    private void testMq() {
-        int[] subs = new int[100];
-        for(int i=0; i< 100; i++)
-            subs[i] = i+1;
-        AppExecutors.getInstance().getNetworkIO().execute(
-                new MQClient(Constant.getIpAddress(), this, subs));
-    }
-
-    private void testPictureSave(){
-        Retrofit retrofit = new Retrofit.Builder()
-                .baseUrl(Constant.getBaseUrl())
-                .addConverterFactory(GsonConverterFactory
-                        .create(new GsonBuilder().setFieldNamingPolicy(FieldNamingPolicy.UPPER_CAMEL_CASE).create()))
-                .build();
-        PictureService service = retrofit.create(PictureService.class);
-        Call<PictureDTO> call = service.getPicture(66);
-
-        call.enqueue(new Callback<PictureDTO>() {
-
-            @Override
-            public void onResponse(Call<PictureDTO> call, Response<PictureDTO> response) {
-                PictureDTO pic = response.body();
-            }
-
-            @Override
-            public void onFailure(Call<PictureDTO> call, Throwable t) {
-                Log.e("error", t.getMessage());
-            }
+            BitmapObservable o =  BitmapCache.getInstance().getBitmapObservable(this, pictureId, newsId);
+            backgroundObserver = new BitmapObserver(o, background);
         });
+    }
 
+    @Override
+    protected void onDestroy() {
+        if(backgroundObserver != null)
+            backgroundObserver.removeObserver();
+        super.onDestroy();
+    }
+
+    private void setIpAddress(){
+        SharedPreferences preferences = PreferenceManager.getDefaultSharedPreferences(this);
+        String ip = preferences.getString(getString(R.string.pref_ip_key), getString(R.string.pref_ip));
+        Constant.setIpAddress(ip);
     }
 
     private News genNews() {

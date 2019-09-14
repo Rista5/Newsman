@@ -30,31 +30,9 @@ import java.util.List;
 
 import static android.app.Activity.RESULT_OK;
 
-public class PictureLoader extends AsyncTaskLoader<List<SimpleNews>> {
+public class PictureLoader {
 
     private static String currentPicturePath;
-    private static List<News> newsList;
-
-    public PictureLoader(@NonNull Context context, List<News> news) {
-        super(context);
-        newsList = news;
-    }
-
-    @Override
-    protected void onStartLoading() {
-        super.onStartLoading();
-        forceLoad();
-    }
-
-    @Nullable
-    @Override
-    public List<SimpleNews> loadInBackground() {
-        List<SimpleNews> simpleNewsList = new ArrayList<>(newsList.size());
-        for(News n: newsList) {
-            simpleNewsList.add(SimpleNews.getSimpleNews(n, getContext()));
-        }
-        return simpleNewsList;
-    }
 
     private static File createPictureFile(Context context, Picture picture) throws IOException {
         File storageDir = context.getExternalFilesDir(Environment.DIRECTORY_PICTURES);
@@ -189,43 +167,5 @@ public class PictureLoader extends AsyncTaskLoader<List<SimpleNews>> {
             }
         }
         return null;
-    }
-
-
-
-
-    //TODO trebalo bi ovako nesto umesto parcelable
-    //link https://stackoverflow.com/questions/11010386/passing-android-bitmap-data-within-activity-using-intent-in-android
-    private void alternative(Bitmap bmp, Context context){
-        try {
-            //Write file
-            String filename = "bitmap.png";
-            FileOutputStream stream = context.openFileOutput(filename, Context.MODE_PRIVATE);
-            bmp.compress(Bitmap.CompressFormat.PNG, 100, stream);
-
-            //Cleanup
-            stream.close();
-            bmp.recycle();
-
-            //Pop intent
-//            Intent in1 = new Intent(this, Activity2.class);
-//            in1.putExtra("image", filename);
-//            startActivity(in1);
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-    }
-
-    private void res(Context context){
-        Bitmap bmp = null;
-        String filename = "";
-//                getIntent().getStringExtra("image");
-        try {
-            FileInputStream is = context.openFileInput(filename);
-            bmp = BitmapFactory.decodeStream(is);
-            is.close();
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
     }
 }

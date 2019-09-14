@@ -14,6 +14,7 @@ import android.widget.TextView;
 
 import com.newsman.newsman.auxiliary.Constant;
 import com.newsman.newsman.auxiliary.LoginState;
+import com.newsman.newsman.picture_management.BitmapObservable;
 import com.newsman.newsman.rest_connection.rest_connectors.PictureConnector;
 import com.newsman.newsman.picture_management.BitmapCache;
 import com.newsman.newsman.picture_management.BitmapObserver;
@@ -51,14 +52,19 @@ public class PicturesListAdapter extends RecyclerView.Adapter<PicturesListAdapte
         newsImageViewHolder.pictureId = pictureItem.getId();
         newsImageViewHolder.newsId = pictureItem.getBelongsToNewsId();
         newsImageViewHolder.title.setText(pictureItem.getName());
-        BitmapObserver observer = new BitmapObserver(newsImageViewHolder.imageView);
-        Observable observable = BitmapCache.getInstance().getBitmapObservable(context, pictureItem.getId(), pictureItem.getBelongsToNewsId());
-        observable.addObserver(observer);
+        BitmapObservable observable = BitmapCache.getInstance().getBitmapObservable(context, pictureItem.getId(), pictureItem.getBelongsToNewsId());
+        newsImageViewHolder.observer = new BitmapObserver(observable, newsImageViewHolder.imageView);
     }
 
     @Override
     public int getItemCount() {
         return pictureList.size();
+    }
+
+    @Override
+    public void onViewRecycled(@NonNull NewsImageViewHolder holder) {
+        holder.observer.removeObserver();
+        super.onViewRecycled(holder);
     }
 
     public void addPicture(Picture picture) {
@@ -76,7 +82,6 @@ public class PicturesListAdapter extends RecyclerView.Adapter<PicturesListAdapte
 
     public void updatePicture(int position, Picture picture) {
         if(sendToRest){
-            //TODO ovo nece bas da radi, slika se ne pribavlja lepo
             Bitmap bmp = BitmapCache.getInstance().getBitmapObservable(context,
                     picture.getId(), picture.getBelongsToNewsId()).getBitmap();
             AppExecutors.getInstance().getNetworkIO()
@@ -116,6 +121,7 @@ public class PicturesListAdapter extends RecyclerView.Adapter<PicturesListAdapte
         private TextView title;
         private ImageView imageView;
         private ImageView removePicture;
+        private BitmapObserver observer;
 
         private PicturesListAdapter adapter;
 

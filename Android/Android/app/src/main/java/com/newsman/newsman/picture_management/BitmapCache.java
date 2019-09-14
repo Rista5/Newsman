@@ -6,6 +6,7 @@ import android.graphics.BitmapFactory;
 import android.util.LruCache;
 
 import com.newsman.newsman.R;
+import com.newsman.newsman.auxiliary.picture_helpers.PictureConverter;
 import com.newsman.newsman.picture_management.ConnectionDI.BitmapRestConnection;
 import com.newsman.newsman.picture_management.ConnectionDI.DaggerBitmapCacheComponent;
 import com.newsman.newsman.rest_connection.rest_connectors.BitmapConnector;
@@ -25,11 +26,16 @@ public class BitmapCache {
 
     public BitmapCache() {
         int maxSize = (int)Runtime.getRuntime().maxMemory();
-        maxSize = maxSize/1024/2;
+//        maxSize = maxSize/2048;
+        maxSize = maxSize / (1024*1024*20); //da se odredi max velicina kesa, posto btimap ima promenljivu velicinu
         cache = new LruCache<Integer,BitmapObservable>(maxSize){
-          protected int sizeof(Integer id,BitmapObservable bmp){
-              return bmp.getBitmap().getByteCount()/1024;
-          }
+//            @Override
+//            protected int sizeOf(Integer key, BitmapObservable value) {
+//                if(value.getBitmap() != null)
+//                    return value.getBitmap().getByteCount()/1024;
+//                else
+//                    return 0;
+//            }
         };
     }
 
@@ -66,9 +72,7 @@ public class BitmapCache {
                 getBitmapFromRest(null,pictureId,newsId);
         }
         else {
-            cachedBitmap = new BitmapObservable();
-            cachedBitmap.setBitmap(bitmap);
-            cachedBitmap.setNewsId(newsId);
+            cachedBitmap = new BitmapObservable(bitmap);
             cache.put(pictureId,cachedBitmap);
         }
 
@@ -79,19 +83,10 @@ public class BitmapCache {
             cache.remove(pictureId);
     }
 
-    public void put(int pictureId){
-        BitmapObservable bmpObservable = cache.get(pictureId);
-        if(bmpObservable!=null){
-            putBitmapToRest(pictureId,bmpObservable.getNewsId(),bmpObservable.getBitmap());
-        }
-    }
-
     public BitmapObservable getBitmapObservable(Context context, int picId, int newsId){
         BitmapObservable cachedBitmap = cache.get(picId);
         if(cachedBitmap == null){
-            cachedBitmap = new BitmapObservable();
-            cachedBitmap.setBitmap(null);
-            cachedBitmap.setNewsId(newsId);
+            cachedBitmap = new BitmapObservable(null);
             cache.put(picId,cachedBitmap);
 
             getBitmapFromRest(context, picId, newsId);
@@ -109,23 +104,10 @@ public class BitmapCache {
         if(picId<=0)
             return;
         restConnection.getBitmap(picId,newsId);
-//        new RestConnector(new GetBitmap(picId, newsId, context), Constant.getRawPictureRoute(picId,newsId))
-//                .execute();
     }
 
     private void putBitmapToRest(int picId, int newsId,Bitmap bitmap){
         restConnection.putBitmap(picId,newsId,bitmap);
-    }
-
-    public void putBitmapsCreateNews(List<Integer> oldId, List<Integer> newId, int newsId){
-        //TODO background image se ne salje. Why is that?
-        for(int i=0;i<oldId.size();i++){
-            BitmapObservable bmp = cache.get(oldId.get(i));
-            bmp.setNewsId(newsId);
-            cache.remove(oldId.get(i));
-            cache.put(newId.get(i),bmp);
-            putBitmapToRest(newId.get(i),newsId,bmp.getBitmap());
-        }
     }
 
     public void loadPicturesInCache(Context context, List<Picture> pictureList){

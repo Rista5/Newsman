@@ -16,6 +16,7 @@ import com.newsman.newsman.auxiliary.manu_helpers.PopUpMenuController;
 import com.newsman.newsman.R;
 import com.newsman.newsman.auxiliary.sorting.news.SimpleNewsSorting;
 import com.newsman.newsman.picture_management.BitmapCache;
+import com.newsman.newsman.picture_management.BitmapObservable;
 import com.newsman.newsman.picture_management.BitmapObserver;
 import com.newsman.newsman.model.db_entities.SimpleNews;
 import com.newsman.newsman.activities.DisplayNewsActivity;
@@ -51,12 +52,10 @@ public class NewsListAdapter extends RecyclerView.Adapter<NewsListAdapter.NewsIt
         newsItemViewHolder.dateModified.setText(DateAux.formatDate(news.getLastModified()));
         newsItemViewHolder.userModifier.setText(news.getModifierUsername());
         newsItemViewHolder.content.setText(news.getContent());
-        if(news.getBackgroundId() != Constant.INVALID_PICTURE_ID) {
-            BitmapObserver observer = new BitmapObserver(newsItemViewHolder.background);
-            Observable observable = BitmapCache.getInstance().getBitmapObservable(mContext, news.getBackgroundId(), news.getId());
-            observable.addObserver(observer);
-        }
-//            newsItemViewHolder.background.setImageBitmap(news.getBackgroundPicture());
+        BitmapObservable observable = BitmapCache.getInstance()
+                .getBitmapObservable(mContext, news.getBackgroundId(), news.getId());
+        newsItemViewHolder.observer = new BitmapObserver(observable, newsItemViewHolder.background);
+
 
         newsItemViewHolder.overflow.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -64,6 +63,12 @@ public class NewsListAdapter extends RecyclerView.Adapter<NewsListAdapter.NewsIt
                 PopUpMenuController.showMenu(mContext, view, newsId);
             }
         });
+    }
+
+    @Override
+    public void onViewRecycled(@NonNull NewsItemViewHolder holder) {
+        holder.observer.removeObserver();
+        super.onViewRecycled(holder);
     }
 
     @Override
@@ -89,6 +94,7 @@ public class NewsListAdapter extends RecyclerView.Adapter<NewsListAdapter.NewsIt
     public class NewsItemViewHolder extends RecyclerView.ViewHolder {
         private TextView title, dateModified, userModifier, content;
         private ImageView background, overflow;
+        private BitmapObserver observer;
 
 
         NewsItemViewHolder(@NonNull View itemView, final Context context) {

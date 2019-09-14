@@ -48,7 +48,6 @@ public class UpdateNewsActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_update_news);
-        // TODO verovatno je najbolje da se posalje vest umesto id, ali za sad nek ide iz db
 
         BackArrowHelper.displayBackArrow(this);
 
@@ -102,7 +101,7 @@ public class UpdateNewsActivity extends AppCompatActivity {
                 .newInstance(SimpleNews.getSimpleNews(news, this));
         List<Picture> pictures = AppDatabase.getInstance(this).pictureDao()
                 .getPicturesForNewsNonLive(newsId);
-        BitmapCache.getInstance().loadPicturesInCache(this, pictures);
+//        BitmapCache.getInstance().loadPicturesInCache(this, pictures);
         pictureHistoryList = new HistoryList<>(PictureLoader.loadPictureListData(this, pictures));
         picturesFragment = PicturesFragment.newInstance(newsId, pictureHistoryList, false);
         List<Comment> commentList = AppDatabase.getInstance(this).commentDao()

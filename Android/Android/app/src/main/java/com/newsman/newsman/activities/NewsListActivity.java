@@ -94,6 +94,12 @@ public class NewsListActivity extends AppCompatActivity{
         }
     }
 
+    @Override
+    protected void onResume() {
+        invalidateOptionsMenu();
+        super.onResume();
+    }
+
     private void createNews() {
         Intent intent = new Intent(this, CreateNewsActivity.class);
         startActivity(intent);

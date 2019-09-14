@@ -25,12 +25,20 @@ public abstract class NewsDao {
     @Query("SELECT * FROM news ORDER BY lastModified DESC")
     public abstract LiveData<List<News>> getAllNews();
 
+    @Query("SELECT * FROM news ORDER BY lastModified DESC")
+    public abstract List<News> getAllNewsNonLive();
+
     @Transaction
     @Query("SELECT * FROM news WHERE id = :id")
     public abstract News getNewsByIdNonLive(int id);
 
     @Insert(onConflict = OnConflictStrategy.REPLACE)
-    public abstract void insertNews(News news);
+    abstract void insertNewsReplace(News news);
+
+    public void insertNews(News news) {
+        news.setSubscribed(getSubscriptionStatus(news.getId()));
+        insertNewsReplace(news);
+    }
 
 
     public void updateNews(News news) {

@@ -3,7 +3,10 @@ package com.newsman.newsman.activities;
 import androidx.appcompat.app.AppCompatActivity;
 
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.Bundle;
+import android.preference.Preference;
+import android.preference.PreferenceManager;
 import android.view.MenuItem;
 import android.widget.EditText;
 
@@ -27,6 +30,12 @@ public class SettingsActivity extends AppCompatActivity {
     }
 
     @Override
+    protected void onResume() {
+        invalidateOptionsMenu();
+        super.onResume();
+    }
+
+    @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         switch (item.getItemId()) {
             case android.R.id.home:
@@ -38,7 +47,14 @@ public class SettingsActivity extends AppCompatActivity {
 
     private void setUpViews() {
         etIpAddresse = findViewById(R.id.settings_ip_adr_et);
-        etIpAddresse.setText(Constant.getIpAddress());
+//        etIpAddresse.setText(Constant.getIpAddress());
+        setIpFromPref();
+    }
+
+    private void setIpFromPref() {
+        SharedPreferences preferences = PreferenceManager.getDefaultSharedPreferences(this);
+        String ip = preferences.getString(getString(R.string.pref_ip_key), getString(R.string.pref_ip));
+        etIpAddresse.setText(ip);
     }
 
     private void setBtnClickListener() {
@@ -49,6 +65,7 @@ public class SettingsActivity extends AppCompatActivity {
             String ip = etIpAddresse.getText().toString();
             String[] arr = ip.split("\\.");
             if(arr.length == validDots && ip.length()>=minLen && ip.length()<=maxLen) {
+                saveIp(ip);
                 Constant.setIpAddress(ip);
                 Intent intent = new Intent(this, SubscriptionService.class);
                 intent.setAction(SubscriptionService.START);
@@ -56,5 +73,12 @@ public class SettingsActivity extends AppCompatActivity {
                 finish();
             }
         });
+    }
+
+    private void saveIp(String ip) {
+        SharedPreferences preferences = PreferenceManager.getDefaultSharedPreferences(this);
+        preferences.edit()
+                .putString(getString(R.string.pref_ip_key), ip)
+                .apply();
     }
 }
