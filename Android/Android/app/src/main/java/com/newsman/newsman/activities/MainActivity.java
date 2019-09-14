@@ -84,9 +84,7 @@ public class MainActivity extends AppCompatActivity {
         findViewById(R.id.lounch_news_list).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                AppExecutors.getInstance().getNetworkIO()
-                        .execute(NewsConnector.loadAllNews(getApplicationContext()));
-
+                startUpServices();
                 Intent intent = new Intent(getApplicationContext(), NewsListActivity.class);
                 startActivity(intent);
             }
@@ -100,18 +98,6 @@ public class MainActivity extends AppCompatActivity {
             startActivity(intent);
         });
         background = findViewById(R.id.main_activity_logo);
-        findViewById(R.id.test_buton).setOnClickListener(view -> {
-            int reqWidth = background.getMeasuredWidth();
-            int reqheight = background.getMeasuredHeight();
-            int pictureId = 85;
-            int newsId =  22;
-            AppExecutors.getInstance().getNetworkIO().execute(
-                    BitmapConnector.loadBitmap(newsId, pictureId, reqWidth, reqheight)
-            );
-
-            BitmapObservable o =  BitmapCache.getInstance().getBitmapObservable(this, pictureId, newsId);
-            backgroundObserver = new BitmapObserver(o, background);
-        });
     }
 
     @Override
@@ -119,6 +105,14 @@ public class MainActivity extends AppCompatActivity {
         if(backgroundObserver != null)
             backgroundObserver.removeObserver();
         super.onDestroy();
+    }
+
+    private void startUpServices() {
+        AppExecutors.getInstance().getNetworkIO()
+                .execute(NewsConnector.loadAllSimpleNews(getApplicationContext()));
+        Intent intent = new Intent(this, SubscriptionService.class);
+        intent.setAction(SubscriptionService.START);
+        startService(intent);
     }
 
     private void setIpAddress(){

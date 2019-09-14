@@ -67,8 +67,7 @@ public class SubscriptionService extends IntentService {
     }
 
     public void startClient() {
-        int[] ids = AppDatabase.getInstance(getApplicationContext()).newsDao().getSubscribedNewsIds();
-        ClientSingleton.getClient(getApplicationContext()).startService(ids);
+        ClientSingleton.getClient(getApplicationContext()).startService();
     }
 
     public void stopClient() {
@@ -83,7 +82,7 @@ public class SubscriptionService extends IntentService {
         try {
             ClientSingleton.getClient(getApplicationContext()).subscribeToNews(newsId);
             AppDatabase.getInstance(getApplicationContext()).newsDao().subscribeToNews(newsId);
-            displayToast(R.string.action_subscribe_to_news);
+            displayToast(R.string.subscribe_toast);
         } catch (IOException e) {
             e.printStackTrace();
         }
@@ -97,7 +96,7 @@ public class SubscriptionService extends IntentService {
         try {
             ClientSingleton.getClient(getApplicationContext()).unsubscribeFromNews(newsId);
             AppDatabase.getInstance(getApplicationContext()).newsDao().unsubscribeFromNews(newsId);
-            displayToast(R.string.action_unsubscribe_from_news);
+            displayToast(R.string.unsubscribe_toast);
         } catch (IOException e) {
             e.printStackTrace();
         }

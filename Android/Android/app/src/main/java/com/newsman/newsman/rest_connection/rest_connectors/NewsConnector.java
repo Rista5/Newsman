@@ -32,10 +32,22 @@ public class NewsConnector {
             try{
                 Response<List<SimpleNewsDTO>> response = newsListCall.execute();
                 if(response.body() == null) return;
+                int[] subs = null;
+                if(response.body().size() >0 ) {
+                    subs = AppDatabase.getInstance(context).newsDao().getSubscribedNewsIds();
+                    AppDatabase.getInstance(context).commentDao().deleteAllComments();
+                    AppDatabase.getInstance(context).pictureDao().deleteAllPictures();
+                    AppDatabase.getInstance(context).newsDao().deleteAllNews();
+                }
                 for(SimpleNewsDTO news: response.body()){
                     News retrivedNews = new News();
                     SimpleNews.populateNews(retrivedNews, news.getSimpleNews());
                     AppDatabase.getInstance(context).newsDao().insertNews(retrivedNews);
+                }
+                if(subs != null && subs.length>0) {
+                    for(int i: subs){
+                        AppDatabase.getInstance(context).newsDao().subscribeToNews(i);
+                    }
                 }
             }
             catch (IOException ex){
@@ -88,12 +100,17 @@ public class NewsConnector {
                 Response<NewsDTO> response = getCall.execute();
                 if(response.body()!= null){
                     NewsDTO news = response.body();
-                    AppDatabase.getInstance(context).newsDao().updateNews(NewsDTO.getNews(news));
+                    int subscribed = AppDatabase.getInstance(context).newsDao().getSubscriptionStatus(news.getId());
+                    News newNews = NewsDTO.getNews(news);
+                    newNews.setSubscribed(subscribed);
+                    AppDatabase.getInstance(context).newsDao().insertNews(newNews);
+                    AppDatabase.getInstance(context).commentDao().deleteCommentsForNews(news.getId());
+                    AppDatabase.getInstance(context).pictureDao().deletePicturesForNews(news.getId());
                     for(CommentDTO comment: news.getComments()) {
-                        AppDatabase.getInstance(context).commentDao().updateComment(CommentDTO.getComment(comment));
+                        AppDatabase.getInstance(context).commentDao().insertComment(CommentDTO.getComment(comment));
                     }
                     for(PictureDTO picture: news.getPictures()) {
-                        AppDatabase.getInstance(context).pictureDao().updatePicture(PictureDTO.getPicture(picture));
+                        AppDatabase.getInstance(context).pictureDao().insertPicture(PictureDTO.getPicture(picture));
                     }
                 }
             }

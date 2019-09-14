@@ -32,7 +32,7 @@ public class CommentConnector {
         };
     }
 
-    public static Runnable loadComment(final Context context, final int newsId){
+    public static Runnable loadCommentsForNews(final Context context, final int newsId){
         return () -> {
           Retrofit retrofit = RetrofitFactory.createInstance();;
           Call<List<CommentDTO>> commentCall = retrofit.create(CommentService.class).getCommentsForNews(newsId);

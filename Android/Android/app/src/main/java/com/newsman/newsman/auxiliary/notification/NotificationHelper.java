@@ -16,6 +16,7 @@ import androidx.core.content.ContextCompat;
 
 import com.newsman.newsman.R;
 import com.newsman.newsman.activities.DisplayNewsActivity;
+import com.newsman.newsman.activities.NewsListActivity;
 import com.newsman.newsman.auxiliary.Constant;
 
 public class NotificationHelper {
@@ -45,6 +46,8 @@ public class NotificationHelper {
 
         if(startActivity)
             notificationBuilder.setContentIntent(displayNewsIntent(context, newsId));
+        else
+            notificationBuilder.setContentIntent(newsListIntent(context));
         if(Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN
                 && Build.VERSION.SDK_INT < Build.VERSION_CODES.O) {
             notificationBuilder.setPriority(NotificationCompat.PRIORITY_HIGH);
@@ -60,6 +63,15 @@ public class NotificationHelper {
     private static PendingIntent displayNewsIntent(Context context, int newsId) {
         Intent intent = new Intent(context, DisplayNewsActivity.class);
         intent.putExtra(Constant.NEWS_BUNDLE_KEY, newsId);
+        return PendingIntent.getActivity(
+                context,
+                NOTIFIACTION_ID,
+                intent,
+                PendingIntent.FLAG_CANCEL_CURRENT);
+    }
+
+    private static PendingIntent newsListIntent(Context context) {
+        Intent intent = new Intent(context, NewsListActivity.class);
         return PendingIntent.getActivity(
                 context,
                 NOTIFIACTION_ID,

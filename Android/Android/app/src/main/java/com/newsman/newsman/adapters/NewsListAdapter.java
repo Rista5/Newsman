@@ -15,6 +15,7 @@ import com.newsman.newsman.auxiliary.date_helpers.DateAux;
 import com.newsman.newsman.auxiliary.manu_helpers.PopUpMenuController;
 import com.newsman.newsman.R;
 import com.newsman.newsman.auxiliary.sorting.news.SimpleNewsSorting;
+import com.newsman.newsman.database.AppDatabase;
 import com.newsman.newsman.picture_management.BitmapCache;
 import com.newsman.newsman.picture_management.BitmapObservable;
 import com.newsman.newsman.picture_management.BitmapObserver;
@@ -60,7 +61,8 @@ public class NewsListAdapter extends RecyclerView.Adapter<NewsListAdapter.NewsIt
         newsItemViewHolder.overflow.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                PopUpMenuController.showMenu(mContext, view, newsId);
+                int sub = AppDatabase.getInstance(mContext).newsDao().getSubscriptionStatus(newsId);
+                PopUpMenuController.showMenu(mContext, view, newsId,sub);
             }
         });
     }

@@ -10,6 +10,7 @@ import android.view.MenuInflater;
 import android.view.MenuItem;
 
 import com.newsman.newsman.auxiliary.BackArrowHelper;
+import com.newsman.newsman.auxiliary.RequestHelper;
 import com.newsman.newsman.auxiliary.manu_helpers.LoginMenuInflater;
 import com.newsman.newsman.fragments.comment_fragment.delete_strategy.DeleteComment;
 import com.newsman.newsman.picture_management.BitmapCache;
@@ -56,6 +57,7 @@ public class UpdateNewsActivity extends AppCompatActivity {
             newsId = extras.getInt(Constant.NEWS_BUNDLE_KEY);
             setFragments();
         }
+        updateNewsData();
     }
 
 
@@ -154,5 +156,10 @@ public class UpdateNewsActivity extends AppCompatActivity {
         }
         AppExecutors.getInstance().getNetworkIO().execute(ub.getResult());
         finish();
+    }
+
+
+    private void updateNewsData() {
+        RequestHelper.requestNewsData(this, newsId);
     }
 }

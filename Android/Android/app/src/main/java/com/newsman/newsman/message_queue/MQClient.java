@@ -2,6 +2,7 @@ package com.newsman.newsman.message_queue;
 
 import android.content.Context;
 
+import com.newsman.newsman.database.AppDatabase;
 import com.newsman.newsman.message_queue.update_objects.DBUpdate;
 import com.newsman.newsman.message_queue.update_objects.DBUpdateFactory;
 import com.rabbitmq.client.AMQP;
@@ -47,14 +48,17 @@ public class MQClient {
         initConnFactory();
     }
 
-    public void startService(int[] newsIds) {
+    public void startService() {
         try{
+            setNewsIds();
             connection = factory.newConnection();
             channel = connection.createChannel();
             channel.exchangeDeclare(EXCHANGE_NAME, EXCHAMGE_TYPE);
             AMQP.Queue.DeclareOk q = channel.queueDeclare();
             queue = q.getQueue();
-            bindChannelTopic(newsIds);
+            Integer[] list = new Integer[newsIds.size()];
+            newsIds.toArray(list);
+            bindChannelTopic(list);
             consumerTag = channel.basicConsume(q.getQueue(),true,
                     new NewsUpdateConsumer(channel, context));
 
@@ -73,6 +77,14 @@ public class MQClient {
         }
     }
 
+    private void setNewsIds() {
+        int[] ids = AppDatabase.getInstance(context).newsDao().getSubscribedNewsIds();
+        newsIds.clear();
+        for (int id : ids) {
+            newsIds.add(id);
+        }
+    }
+
     public void stopService() {
         if(connection != null && connection.isOpen()){
             try {
@@ -88,7 +100,7 @@ public class MQClient {
 
     public void subscribeToNews(int newsId) throws IOException {
         if(channel == null || !channel.isOpen())
-            return;
+            startService();
         newsIds.add(newsId);
         String routeKey = getRoutingKey(newsId);
         channel.queueBind(queue, EXCHANGE_NAME, routeKey);
@@ -96,7 +108,7 @@ public class MQClient {
 
     public void unsubscribeFromNews(int newsId) throws IOException {
         if(channel == null || !channel.isOpen())
-            return;
+            startService();
         newsIds.remove(Integer.valueOf(newsId));
         String routeKey = getRoutingKey(newsId);
         channel.queueUnbind(queue, EXCHANGE_NAME, routeKey);
@@ -104,7 +116,7 @@ public class MQClient {
 
     public void subscribeTempNews(int newsId) throws IOException {
         if(channel == null || !channel.isOpen())
-            return;
+            startService();
         if(!tempSubscription.contains(newsId))
             tempSubscription.add(newsId);
         if(newsIds.contains(newsId)) return;
@@ -114,7 +126,7 @@ public class MQClient {
 
     public void unsubscribeFromTempNews(int newsId) throws IOException {
         if(channel == null || !channel.isOpen())
-            return;
+            startService();
         if(tempSubscription.contains(newsId))
             tempSubscription.remove(Integer.valueOf(newsId));
         if(newsIds.contains(newsId)) return;
@@ -130,7 +142,7 @@ public class MQClient {
         factory.setPassword("admin");
     }
 
-    private void bindChannelTopic(int[] newsIds) throws IOException {
+    private void bindChannelTopic(Integer[] newsIds) throws IOException {
         for(int i: newsIds) {
             subscribeToNews(i);
         }

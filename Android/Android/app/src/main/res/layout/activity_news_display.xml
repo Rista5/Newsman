@@ -18,8 +18,9 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:adjustViewBounds="true"
-                android:minHeight="32dp"
-                android:src="@drawable/mountain" />
+                android:src="@drawable/mountain"
+                android:minHeight="@dimen/minNewsItemHeight"
+                android:maxHeight="@dimen/newsItemMaxHeight"/>
 
             <TextView
                 android:id="@+id/news_item_title"

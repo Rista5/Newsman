@@ -17,6 +17,7 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.newsman.newsman.auxiliary.BackArrowHelper;
+import com.newsman.newsman.auxiliary.RequestHelper;
 import com.newsman.newsman.auxiliary.date_helpers.DateAux;
 import com.newsman.newsman.auxiliary.picture_helpers.PictureLoader;
 import com.newsman.newsman.auxiliary.manu_helpers.PopUpMenuController;
@@ -69,7 +70,8 @@ public class DisplayNewsActivity extends AppCompatActivity {
         overflow.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                PopUpMenuController.showMenu(getApplicationContext(), v, newsId);
+                int sub = AppDatabase.getInstance(getApplicationContext()).newsDao().getSubscriptionStatus(newsId);
+                PopUpMenuController.showMenu(getApplicationContext(), v, newsId, sub);
             }
         });
 
@@ -77,12 +79,12 @@ public class DisplayNewsActivity extends AppCompatActivity {
         inflateCommentsFragment();
         subscribeToLiveData();
         getPictures();
-        updateNewsData();
     }
 
     @Override
     protected void onResume() {
         invalidateOptionsMenu();
+        updateNewsData();
         super.onResume();
     }
 
@@ -197,7 +199,7 @@ public class DisplayNewsActivity extends AppCompatActivity {
     }
 
     private void updateNewsData() {
-        AppExecutors.getInstance().getNetworkIO().execute(NewsConnector.loadNewsById(this, newsId));
+        RequestHelper.requestNewsData(this, newsId);
     }
 
 }

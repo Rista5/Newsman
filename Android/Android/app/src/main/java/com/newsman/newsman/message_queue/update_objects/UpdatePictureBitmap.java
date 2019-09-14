@@ -20,9 +20,11 @@ public class UpdatePictureBitmap extends DBUpdate{
     @Override
     public void update() {
         switch (messageInfo.getOperation()){
-            case MQClient.opRawPitctureUpdate:
+            case MQClient.opUpdate:
                 BitmapCache.getInstance().updateBitmap(mContext, pictureInfo.pictureId, pictureInfo.newsId);
                 break;
+                default:
+                    break;
         }
     }
 

@@ -13,9 +13,9 @@
     <string name="create_news_cancel_button">Cancel</string>
     <string name="create_news_toast_message">News must have at least title and content to be created!</string>
 
-    <string name="action_subscribe_to_news">Subscribed to news</string>
+    <string name="action_subscribe_to_news">Subscribe to news</string>
     <string name="action_create_new_news">Create news</string>
-    <string name="action_unsubscribe_from_news">Unsubscribed from news</string>
+    <string name="action_unsubscribe_from_news">Unsubscribe from news</string>
     <string name="subscribe_error">News not found error</string>
     <string name="action_update_news">Update news</string>
     <string name="action_delete_news">Delete news</string>
@@ -50,6 +50,7 @@
     <string name="login_btn">Login</string>
     <string name="confirm_password_placeholder">Confirm password</string>
     <string name="create_account_btn">Create account</string>
+
     <string name="login_invalid_toast">"Invalid username or password!"</string>
     <string name="create_account_invalid_toast">Invalid username or password!\n
         Password and confirm password must match</string>
@@ -57,6 +58,8 @@
     <string name="create_account_success_toast">Account successfully created</string>
     <string name="create_account_fail_toast">Already exists user with that username!</string>
     <string name="login_successful_toast">Login successful!</string>
+    <string name="subscribe_toast">Successfully subscribed</string>
+    <string name="unsubscribe_toast">Successfully unsubscribed</string>
 
 
     <string name="title_activity_login2">Login</string>
