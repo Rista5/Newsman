@@ -6,15 +6,12 @@ using System.Threading.Tasks;
 using ObjectModel.DTOs;
 using NHibernate;
 using ObjectModel.Entities;
-using DataLayerLib.MultimediaLoader;
 using BuisnessLogicLayer.DAOInterfaces;
 
 namespace DataLayerLib.DTOManagers
 {
     public class PictureDTOManager : PictureData
     {
-        private static IMultimediaLoader _loader = null;
-
         public List<PictureDTO> GetAllPictures()
         {
             List<PictureDTO> pictures = new List<PictureDTO>();
@@ -27,7 +24,6 @@ namespace DataLayerLib.DTOManagers
                 foreach (Picture p in retData)
                 {
                     PictureDTO picDto = new PictureDTO(p);
-                    picDto.SetPictureBytes(Loader.GetMedia(p.Id, p.BelongsTo.Id, p.Name));
                     pictures.Add(picDto);
                 }
                 session.Close();
@@ -54,7 +50,6 @@ namespace DataLayerLib.DTOManagers
                 foreach (Picture p in retData)
                 {
                     PictureDTO pictureDto = new PictureDTO(p);
-
                     pictures.Add(pictureDto);
                 }
                 session.Close();
@@ -77,55 +72,10 @@ namespace DataLayerLib.DTOManagers
                 session = DataLayer.GetSession();
                 Picture picture = session.Load<Picture>(pictureId);
                 result = new PictureDTO(picture);
-                MultimediaLoader.IMultimediaLoader loader = new MultimediaLoader.FileSystemLoader();
-                result.SetPictureBytes(loader.GetMedia(picture.Id,picture.BelongsTo.Id , picture.Name));
                 session.Close();
             }
             catch (Exception ex)
             {
-                Console.WriteLine(ex.Message);
-                if (session != null)
-                    session.Close();
-            }
-            return result;
-        }
-
-        public PictureDTO CreatePicture(int newsId, string name,
-            string description, byte[] pictureData = null)
-        {
-            PictureDTO result = null;
-            ISession session = null;
-            try
-            {
-                Picture picture = new Picture();
-                picture.Name = name;
-                picture.Description = description;
-
-                session = DataLayer.GetSession();
-                News belongsTo = session.Load<News>(newsId);
-                picture.BelongsTo = belongsTo;
-                session.Save(picture);
-                session.Flush();
-
-                if (pictureData != null)
-                {
-                    MultimediaLoader.IMultimediaLoader loader = new MultimediaLoader.FileSystemLoader();
-                    loader.SaveMedia(picture.Id,picture.BelongsTo.Id, picture.Name, pictureData);
-                }
-
-                PictureDTO dto = new PictureDTO(picture);
-                dto.SetPictureBytes(pictureData);
-
-                //MessageQueueManager menager = MessageQueueManager.Instance;
-                //menager.PublishMessage(picture.BelongsTo.Id, picture.Id, dto, MessageOperation.Insert);
-
-                session.Close();
-
-                result = dto;
-            }
-            catch (Exception ex)
-            {
-
                 Console.WriteLine(ex.Message);
                 if (session != null)
                     session.Close();
@@ -153,18 +103,11 @@ namespace DataLayerLib.DTOManagers
 
                 if (picturedto.PictureData != null)
                 {
-                    MultimediaLoader.IMultimediaLoader loader = new MultimediaLoader.FileSystemLoader();
-                    loader.SaveMedia(picture.Id, picturedto.BelongsToNewsId, picture.Name, picturedto.GetPictureBytes());
-
-                    MessageQueueManager menager = MessageQueueManager.Instance;
-                    PictureDTO message = new PictureDTO(picture);
-                    message.PictureData = picturedto.PictureData;
-                    menager.PublishMessage(picture.BelongsTo.Id, picture.Id, picturedto, MessageOperation.Insert);
-
                     result = picturedto;
                 }
 
                 session.Close();
+                result = new PictureDTO(picture);
             }
             catch (Exception ex)
             {
@@ -173,43 +116,6 @@ namespace DataLayerLib.DTOManagers
                 if (session != null)
                     session.Close();
             }
-            return result;
-        }
-
-        public bool UpdatePicture(int pictureId, string name,
-            string description, byte[] pictureData)
-        {
-            ISession session = null;
-            bool result = false;
-            try
-            {
-                session = DataLayer.GetSession();
-                Picture picture = session.Load<Picture>(pictureId);
-                picture.Name = name;
-                picture.Description = description;
-                session.SaveOrUpdate(picture);
-                session.Flush();
-                
-                if (pictureData != null)
-                {
-                    MultimediaLoader.IMultimediaLoader loader = new MultimediaLoader.FileSystemLoader();
-                    loader.SaveMedia(picture.Id, picture.BelongsTo.Id, picture.Name, pictureData);
-                }
-
-                PictureDTO dto = new PictureDTO(picture);
-                dto.SetPictureBytes(pictureData);
-                MessageQueueManager manager = MessageQueueManager.Instance;
-                manager.PublishMessage(picture.BelongsTo.Id, picture.Id, dto, MessageOperation.Update);
-
-                session.Close();
-
-                result = true;
-            }
-            catch (Exception ex)
-            {
-                Console.WriteLine(ex.Message);
-            }
-
             return result;
         }
 
@@ -230,15 +136,6 @@ namespace DataLayerLib.DTOManagers
                 session.SaveOrUpdate(picture);
                 session.Flush();
 
-                if (pic.PictureData != null)
-                {
-                    MultimediaLoader.IMultimediaLoader loader = new MultimediaLoader.FileSystemLoader();
-                    loader.SaveMedia(picture.Id,pic.BelongsToNewsId, pic.Name, pic.GetPictureBytes());
-                }
-
-                //MessageQueueManager manager = MessageQueueManager.Instance;
-                //manager.PublishMessage(picture.BelongsTo.Id, picture.Id, pic, MessageOperation.Update);
-
                 session.Close();
 
                 result = pic;
@@ -251,22 +148,20 @@ namespace DataLayerLib.DTOManagers
             return result;
         }
 
-        public bool DeletePicture(int pictureId)
+        public PictureDTO DeletePicture(int pictureId)
         {
             ISession session = null;
-            bool result = false;
+            PictureDTO result = null;
             try
             {
                 session = DataLayer.GetSession();
                 Picture picture = session.Load<Picture>(pictureId);
-
-                MultimediaLoader.IMultimediaLoader loader = new MultimediaLoader.FileSystemLoader();
-                loader.DeleteMedia(picture.Id,picture.BelongsTo.Id, picture.Name);
+                
+                result = new PictureDTO(picture);
 
                 session.Delete(picture);
                 session.Flush();
                 session.Close();
-                result = true;
             }
             catch (Exception ex)
             {
@@ -276,16 +171,6 @@ namespace DataLayerLib.DTOManagers
             }
 
             return result;
-        }
-
-        IMultimediaLoader Loader
-        {
-            get
-            {
-                if (_loader == null)
-                    _loader = new FileSystemLoader();
-                return _loader;
-            }
         }
 
     }

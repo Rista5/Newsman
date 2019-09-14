@@ -106,8 +106,8 @@ namespace DataLayerLib
             Picture picture = session.Get<Picture>(1);
             session.Close();
 
-            MultimediaLoader.IMultimediaLoader loader = new MultimediaLoader.FileSystemLoader();
-            byte[] pictureData = loader.GetMedia(picture.Id,picture.BelongsTo.Id, picture.Name);
+            BuisnessLogicLayer.IMultimediaLoader loader = new MultimediaLoader.FileSystemLoader();
+            byte[] pictureData = loader.GetMedia(picture.Id,picture.BelongsTo.Id);
             System.IO.MemoryStream ms = new System.IO.MemoryStream(pictureData);
             Image image = Image.FromStream(ms);
 
@@ -115,9 +115,9 @@ namespace DataLayerLib
 
         private void btnGetAllNews_Click(object sender, EventArgs e)
         {
-            List<NewsDTO> newsDTO = new DTOManagers.NewsDTOManager().GetAllNews();
-            foreach (NewsDTO dto in newsDTO)
-                MessageBox.Show(dto.ToString());
+        //    List<NewsDTO> newsDTO = new DTOManagers.NewsDTOManager().GetAllNews();
+        //    foreach (NewsDTO dto in newsDTO)
+        //        MessageBox.Show(dto.ToString());
         }
 
         private void btnGetAllUsers_Click(object sender, EventArgs e)
@@ -194,7 +194,7 @@ namespace DataLayerLib
             CreateUserForm form = new CreateUserForm();
             if(form.ShowDialog() == DialogResult.OK)
             {
-                if (new DTOManagers.UserDTOManager().CreateUser(form.Username, form.Password))
+                if (new DTOManagers.UserDTOManager().CreateUser(form.Username, form.Password) != null)
                 {
                     MessageBox.Show("Kreiran user: " + form.Username);
                 }
@@ -205,30 +205,30 @@ namespace DataLayerLib
 
         private void btnCreateComment_Click(object sender, EventArgs e)
         {
-            List<UserDTO> users = new DTOManagers.UserDTOManager().GetAllUsers();
-            List<NewsDTO> news = new DTOManagers.NewsDTOManager().GetAllNews();
-            CreateCommentForm form = new CreateCommentForm(users, news);
-            if(form.ShowDialog() == DialogResult.OK)
-            {
-                if (new DTOManagers.CommentDTOManager().CreateComment(form.User_Id, form.News_Id, form.Content) != null)
-                    MessageBox.Show("Uspesno dodat komentar");
-                else
-                    MessageBox.Show("Greska");
-            }
+            //List<UserDTO> users = new DTOManagers.UserDTOManager().GetAllUsers();
+            //List<NewsDTO> news = new DTOManagers.NewsDTOManager().GetAllNews();
+            //CreateCommentForm form = new CreateCommentForm(users, news);
+            //if(form.ShowDialog() == DialogResult.OK)
+            //{
+            //    if (new DTOManagers.CommentDTOManager().CreateComment(form.User_Id, form.News_Id, form.Content) != null)
+            //        MessageBox.Show("Uspesno dodat komentar");
+            //    else
+            //        MessageBox.Show("Greska");
+            //}
         }
 
         private void btnCreatePicture_Click(object sender, EventArgs e)
         {
-            List<NewsDTO> news = new DTOManagers.NewsDTOManager().GetAllNews();
-            CreatePictureForm form = new CreatePictureForm(news);
-            if(form.ShowDialog()==DialogResult.OK)
-            {
-                if (new DTOManagers.PictureDTOManager().CreatePicture(form.News_ID, form.PictureName,
-                    form.Description, form.PictureData) != null)
-                    MessageBox.Show("Uspesno dodata slika");
-                else
-                    MessageBox.Show("Greska");
-            }
+            //List<NewsDTO> news = new DTOManagers.NewsDTOManager().GetAllNews();
+            //CreatePictureForm form = new CreatePictureForm(news);
+            //if(form.ShowDialog()==DialogResult.OK)
+            //{
+            //    if (new DTOManagers.PictureDTOManager().CreatePicture(form.News_ID, form.PictureName,
+            //        form.Description, form.PictureData) != null)
+            //        MessageBox.Show("Uspesno dodata slika");
+            //    else
+            //        MessageBox.Show("Greska");
+            //}
         }
 
         private void btnUpdateUser_Click(object sender, EventArgs e)
@@ -248,15 +248,7 @@ namespace DataLayerLib
 
         private void btnCreateNews_Click(object sender, EventArgs e)
         {
-            List<UserDTO> users = new DTOManagers.UserDTOManager().GetAllUsers();
-            CreateNewsForm form = new CreateNewsForm(users);
-            if(form.ShowDialog() == DialogResult.OK)
-            {
-                if(new DTOManagers.NewsDTOManager().CreateNews(form.Title,form.Content,form.User_ID) != null)
-                    MessageBox.Show("Uspesno kreirana vest");
-                else
-                    MessageBox.Show("Greska");
-            }
+            MessageBox.Show("This service was discontinued. Mrzelo me da stavim");
         }
 
         private void btnUpdateNews_Click(object sender, EventArgs e)
@@ -267,31 +259,19 @@ namespace DataLayerLib
             CreateNewsForm form = new CreateNewsForm(users, news.Title, news.Content);
             if(form.ShowDialog() == DialogResult.OK)
             {
-                if(new DTOManagers.NewsDTOManager().UpdateNews(form.User_ID,news.Id,form.Title, form.Content))
-                    MessageBox.Show("Uspesno azurirana vest");
-                else
-                    MessageBox.Show("Greska");
+                MessageBox.Show("We have discontinued this option");
             }
         }
 
         private void btnUpdatePicture_Click(object sender, EventArgs e)
         {
-            int pictureId = int.Parse(txtUpdatePicture.Text);
-            PictureDTO picture = new DTOManagers.PictureDTOManager().GetPicture(pictureId);
-            CreatePictureForm form = new CreatePictureForm(picture.Name, picture.Description, picture.GetPictureBytes());
-            if(form.ShowDialog() == DialogResult.OK)
-            {
-                if (new DTOManagers.PictureDTOManager().UpdatePicture(picture.Id, form.PictureName, form.Description, form.PictureData))
-                    MessageBox.Show("Uspesno azurirana slika");
-                else
-                    MessageBox.Show("Greska");
-            }
+            MessageBox.Show("Discontinued operation");
         }
 
         private void btnDeleteNews_Click(object sender, EventArgs e)
         {
             int newsId = int.Parse(txtUpdateNews.Text);
-            if (new DTOManagers.NewsDTOManager().DeleteNews(newsId))
+            if (new DTOManagers.NewsDTOManager().DeleteNews(newsId) != null)
                 MessageBox.Show("Vest je obrisana");
             else
                 MessageBox.Show("Greska");
@@ -318,7 +298,7 @@ namespace DataLayerLib
         private void btnDeletePicture_Click(object sender, EventArgs e)
         {
             int pictureId = int.Parse(txtUpdatePicture.Text);
-            if (new DTOManagers.PictureDTOManager().DeletePicture(pictureId))
+            if (new DTOManagers.PictureDTOManager().DeletePicture(pictureId)!=null)
                 MessageBox.Show("Slika je obrisana");
             else
                 MessageBox.Show("Greska");

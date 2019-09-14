@@ -12,8 +12,8 @@ namespace ObjectModel.DTOs
         public int Id { get; set; }
         public string Title { get; set; }
         public string Content { get; set; }
-        public DateTime LasModified { get; set; }
-        public int LastModifiedUser { get; set; }
+        public DateTime LastModified { get; set; }
+        public UserDTO LastModifiedUser { get; set; }
         public PictureDTO BackgroundPicture { get; set; }
         public IList<CommentDTO> Comments { get; set; }
         public IList<PictureDTO> Pictures { get; set; }
@@ -30,9 +30,14 @@ namespace ObjectModel.DTOs
             Id = news.Id;
             Title = news.Title;
             Content = news.Content;
-            LasModified = news.LastModified;
-            var newestDate = news.Modifications.Max(x => x.ModificationDate);
-            LastModifiedUser = news.Modifications.First(x => x.ModificationDate == newestDate).Id;
+            LastModified = news.LastModified;
+            var newestdate = news.Modifications.Max(x => x.ModificationDate);
+            User modifier = news.Modifications.First(x => x.ModificationDate == newestdate).User;
+            LastModifiedUser = new UserDTO(modifier);
+            //LastModifiedUser = new UserDTO() {
+            //    Id = 0,
+            //    Username = "John Doe"
+            //};
 
             if (news.BackgroundPicture != null)
                 BackgroundPicture = new PictureDTO(news.BackgroundPicture);
@@ -49,6 +54,23 @@ namespace ObjectModel.DTOs
                 Comments.Add(new CommentDTO(comment));
         }
 
+        public NewsDTO(SimpleNewsDTO dto)
+        {
+            Id = dto.Id;
+            Title = dto.Title;
+            Content = dto.Content;
+            LastModified = dto.LastModified;
+            LastModifiedUser = dto.LastModifiedUser;
+
+            if (dto.BackgroundPicture != null)
+                BackgroundPicture = dto.BackgroundPicture;
+            else BackgroundPicture = null;
+
+            Pictures = new List<PictureDTO>();
+            AudioRecordings = new List<AudioDTO>();
+            Comments = new List<CommentDTO>();
+        }
+
         public override string ToString()
         {
             string pictures = "";
@@ -63,7 +85,7 @@ namespace ObjectModel.DTOs
             return String.Format("Id: " + Id +
                 "\nTitle: " + Title +
                 "\nContetn: " + Content +
-                "\nLastModified: " + LasModified +
+                "\nLastModified: " + LastModified +
                 "Comments: \n" + comments +
                 "\nPictures: \n" + pictures +
                 "\nAudios: \n" + audios

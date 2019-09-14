@@ -14,5 +14,12 @@ namespace ObjectModel.Entities
         public virtual News BelongsTo { get; set; }
         //public byte[] Data { get; set; }
         public Picture() { }
+        public Picture(int id, string name, string description, News belongsTo)
+        {
+            Id = id<0 ? 0 : id;
+            Name = name;
+            Description = description;
+            BelongsTo = belongsTo;
+        }
     }
 }

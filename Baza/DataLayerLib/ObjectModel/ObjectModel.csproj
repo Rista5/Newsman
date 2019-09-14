@@ -49,6 +49,7 @@
     <Compile Include="DTOs\SimpleNewsDTO.cs" />
     <Compile Include="DTOs\UserDTO.cs" />
     <Compile Include="DTOs\UserPasswordsDTO.cs" />
+    <Compile Include="DTOs\UserWithPassword.cs" />
     <Compile Include="Entities\Audio.cs" />
     <Compile Include="Entities\Comment.cs" />
     <Compile Include="Entities\News.cs" />

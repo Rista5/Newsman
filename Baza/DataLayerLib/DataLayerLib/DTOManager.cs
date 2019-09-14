@@ -337,8 +337,8 @@ namespace DataLayerLib
                 session = DataLayer.GetSession();
                 Picture picture = session.Load<Picture>(pictureId);
                 result = new PictureDTO(picture);
-                MultimediaLoader.IMultimediaLoader loader = new MultimediaLoader.FileSystemLoader();
-                result.SetPictureBytes(loader.GetMedia(picture.Id, picture.BelongsTo.Id, picture.Name));
+                BuisnessLogicLayer.IMultimediaLoader loader = new MultimediaLoader.FileSystemLoader();
+                result.SetPictureBytes(loader.GetMedia(picture.Id, picture.BelongsTo.Id));
                 session.Close();
             }
             catch (Exception ex)
@@ -381,11 +381,11 @@ namespace DataLayerLib
                 News news = new News();
                 User user = session.Load<User>(userId);
                 NewsModified modifiaction = new NewsModified();
-                modifiaction.ModificationDate = DateTime.Today;
+                modifiaction.ModificationDate = DateTime.Now;
                 modifiaction.User = user;
                 modifiaction.News = news;
 
-                news.LastModified = DateTime.Today;
+                news.LastModified = DateTime.Now;
                 news.Title = title;
                 news.Content = content;
                 //news.Pictures = new List<Picture>();
@@ -447,7 +447,7 @@ namespace DataLayerLib
             {
                 Comment comment = new Comment();
                 comment.Content = content;
-                comment.PostDate = DateTime.Today;
+                comment.PostDate = DateTime.Now;
 
                 session = DataLayer.GetSession();
                 User creator = session.Load<User>(userId);
@@ -489,8 +489,8 @@ namespace DataLayerLib
 
                 if(pictureData != null)
                 {
-                    MultimediaLoader.IMultimediaLoader loader = new MultimediaLoader.FileSystemLoader();
-                    loader.SaveMedia(picture.Id,picture.BelongsTo.Id, picture.Name, pictureData);
+                    BuisnessLogicLayer.IMultimediaLoader loader = new MultimediaLoader.FileSystemLoader();
+                    loader.SaveMedia(picture.Id,picture.BelongsTo.Id, pictureData);
                 }
 
                 result = true;
@@ -526,8 +526,8 @@ namespace DataLayerLib
                 //mora da se napravi poseban za audio
                 if (audioData != null)
                 {
-                    MultimediaLoader.IMultimediaLoader loader = new MultimediaLoader.FileSystemLoader();
-                    loader.SaveMedia(audio.Id, audio.BelongsTo.Id, audio.Name, audioData);
+                    BuisnessLogicLayer.IMultimediaLoader loader = new MultimediaLoader.FileSystemLoader();
+                    loader.SaveMedia(audio.Id, audio.BelongsTo.Id, audioData);
                 }
 
                 result = true;
@@ -555,10 +555,10 @@ namespace DataLayerLib
                 News news = session.Load<News>(newsId);
                 news.Title = title;
                 news.Content = content;
-                news.LastModified = DateTime.Today;
+                news.LastModified = DateTime.Now;
 
                 NewsModified modification = new NewsModified();
-                modification.ModificationDate = DateTime.Today;
+                modification.ModificationDate = DateTime.Now;
                 modification.News = news;
                 modification.User = user;
 
@@ -671,8 +671,8 @@ namespace DataLayerLib
                 session.Close();
                 if(pictureData!=null)
                 {
-                    MultimediaLoader.IMultimediaLoader loader = new MultimediaLoader.FileSystemLoader();
-                    loader.SaveMedia(picture.Id,picture.BelongsTo.Id, picture.Name, pictureData);
+                    BuisnessLogicLayer.IMultimediaLoader loader = new MultimediaLoader.FileSystemLoader();
+                    loader.SaveMedia(picture.Id,picture.BelongsTo.Id, pictureData);
                 }
                 result = true;
             }
@@ -788,8 +788,8 @@ namespace DataLayerLib
                 session = DataLayer.GetSession();
                 Picture picture = session.Load<Picture>(pictureId);
 
-                MultimediaLoader.IMultimediaLoader loader = new MultimediaLoader.FileSystemLoader();
-                loader.DeleteMedia(picture.Id,picture.BelongsTo.Id,picture.Name);
+                BuisnessLogicLayer.IMultimediaLoader loader = new MultimediaLoader.FileSystemLoader();
+                loader.DeleteMedia(picture.Id,picture.BelongsTo.Id);
 
                 session.Delete(picture);
                 session.Flush();

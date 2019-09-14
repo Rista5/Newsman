@@ -48,17 +48,15 @@ namespace BuisnessLogicLayer.Services
             return result;
         }
         
-        public bool CreateComment(CommentSimpleDTO value)
+        public CommentDTO CreateComment(CommentDTO value)
         {
-            bool result = false;
-            CommentDTO dataResult = commentDataAccess.CreateComment(value.CreatedBy, value.BelongsToNewsId, value.Content);
+            CommentDTO dataResult = commentDataAccess.CreateComment(value);
             if(dataResult != null)
             {
                 MessageQueueManager menager = MessageQueueManager.Instance;
                 menager.PublishMessage(dataResult.BelongsToNewsId, dataResult.Id, dataResult, MessageOperation.Insert);
-                result = true;
             }
-            return result;
+            return dataResult;
         }
         
         public bool DeleteComment(int id)

@@ -12,23 +12,23 @@ namespace BuisnessLogicLayer.DAOInterfaces
     {
         List<NewsDTO> GetAllNews();
 
+        List<SimpleNewsDTO> GetAllNewsSimple();
+
         List<NewsDTO> GetNewsModifiedByUser(int userId);
 
         NewsDTO GetNews(int newsId);
 
-        News GetFullNews(int newsId);
+        SimpleNewsDTO GetSimpleNewsById(int newsId);
 
-        NewsDTO CreateNews(string title, string content, int userId);
+        News GetFullNews(int newsId);
 
         NewsDTO CreateNews(NewsDTO news, int userId);
 
-        bool UpdateNews(int userId, int newsId, string title, string content);
+        SimpleNewsDTO CreateNews(SimpleNewsDTO news, int userId);
 
-        NewsDTO UpdateNews(SimpleNewsDTO simpleDTO, int userId);
+        SimpleNewsDTO UpdateNews(SimpleNewsDTO simpleDTO, int userId);
 
-        NewsDTO UpdateNews(NewsDTO newsDTO, int userId);
-
-        bool DeleteNews(int newsId);
+        NewsDTO DeleteNews(int newsId);
 
         bool DeleteNewsModifiaction(int modificationId);
     }

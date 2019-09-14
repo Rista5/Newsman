@@ -21,12 +21,14 @@ namespace ObjectModel.DTOs
             Id = picture.Id;
             Name = picture.Name;
             Description = picture.Description;
-            BelongsToNewsId = picture.BelongsTo.Id;
+            if(picture.BelongsTo != null)
+                BelongsToNewsId = picture.BelongsTo.Id;
         }
 
         public void SetPictureBytes(byte[] data)
         {
-            PictureData = Encoding.Default.GetString(data);
+            if(data != null)
+                PictureData = Encoding.Default.GetString(data);
         }
 
         public byte[] GetPictureBytes()

@@ -85,45 +85,9 @@ namespace DataLayerLib.DTOManagers
             return result;
         }
 
-        public bool CreateAudio(int newsId, string name,
-            string description, byte[] audioData = null)
+        public AudioDTO CreateAudio(AudioDTO audioDTO)
         {
-            bool result = false;
-            ISession session = null;
-            try
-            {
-                Audio audio = new Audio();
-                audio.Name = name;
-                audio.Description = description;
-
-                session = DataLayer.GetSession();
-                News belongsTo = session.Load<News>(newsId);
-                audio.BelongsTo = belongsTo;
-                session.Save(audio);
-                session.Flush();
-                session.Close();
-
-                //mora da se napravi poseban za audio
-                if (audioData != null)
-                {
-                    MultimediaLoader.IMultimediaLoader loader = new MultimediaLoader.FileSystemLoader();
-                    loader.SaveMedia(audio.Id,audio.BelongsTo.Id, audio.Name, audioData);
-                }
-
-                result = true;
-            }
-            catch (Exception ex)
-            {
-                Console.WriteLine(ex.Message);
-                if (session != null)
-                    session.Close();
-            }
-            return result;
-        }
-
-        public bool CreateAudio(AudioDTO audioDTO)
-        {
-            bool result = false;
+            AudioDTO result = null;
             ISession session = null;
             try
             {
@@ -138,13 +102,7 @@ namespace DataLayerLib.DTOManagers
                 session.Flush();
                 session.Close();
 
-                if (audioDTO.AudioData != null)
-                {
-                    MultimediaLoader.IMultimediaLoader loader = new MultimediaLoader.FileSystemLoader();
-                    loader.SaveMedia(audio.Id, audioDTO.BelongsToNewsId, audio.Name, audioDTO.GetAudioBytes());
-                }
-
-                result = true;
+                result = new AudioDTO(audio);
             }
             catch (Exception ex)
             {
@@ -155,36 +113,10 @@ namespace DataLayerLib.DTOManagers
             return result;
         }
 
-        public bool UpdateAudio(int audioId, string name,
-            string description)
+        public AudioDTO UpdateAudio(AudioDTO audioDTO)
         {
             ISession session = null;
-            bool result = false;
-            try
-            {
-                session = DataLayer.GetSession();
-                Audio audio = session.Load<Audio>(audioId);
-                audio.Name = name;
-                audio.Description = description;
-                session.SaveOrUpdate(audio);
-                session.Flush();
-                session.Close();
-                result = true;
-            }
-            catch (Exception ex)
-            {
-                Console.WriteLine(ex.Message);
-                if (session != null)
-                    session.Close();
-            }
-
-            return result;
-        }
-
-        public bool UpdateAudio(AudioDTO audioDTO)
-        {
-            ISession session = null;
-            bool result = false;
+            AudioDTO result = null;
             try
             {
                 session = DataLayer.GetSession();
@@ -197,12 +129,8 @@ namespace DataLayerLib.DTOManagers
                 session.SaveOrUpdate(audio);
                 session.Flush();
                 session.Close();
-                if(audioDTO.AudioData!=null)
-                {
-                    MultimediaLoader.IMultimediaLoader loader = new MultimediaLoader.FileSystemLoader();
-                    loader.SaveMedia(audio.Id,audioDTO.BelongsToNewsId, audio.Name, audioDTO.GetAudioBytes());
-                }
-                result = true;
+                
+                result = new AudioDTO(audio);
             }
             catch (Exception ex)
             {
@@ -214,22 +142,19 @@ namespace DataLayerLib.DTOManagers
             return result;
         }
 
-        public bool DeleteAudio(int audioId)
+        public AudioDTO DeleteAudio(int audioId)
         {
             ISession session = null;
-            bool result = false;
+            AudioDTO result = null;
             try
             {
                 session = DataLayer.GetSession();
                 Audio audio = session.Load<Audio>(audioId);
-
-                MultimediaLoader.IMultimediaLoader loader = new MultimediaLoader.FileSystemLoader();
-                loader.DeleteMedia(audio.Id, audio.BelongsTo.Id, audio.Name);
 
                 session.Delete(audio);
                 session.Flush();
                 session.Close();
-                result = true;
+                result = new AudioDTO(audio);
             }
             catch (Exception ex)
             {

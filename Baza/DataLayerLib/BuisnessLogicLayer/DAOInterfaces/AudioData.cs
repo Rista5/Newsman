@@ -15,12 +15,10 @@ namespace BuisnessLogicLayer.DAOInterfaces
 
         AudioDTO GetAudio(int audioId);
         
-        bool CreateAudio(AudioDTO audioDTO);
+        AudioDTO CreateAudio(AudioDTO audioDTO);
 
-        bool UpdateAudio(int audioId, string name, string description);
+        AudioDTO UpdateAudio(AudioDTO audioDTO);
 
-        bool UpdateAudio(AudioDTO audioDTO);
-
-        bool DeleteAudio(int audioId);
+        AudioDTO DeleteAudio(int audioId);
     }
 }

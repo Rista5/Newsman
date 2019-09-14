@@ -14,6 +14,8 @@ namespace API.Controllers
     {
         private NewsService service;
         //GET /api/News/
+        [HttpGet]
+        [Route("api/News/")]
         public IEnumerable<NewsDTO> Get()
         {
             service = Service.NewsService;
@@ -24,42 +26,41 @@ namespace API.Controllers
         [Route("api/NewsModifiedByUser/{id}")]
         public IEnumerable<NewsDTO> Get(int id)
         {
+            service = Service.NewsService;
             return service.GetNewsModifiedByUser(id);
         }
+
 
         [HttpGet]
         [Route("api/News/{id}")]
         public NewsDTO GetNewsById(int id)
         {
+            service = Service.NewsService;
             return service.GetNewsById(id);
         }
 
         [HttpPut]
-        [Route("api/CreateNews/{userId}")]
-        public bool CreateNews([FromBody]NewsDTO news, int userId)
+        [Route("api/News/{userId}")]
+        public NewsDTO CreateNews([FromBody]NewsDTO news, int userId)
         {
+            service = Service.NewsService;
             return service.CreateNews(news, userId);
         }
 
         [HttpPost]
-        [Route("api/UpdateNews/{userId}")]
-        public bool UpdateNews([FromBody] NewsDTO news, int userId)
-        {
-            return service.UpdateNews(news, userId);
-        }
-
-        [HttpPost]
         [Route("api/News/{userId}")]
-        public bool UpdateNews([FromBody] SimpleNewsDTO simpleDTO, int userId)
+        public SimpleNewsDTO UpdateNews([FromBody] SimpleNewsDTO simpleDTO, int userId)
         {
+            service = Service.NewsService;
             return service.UpdateNews(simpleDTO, userId);
         }
 
         [HttpDelete]
-        [Route("api/DeleteNews/{userId}")]
-        public bool DeleteNews(int userId)
+        [Route("api/News/{newsId}")]
+        public bool DeleteNews(int newsId)
         {
-            return service.DeleteNews(userId);
+            service = Service.NewsService;
+            return service.DeleteNews(newsId);
         }
     }
 }

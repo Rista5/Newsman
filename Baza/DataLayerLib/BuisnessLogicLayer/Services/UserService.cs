@@ -41,9 +41,14 @@ namespace BuisnessLogicLayer.Services
             return userDataAccess.DeleteUser(id);
         }
 
-        public bool CreateUser(string username, string password)
+        public UserWithPassword CreateUser(string username, string password)
         {
             return userDataAccess.CreateUser(username, password);
+        }
+
+        public UserWithPassword GetUser(string username, string password)
+        {
+            return userDataAccess.GetUser(username, password);
         }
     }
 }

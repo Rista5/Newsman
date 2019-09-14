@@ -105,9 +105,9 @@ namespace DataLayerLib.DTOManagers
             return result;
         }
 
-        public bool CreateUser(string username, string password)
+        public UserWithPassword CreateUser(string username, string password)
         {
-            bool result = false;
+            UserWithPassword result = null;
             ISession session = null;
             try
             {
@@ -117,33 +117,41 @@ namespace DataLayerLib.DTOManagers
 
                 session = DataLayer.GetSession();
 
-                //IEnumerable<User> qresult = from u in session.Query<User>()
-                //                            where u.Username == user.Username
-                //                            select u;
-                //bool usernameInUse = false;
-                //foreach (User u in qresult)
-                //    if (u.Username.Equals(user.Username) && u.Id != user.Id)
-                //        usernameInUse = true;
-                //if (usernameInUse)
-                //{
-                //    Exception exception = new Exception("Username already used by another user");
-                //    throw exception;
-                //}
-
                 bool usernameInUse = ValidateUsername(session, user.Id, user.Username);
                 if (usernameInUse)
                 {
                     //return result;//new UsernameTaken();
-                    result = false;
+                    result = null;
                 }
                 else
                 {
                     session.Save(user);
                     session.Flush();
+                    result = new UserWithPassword(user);
                     session.Close();
                     //result = new UserCreated();
-                    result = true;
                 }
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine(ex.Message);
+                if (session != null)
+                    session.Close();
+            }
+            return result;
+        }
+
+        public UserWithPassword GetUser(string username, string password)
+        {
+            UserWithPassword result = null;
+            ISession session = null;
+            try
+            {
+                session = DataLayer.GetSession();
+                User user = session.Query<User>()
+                    .Where(u => u.Username.Equals(username))
+                    .Where(u => u.Password.Equals(password)).FirstOrDefault();
+                result = new UserWithPassword(user);
             }
             catch (Exception ex)
             {
@@ -264,7 +272,13 @@ namespace DataLayerLib.DTOManagers
             {
                 session = DataLayer.GetSession();
                 User user = session.Load<User>(userId);
+
+                //UserDTO userDTO = new UserDTO(user);
                 session.Delete(user);
+                
+                //MessageQueueManager manager = MessageQueueManager.Instance;
+                //manager.PublishMessage(userDTO.BelongsToNewsId, commentDTO.Id, commentDTO, MessageOperation.Delete);
+
                 session.Flush();
                 session.Close();
                 result = true;
