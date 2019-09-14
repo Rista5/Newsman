@@ -26,6 +26,9 @@ namespace ObjectModel.DTOs
             Title = news.Title;
             Content = news.Content;
             LastModified = news.LastModified;
+            var newestdate = news.Modifications.Max(x => x.ModificationDate);
+            User modifier = news.Modifications.First(x => x.ModificationDate == newestdate).User;
+            LastModifiedUser = new UserDTO(modifier);
             if (news.BackgroundPicture != null)
                 BackgroundPicture = new PictureDTO(news.BackgroundPicture);
             else BackgroundPicture = null;
