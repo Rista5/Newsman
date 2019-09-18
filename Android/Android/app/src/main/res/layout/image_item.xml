@@ -11,7 +11,7 @@
         android:layout_height="wrap_content"
         android:layout_gravity="center"
         android:adjustViewBounds="true"
-        android:src="@drawable/mountain"
+        android:src="@drawable/default_background"
         android:minHeight="@dimen/minNewsItemHeight"
         android:maxHeight="@dimen/newsItemMaxHeight"
         android:layout_centerHorizontal="true"/>

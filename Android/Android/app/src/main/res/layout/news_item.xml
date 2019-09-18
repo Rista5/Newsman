@@ -25,7 +25,7 @@
                 android:adjustViewBounds="true"
                 android:minHeight="@dimen/minNewsItemHeight"
                 android:maxHeight="@dimen/newsItemMaxHeight"
-                android:src="@drawable/mountain" />
+                android:src="@drawable/default_background" />
 
             <TextView
                 android:id="@+id/news_item_title"

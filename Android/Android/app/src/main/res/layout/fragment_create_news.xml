@@ -16,7 +16,7 @@
         android:minHeight="@dimen/picture_min_height"
         android:maxHeight="@dimen/picture_max_height"
         android:layout_below="@+id/create_new_news_title"
-        tools:src="@drawable/mountain"/>
+        tools:src="@drawable/default_background"/>
     <ImageView
         android:id="@+id/create_new_news_pick_gallery"
         android:layout_width="30dp"
