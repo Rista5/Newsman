@@ -16,6 +16,7 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.io.IOException;
+import java.net.ConnectException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.TimeoutException;
@@ -48,8 +49,8 @@ public class MQClient {
         initConnFactory();
     }
 
-    public void startService() {
-        try{
+    public void startService() throws IOException {
+        try {
             setNewsIds();
             connection = factory.newConnection();
             channel = connection.createChannel();
@@ -59,7 +60,7 @@ public class MQClient {
             Integer[] list = new Integer[newsIds.size()];
             newsIds.toArray(list);
             bindChannelTopic(list);
-            consumerTag = channel.basicConsume(q.getQueue(),true,
+            consumerTag = channel.basicConsume(q.getQueue(), true,
                     new NewsUpdateConsumer(channel, context));
 
         }catch (Exception e) {
@@ -74,6 +75,7 @@ public class MQClient {
                     ex.printStackTrace();
                 }
             }
+            throw new IOException("channel not created");
         }
     }
 

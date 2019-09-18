@@ -67,7 +67,11 @@ public class SubscriptionService extends IntentService {
     }
 
     public void startClient() {
-        ClientSingleton.getClient(getApplicationContext()).startService();
+        try {
+            ClientSingleton.getClient(getApplicationContext()).startService();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
     }
 
     public void stopClient() {
